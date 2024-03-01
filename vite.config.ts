@@ -6,11 +6,11 @@ export default defineConfig({
   plugins: [react()],
   build: {
     lib: {
-      entry: '/src/index.ts',  // 设置库的入口文件
-      name: 'MyLibrary',           // 设置库的名称
+      entry: '/lib/index.ts',
+      name: 'buitar-editor',
     },
     rollupOptions: {
-      external: ['react', 'react-dom'], // 将 react 和 react-dom 设置为外部依赖项
+      external: ['react', 'react-dom'],
       output: {
         globals: {
           react: 'React',
@@ -18,8 +18,5 @@ export default defineConfig({
         },
       },
     },
-  },
-  server: {
-    open: '/src/demo/index.html', // 设置 demo 的入口文件
   },
 })

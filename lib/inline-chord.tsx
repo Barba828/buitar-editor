@@ -2,10 +2,10 @@ import { useState, useRef, useMemo, useEffect, Ref, useCallback } from 'react'
 import { Range, Editor, Transforms, CustomTypes, BaseOperation } from 'slate'
 import { ReactEditor } from 'slate-react'
 import { chordTagMap, type BoardChord } from '@buitar/to-guitar'
-import { getNoteAndTag, getTapsByChordName } from '../utils'
-import { PopoverList, popoverListShow } from '../components/list'
-import { PopoverTapsItem } from '../components/taps-item'
-import { CustomInlineChordElement } from '../custom-types'
+import { getNoteAndTag, getTapsByChordName } from './utils'
+import { PopoverList, popoverListShow } from './components/list'
+import { PopoverTapsItem } from './components/taps-item'
+import { CustomInlineChordElement } from './custom-types'
 
 const tags = Array.from(chordTagMap.keys())
 
