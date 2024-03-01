@@ -2,6 +2,17 @@
   "name": "buitar-editor",
   "version": "0.0.0",
   "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/buitar-editor.umd.cjs",
+  "module": "./dist/buitar-editor.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "types": "./dist/index.d.ts",
+    "import": "./dist/buitar-editor.js",
+    "require": "./dist/buitar-editor.umd.cjs"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -29,6 +40,7 @@
     "eslint-plugin-react-refresh": "^0.4.5",
     "sass": "^1.71.1",
     "typescript": "^5.2.2",
-    "vite": "^5.1.4"
+    "vite": "^5.1.4",
+    "vite-plugin-dts": "^3.7.3"
   }
 }
