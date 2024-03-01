@@ -11,8 +11,16 @@ const App = () => {
   const [value] = useState<Descendant[]>([
     {
       type: 'paragraph',
-      children: [{ text: 'A line of text in a paragraph.' }],
-    },
+      children: [
+        { text: 'There is an empty chord card here' },
+        {
+          type: 'inline-chord',
+          children: [{ text: '' }],
+          taps: { chordType: { name: '', name_zh: '', tag: '' }, chordTaps: [] },
+        },
+        { text: ", try typing '/c' and 'G' to get the G chord in the sentence." },
+      ],
+    }
   ])
   const { ChordPopover } = useInlineChord(editor)
   const renderElement = useCallback((props: RenderElementProps) => <Element {...props} />, [])

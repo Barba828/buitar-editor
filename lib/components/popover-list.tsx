@@ -16,7 +16,7 @@ interface PopoverProp<T> extends HTMLProps<HTMLDivElement> {
   onItemClick?: (item: T, index: number) => void
 }
 
-function ListInner<T>(
+function PopoverListInner<T>(
   { children, lists, renderItem: propRenderItem, onItemClick, ...props }: PopoverProp<T>,
   ref?: LegacyRef<HTMLDivElement>
 ) {
@@ -73,7 +73,7 @@ function ListInner<T>(
         key={index}
         onClick={() => handleClickItem(item, index)}
         onMouseEnter={() => setCheckedIndex(index)}
-        className={cx('popover-item', index === checkedIndex && 'popover-item-active')}
+        className={cx('popover-item', index === checkedIndex && 'popover-item--active')}
         data-key={index}
       >
         {propRenderItem ? propRenderItem(item, index) : String(item)}
@@ -87,13 +87,14 @@ function ListInner<T>(
   return (
     <Portal>
       <div ref={ref} className="popover-container" {...props} tabIndex={0}>
-        {children ? children : renderElement()}
+        {children}
+        {renderElement()}
       </div>
     </Portal>
   )
 }
 
-export const PopoverList = forwardRef(ListInner)
+export const PopoverList = forwardRef(PopoverListInner)
 
 export const popoverListShow = (
   popEl: HTMLElement,
@@ -115,10 +116,10 @@ export const popoverListShow = (
     popEl.style.left = 'unset'
   }
   if (bottom + height < window.innerHeight) {
-    popEl.style.top = `${bottom + window.scrollY}px`
+    popEl.style.top = `${bottom + window.scrollY + 6}px`
     popEl.style.bottom = 'unset'
   } else {
-    popEl.style.bottom = `${window.innerHeight - top - window.scrollY}px`
+    popEl.style.bottom = `${window.innerHeight - top - window.scrollY - 6}px`
     popEl.style.top = 'unset'
   }
 }

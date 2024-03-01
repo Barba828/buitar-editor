@@ -1,17 +1,18 @@
 import { useState, useRef, useMemo, useEffect, Ref, useCallback } from 'react'
 import { Range, Editor, Transforms, CustomTypes, BaseOperation } from 'slate'
 import { ReactEditor } from 'slate-react'
-import { chordTagMap, type BoardChord } from '@buitar/to-guitar'
-import { getNoteAndTag, getTapsByChordName } from './utils'
-import { PopoverList, popoverListShow } from './components/list'
+import { chordTagMap, type BoardChord, pitchToChordType } from '@buitar/to-guitar'
+import { getNoteAndTag, getTapsByChordName, strsToTaps } from './utils'
+import { PopoverList, popoverListShow } from './components/popover-list'
 import { PopoverTapsItem } from './components/taps-item'
 import { CustomInlineChordElement } from './custom-types'
 
 const tags = Array.from(chordTagMap.keys())
 
-type ChordInputTag = '' | '/c' | '/C'
+type ChordInputTag = '' | '/c' | '/C' | '/x' | '/X'
 
 export const useInlineChord = (editor: CustomTypes['Editor']) => {
+  const customRef = useRef<HTMLDivElement | null>()
   const tagRef = useRef<HTMLDivElement | null>()
   const tapsRef = useRef<HTMLDivElement | null>()
   const [inputTag, setInputTag] = useState<ChordInputTag | null>()
@@ -19,11 +20,14 @@ export const useInlineChord = (editor: CustomTypes['Editor']) => {
   const [search, setSearch] = useState('')
   const [selectedChord, setSelectedChord] = useState('')
 
+  /**Chord Tag 列表 */
   const chordList = useMemo(() => {
-    if (!search.length || !target) {
+    if (inputTag !== '/C' && inputTag !== '/c') {
       return []
     }
-
+    if (!search.length) {
+      return []
+    }
     if (!['C', 'D', 'E', 'F', 'G', 'A', 'B'].includes(search[0].toLocaleUpperCase())) {
       return []
     }
@@ -35,23 +39,76 @@ export const useInlineChord = (editor: CustomTypes['Editor']) => {
     return tags.filter((t) => t.includes(tag)).map((t) => note + t)
   }, [search, target])
 
-  const chordTapList = useMemo(() => {
+  /**选中Tag后 Chord Taps 列表 */
+  const chordTapList = useMemo<BoardChord[]>(() => {
     if (!selectedChord.length) {
       return []
     }
     return getTapsByChordName(selectedChord)
   }, [selectedChord])
 
-  useEffect(() => {
-    if (search !== selectedChord && selectedChord.length) {
-      setSelectedChord('')
+  /**自定义 Chord Taps 列表 */
+  const customChordTapList = useMemo<BoardChord[]>(() => {
+    if (inputTag !== '/X' && inputTag !== '/x') {
+      return []
+    }
+    if (!search.length || search.length > 6) {
+      return []
     }
 
-    if (target && tagRef.current) {
-      const el = tagRef.current
-      const domRange = ReactEditor.toDOMRange(editor, target)
-      const rect = domRange.getBoundingClientRect()
-      popoverListShow(el, rect)
+    const frets = search.slice(0, 6).split('')
+    while (frets.length < 6) {
+      frets.push('x')
+    }
+
+    const chordTaps = strsToTaps(frets)
+    const chordTypes = pitchToChordType(Array.from(new Set(chordTaps.map((tap) => tap.tone))))
+
+    // 无效和弦
+    if (!chordTypes.length) {
+      return [
+        {
+          chordTaps,
+          chordType: {
+            name: '--',
+            name_zh: '--',
+            tag: '',
+          },
+        },
+      ]
+    }
+
+    // 同一taps 也许有转位和弦等多个名称
+    return chordTypes.map(
+      (chordType) =>
+        ({
+          chordTaps,
+          chordType,
+        } as BoardChord)
+    )
+  }, [search, target])
+
+  useEffect(() => {
+    if (inputTag === '/C' || inputTag === '/c') {
+      // 1. 自选和弦
+      if (search !== selectedChord && selectedChord.length) {
+        setSelectedChord('')
+      }
+
+      if (target && tagRef.current) {
+        const el = tagRef.current
+        const domRange = ReactEditor.toDOMRange(editor, target)
+        const rect = domRange.getBoundingClientRect()
+        popoverListShow(el, rect)
+      }
+    } else if (inputTag === '/X' || inputTag === '/x') {
+      // 2. 自定义和弦
+      if (target && customRef.current) {
+        const el = customRef.current
+        const domRange = ReactEditor.toDOMRange(editor, target)
+        const rect = domRange.getBoundingClientRect()
+        popoverListShow(el, rect)
+      }
     }
   }, [editor, search, selectedChord, target])
 
@@ -86,7 +143,7 @@ export const useInlineChord = (editor: CustomTypes['Editor']) => {
   const onSelectTaps = (taps: BoardChord) => {
     if (target) {
       Transforms.select(editor, target)
-      editor.insertInlineChord?.(taps, inputTag === '/c')
+      editor.insertInlineChord?.(taps, inputTag === '/c' || inputTag === '/x')
       setTarget(null)
       setSelectedChord('')
     }
@@ -107,6 +164,10 @@ export const useInlineChord = (editor: CustomTypes['Editor']) => {
       slashTag = '/c'
     } else if (beforeLine.includes('/C')) {
       slashTag = '/C'
+    } else if (beforeLine.includes('/x')) {
+      slashTag = '/x'
+    } else if (beforeLine.includes('/X')) {
+      slashTag = '/X'
     } else {
       setTarget(null)
       return
@@ -139,27 +200,50 @@ export const useInlineChord = (editor: CustomTypes['Editor']) => {
     }
   }, [editor])
 
-  const ChordPopover = () => (
-    <>
-      {chordTapList.length ? (
-        <PopoverList
-          ref={tapsRef as Ref<HTMLDivElement>}
-          data-cy="taps-portal"
-          lists={chordTapList}
-          renderItem={(taps) => <PopoverTapsItem taps={taps} />}
-          onItemClick={onSelectTaps}
-          style={{ maxHeight: '360px' }}
-        ></PopoverList>
-      ) : chordList.length ? (
-        <PopoverList
-          ref={tagRef as Ref<HTMLDivElement>}
-          data-cy="tags-portal"
-          lists={chordList}
-          onItemClick={onSelectChord}
-        ></PopoverList>
-      ) : null}
-    </>
-  )
+  const ChordPopover = () => {
+    if (!target || !search) {
+      return null
+    }
+
+    if (inputTag === '/c' || inputTag === '/C') {
+      if (chordTapList.length) {
+        return (
+          <PopoverList
+            ref={tapsRef as Ref<HTMLDivElement>}
+            data-cy="taps-portal"
+            lists={chordTapList}
+            renderItem={(taps) => <PopoverTapsItem taps={taps} />}
+            onItemClick={onSelectTaps}
+            style={{ maxHeight: '360px' }}
+          ></PopoverList>
+        )
+      } else if (chordList.length) {
+        return (
+          <PopoverList
+            ref={tagRef as Ref<HTMLDivElement>}
+            data-cy="tags-portal"
+            lists={chordList}
+            onItemClick={onSelectChord}
+          ></PopoverList>
+        )
+      }
+    } else if (inputTag === '/X' || inputTag === '/x') {
+      return (
+        customChordTapList.length && (
+          <PopoverList
+            ref={customRef as Ref<HTMLDivElement>}
+            data-cy="frets-portal"
+            lists={customChordTapList}
+            renderItem={(taps) => <PopoverTapsItem taps={taps} size={140} />}
+            onItemClick={onSelectTaps}
+            style={{ maxHeight: '360px' }}
+          ></PopoverList>
+        )
+      )
+    }
+
+    return null
+  }
 
   return {
     onChange,
