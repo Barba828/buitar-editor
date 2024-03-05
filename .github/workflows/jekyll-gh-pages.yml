@@ -30,7 +30,7 @@ jobs:
         run: |
           npm install pnpm -g
           pnpm install --no-frozen-lockfile
-          pnpm build:demo
+          pnpm build:ghpage
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:

@@ -6,7 +6,7 @@
   overflow-y: scroll;
   background-color: #222;
   border-radius: 4px;
-  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 20px rgba(0, 0, 0, 0.15);
 }
 
 .popover-item {
@@ -18,7 +18,7 @@
   transition-timing-function: ease;
   transition-duration: 0.3s;
   &:active,
-  &-active {
+  &--active {
     background: #444 !important;
   }
 }
