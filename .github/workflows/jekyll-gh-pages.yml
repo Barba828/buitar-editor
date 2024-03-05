@@ -30,16 +30,16 @@ jobs:
         run: |
           npm install pnpm -g
           pnpm install --no-frozen-lockfile
-          pnpm build
+          pnpm build:demo
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
-          source: ./dist
+          source: ./dist-demo
           destination: ./_site
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          path: ./dist
+          path: ./dist-demo
 
   # Deployment job
   deploy:

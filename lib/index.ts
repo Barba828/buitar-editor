@@ -1,2 +1,4 @@
-export { useInlineChord, withChords } from './inline-chord'
-export { InlineTapsItem as ChordElement } from './components/taps-item'
+export { withChords } from './with-chords'
+export { InlineChordPopover } from './inline-chord'
+export { FixedChordPopover } from './fixed-chord'
+export { InlineTapsItem as InlineChordElement, FixedTapsItem as FixedChordLeaf } from './components/taps-item'

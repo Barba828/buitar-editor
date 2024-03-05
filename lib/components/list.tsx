@@ -1,25 +1,21 @@
-import { HTMLProps, LegacyRef, forwardRef, useCallback, useEffect, useState } from 'react'
-import { Portal } from './index'
+import { HTMLProps, useCallback, useEffect, useState } from 'react'
 import cx from 'classnames'
 
 import './components.scss'
 
-declare module 'react' {
-  function forwardRef<T, P = unknown>(
-    render: (props: P, ref: React.Ref<T>) => React.ReactNode | null
-  ): (props: P & React.RefAttributes<T>) => React.ReactNode | null
-}
-
-interface PopoverProp<T> extends HTMLProps<HTMLDivElement> {
+interface ListProp<T> extends HTMLProps<HTMLDivElement> {
   lists?: Array<T>
   renderItem?: (item: T, index: number) => JSX.Element
   onItemClick?: (item: T, index: number) => void
 }
 
-function PopoverListInner<T>(
-  { children, lists, renderItem: propRenderItem, onItemClick, ...props }: PopoverProp<T>,
-  ref?: LegacyRef<HTMLDivElement>
-) {
+export function List<T>({
+  children,
+  lists,
+  renderItem: propRenderItem,
+  onItemClick,
+  ...props
+}: ListProp<T>) {
   const [checkedIndex, setCheckedIndex] = useState(0)
 
   const handleClickItem = useCallback(
@@ -85,41 +81,9 @@ function PopoverListInner<T>(
   }
 
   return (
-    <Portal>
-      <div ref={ref} className="popover-container" {...props} tabIndex={0}>
-        {children}
-        {renderElement()}
-      </div>
-    </Portal>
+    <div {...props}>
+      {children}
+      {renderElement()}
+    </div>
   )
-}
-
-export const PopoverList = forwardRef(PopoverListInner)
-
-export const popoverListShow = (
-  popEl: HTMLElement,
-  triggerRect: {
-    left: number
-    right: number
-    top: number
-    bottom: number
-  }
-) => {
-  const { left, right, top, bottom } = triggerRect
-  const { width, height } = popEl.getBoundingClientRect()
-
-  if (left + width < window.innerWidth) {
-    popEl.style.left = `${left + window.scrollX}px`
-    popEl.style.right = 'unset'
-  } else {
-    popEl.style.right = `${window.innerWidth - right - window.scrollX}px`
-    popEl.style.left = 'unset'
-  }
-  if (bottom + height < window.innerHeight) {
-    popEl.style.top = `${bottom + window.scrollY + 6}px`
-    popEl.style.bottom = 'unset'
-  } else {
-    popEl.style.bottom = `${window.innerHeight - top - window.scrollY - 6}px`
-    popEl.style.top = 'unset'
-  }
 }

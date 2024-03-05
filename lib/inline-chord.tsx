@@ -1,20 +1,21 @@
-import { useState, useRef, useMemo, useEffect, Ref, useCallback } from 'react'
-import { Range, Editor, Transforms, CustomTypes, BaseOperation } from 'slate'
-import { ReactEditor } from 'slate-react'
+import { useState, useRef, useMemo, useEffect, useCallback, FC } from 'react'
+import { Range, Editor, Transforms, BaseOperation } from 'slate'
+import { ReactEditor, useSlate } from 'slate-react'
 import { chordTagMap, type BoardChord, pitchToChordType } from '@buitar/to-guitar'
 import { getNoteAndTag, getTapsByChordName, strsToTaps } from './utils'
-import { PopoverList, popoverListShow } from './components/popover-list'
-import { PopoverTapsItem } from './components/taps-item'
-import { CustomInlineChordElement } from './custom-types'
+import { Popover, type PopoverRefs } from './components/popover'
+import { TapsListItem } from './components/taps-item'
+import { List } from './components/list'
 
 const tags = Array.from(chordTagMap.keys())
 
 type ChordInputTag = '' | '/c' | '/C' | '/x' | '/X'
 
-export const useInlineChord = (editor: CustomTypes['Editor']) => {
-  const customRef = useRef<HTMLDivElement | null>()
-  const tagRef = useRef<HTMLDivElement | null>()
-  const tapsRef = useRef<HTMLDivElement | null>()
+export const InlineChordPopover: FC = () => {
+  const editor = useSlate()
+  const customRef = useRef<PopoverRefs>(null)
+  const tagRef = useRef<PopoverRefs>(null)
+  const tapsRef = useRef<PopoverRefs>(null)
   const [inputTag, setInputTag] = useState<ChordInputTag | null>()
   const [target, setTarget] = useState<Range | null>()
   const [search, setSearch] = useState('')
@@ -88,6 +89,7 @@ export const useInlineChord = (editor: CustomTypes['Editor']) => {
     )
   }, [search, target])
 
+  /**输入检测 input tag 显示Popover菜单*/
   useEffect(() => {
     if (inputTag === '/C' || inputTag === '/c') {
       // 1. 自选和弦
@@ -96,28 +98,27 @@ export const useInlineChord = (editor: CustomTypes['Editor']) => {
       }
 
       if (target && tagRef.current) {
-        const el = tagRef.current
         const domRange = ReactEditor.toDOMRange(editor, target)
         const rect = domRange.getBoundingClientRect()
-        popoverListShow(el, rect)
+        tagRef.current.show(rect)
       }
     } else if (inputTag === '/X' || inputTag === '/x') {
       // 2. 自定义和弦
       if (target && customRef.current) {
-        const el = customRef.current
         const domRange = ReactEditor.toDOMRange(editor, target)
         const rect = domRange.getBoundingClientRect()
-        popoverListShow(el, rect)
+        customRef.current.show(rect)
       }
     }
   }, [editor, search, selectedChord, target])
 
+  /**根据 input tag 显示对应 taps */
   useEffect(() => {
     if (chordTapList.length && tapsRef.current && target) {
-      const el = tapsRef.current
       const domRange = ReactEditor.toDOMRange(editor, target)
       const rect = domRange.getBoundingClientRect()
-      popoverListShow(el, rect)
+      tapsRef.current.show(rect)
+
     }
   }, [chordTapList])
 
@@ -198,84 +199,44 @@ export const useInlineChord = (editor: CustomTypes['Editor']) => {
       originalOnChange(options)
       onChange()
     }
-  }, [editor])
+  }, [editor, onChange])
 
-  const ChordPopover = () => {
-    if (!target || !search) {
-      return null
-    }
-
-    if (inputTag === '/c' || inputTag === '/C') {
-      if (chordTapList.length) {
-        return (
-          <PopoverList
-            ref={tapsRef as Ref<HTMLDivElement>}
-            data-cy="taps-portal"
-            lists={chordTapList}
-            renderItem={(taps) => <PopoverTapsItem taps={taps} />}
-            onItemClick={onSelectTaps}
-            style={{ maxHeight: '360px' }}
-          ></PopoverList>
-        )
-      } else if (chordList.length) {
-        return (
-          <PopoverList
-            ref={tagRef as Ref<HTMLDivElement>}
-            data-cy="tags-portal"
-            lists={chordList}
-            onItemClick={onSelectChord}
-          ></PopoverList>
-        )
-      }
-    } else if (inputTag === '/X' || inputTag === '/x') {
-      return (
-        customChordTapList.length && (
-          <PopoverList
-            ref={customRef as Ref<HTMLDivElement>}
-            data-cy="frets-portal"
-            lists={customChordTapList}
-            renderItem={(taps) => <PopoverTapsItem taps={taps} size={140} />}
-            onItemClick={onSelectTaps}
-            style={{ maxHeight: '360px' }}
-          ></PopoverList>
-        )
-      )
-    }
-
+  /**输入检测 input tag 并设置 target 和 search*/
+  if (!target || !search) {
     return null
   }
 
-  return {
-    onChange,
-    ChordPopover,
-  }
-}
-
-export const withChords = (editor: CustomTypes['Editor']) => {
-  const { isInline, isVoid, markableVoid } = editor
-
-  editor.isInline = (element: CustomTypes['Element']) => {
-    return element.type === 'inline-chord' ? true : isInline(element)
-  }
-
-  editor.isVoid = (element: CustomTypes['Element']) => {
-    return element.type === 'inline-chord' ? true : isVoid(element)
-  }
-
-  editor.markableVoid = (element: CustomTypes['Element']) => {
-    return element.type === 'inline-chord' || markableVoid(element)
-  }
-
-  editor.insertInlineChord = (taps: BoardChord, concise?: boolean) => {
-    const chord: CustomInlineChordElement = {
-      type: 'inline-chord',
-      taps,
-      concise: !!concise,
-      children: [{ text: '' }],
+  if (inputTag === '/c' || inputTag === '/C') {
+    if (chordTapList.length) {
+      return (
+        <Popover ref={tapsRef} data-cy="taps-portal" style={{ maxHeight: '360px' }}>
+          <List
+            lists={chordTapList}
+            renderItem={(taps) => <TapsListItem taps={taps} />}
+            onItemClick={onSelectTaps}
+          ></List>
+        </Popover>
+      )
+    } else if (chordList.length) {
+      return (
+        <Popover ref={tagRef} data-cy="tags-portal">
+          <List lists={chordList} onItemClick={onSelectChord}></List>
+        </Popover>
+      )
     }
-    Transforms.insertNodes(editor, chord)
-    Transforms.move(editor)
+  } else if (inputTag === '/X' || inputTag === '/x') {
+    return (
+      customChordTapList.length && (
+        <Popover ref={customRef} data-cy="frets-portal" style={{ maxHeight: '360px' }}>
+          <List
+            lists={customChordTapList}
+            renderItem={(taps) => <TapsListItem taps={taps} size={140} />}
+            onItemClick={onSelectTaps}
+          ></List>
+        </Popover>
+      )
+    )
   }
 
-  return editor
+  return null
 }
