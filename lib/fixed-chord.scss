@@ -1,0 +1,31 @@
+.fixed-container {
+  height: 1.8rem;
+  display: flex;
+  padding: 0;
+}
+
+.fixed-menu-group {
+  display: flex;
+
+  &:not(:last-child) {
+    border-right: 1px solid #ededed;
+  }
+}
+
+.fixed-menu-item {
+  min-width: calc(1.8rem - 4px);
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  opacity: 0.6;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  &:hover,
+  &:active,
+  &--active {
+    background: #f6f6f6;
+    opacity: 1;
+  }
+}

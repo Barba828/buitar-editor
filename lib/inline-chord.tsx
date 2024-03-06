@@ -2,14 +2,22 @@ import { useState, useRef, useMemo, useEffect, useCallback, FC } from 'react'
 import { Range, Editor, Transforms, BaseOperation } from 'slate'
 import { ReactEditor, useSlate } from 'slate-react'
 import { chordTagMap, type BoardChord, pitchToChordType } from '@buitar/to-guitar'
-import { getNoteAndTag, getTapsByChordName, strsToTaps } from './utils'
+import { getChordName, getNoteAndTag, getTapsByChordName, strsToTaps } from './utils'
 import { Popover, type PopoverRefs } from './components/popover'
 import { TapsListItem } from './components/taps-item'
 import { List } from './components/list'
 
-const tags = Array.from(chordTagMap.keys())
+/**
+ * c - chord 自选inline和弦
+ * x - custom 自定义inline和弦
+ * t - tap 自选fixed和弦
+ * r - rest 自定义fixed和弦
+ * Uppercase - 详情和弦卡片
+ */
+type ChordInputTag = '' | '/c' | '/C' | '/x' | '/X' | '/t' | '/T' | '/r' | '/R'
 
-type ChordInputTag = '' | '/c' | '/C' | '/x' | '/X'
+const tags = Array.from(chordTagMap.keys())
+const inputTags: ChordInputTag[] = ['/c', '/C', '/x', '/X', '/t', '/T', '/r', '/R']
 
 export const InlineChordPopover: FC = () => {
   const editor = useSlate()
@@ -21,12 +29,19 @@ export const InlineChordPopover: FC = () => {
   const [search, setSearch] = useState('')
   const [selectedChord, setSelectedChord] = useState('')
 
-  /**Chord Tag 列表 */
+  const isConcise = useMemo(() => {
+    return inputTag === inputTag?.toLowerCase()
+  }, [inputTag])
+  const isCustom = useMemo(() => {
+    return inputTag === '/X' || inputTag === '/x' || inputTag === '/R' || inputTag === '/r'
+  }, [inputTag])
+  const isFixed = useMemo(() => {
+    return inputTag === '/T' || inputTag === '/t' || inputTag === '/R' || inputTag === '/r'
+  }, [inputTag])
+
+  /**根据 search => Chord Tag 列表 */
   const chordList = useMemo(() => {
-    if (inputTag !== '/C' && inputTag !== '/c') {
-      return []
-    }
-    if (!search.length) {
+    if (!inputTag || !search || isCustom) {
       return []
     }
     if (!['C', 'D', 'E', 'F', 'G', 'A', 'B'].includes(search[0].toLocaleUpperCase())) {
@@ -38,9 +53,9 @@ export const InlineChordPopover: FC = () => {
       return ['', 'b', '#', ...tags.slice(1)].map((t) => note + t)
     }
     return tags.filter((t) => t.includes(tag)).map((t) => note + t)
-  }, [search, target])
+  }, [search, target, inputTag])
 
-  /**选中Tag后 Chord Taps 列表 */
+  /**根据 selectedChord => Chord Taps 列表 */
   const chordTapList = useMemo<BoardChord[]>(() => {
     if (!selectedChord.length) {
       return []
@@ -50,7 +65,7 @@ export const InlineChordPopover: FC = () => {
 
   /**自定义 Chord Taps 列表 */
   const customChordTapList = useMemo<BoardChord[]>(() => {
-    if (inputTag !== '/X' && inputTag !== '/x') {
+    if (!isCustom) {
       return []
     }
     if (!search.length || search.length > 6) {
@@ -91,18 +106,21 @@ export const InlineChordPopover: FC = () => {
 
   /**输入检测 input tag 显示Popover菜单*/
   useEffect(() => {
-    if (inputTag === '/C' || inputTag === '/c') {
+    if (!inputTag) {
+      return
+    }
+    if (!isCustom) {
       // 1. 自选和弦
       if (search !== selectedChord && selectedChord.length) {
+        // search变动时，隐藏后续taps，继续根据search选择tag
         setSelectedChord('')
       }
-
       if (target && tagRef.current) {
         const domRange = ReactEditor.toDOMRange(editor, target)
         const rect = domRange.getBoundingClientRect()
         tagRef.current.show(rect)
       }
-    } else if (inputTag === '/X' || inputTag === '/x') {
+    } else {
       // 2. 自定义和弦
       if (target && customRef.current) {
         const domRange = ReactEditor.toDOMRange(editor, target)
@@ -118,7 +136,6 @@ export const InlineChordPopover: FC = () => {
       const domRange = ReactEditor.toDOMRange(editor, target)
       const rect = domRange.getBoundingClientRect()
       tapsRef.current.show(rect)
-
     }
   }, [chordTapList])
 
@@ -144,7 +161,13 @@ export const InlineChordPopover: FC = () => {
   const onSelectTaps = (taps: BoardChord) => {
     if (target) {
       Transforms.select(editor, target)
-      editor.insertInlineChord?.(taps, inputTag === '/c' || inputTag === '/x')
+      if (isFixed) {
+        const title = getChordName(taps.chordType)
+        editor.insertFixedChord?.(title, taps, isConcise)
+      } else {
+        editor.insertInlineChord?.(taps, isConcise)
+      }
+
       setTarget(null)
       setSelectedChord('')
     }
@@ -160,17 +183,12 @@ export const InlineChordPopover: FC = () => {
     const lineBefore = Editor.before(editor, start, { unit: 'line' })
     const beforeLine = Editor.string(editor, Editor.range(editor, start, lineBefore))
 
-    let slashTag = ''
-    if (beforeLine.includes('/c')) {
-      slashTag = '/c'
-    } else if (beforeLine.includes('/C')) {
-      slashTag = '/C'
-    } else if (beforeLine.includes('/x')) {
-      slashTag = '/x'
-    } else if (beforeLine.includes('/X')) {
-      slashTag = '/X'
-    } else {
+    // 当前range下的slashTag「/c...」
+    const slashTag = inputTags.find((tag) => beforeLine.includes(tag))
+    if (!slashTag) {
       setTarget(null)
+      setSearch('')
+      setInputTag('')
       return
     }
     // 前面取到「/c」
@@ -202,11 +220,11 @@ export const InlineChordPopover: FC = () => {
   }, [editor, onChange])
 
   /**输入检测 input tag 并设置 target 和 search*/
-  if (!target || !search) {
+  if (!target || !search || !inputTag) {
     return null
   }
 
-  if (inputTag === '/c' || inputTag === '/C') {
+  if (!isCustom) {
     if (chordTapList.length) {
       return (
         <Popover ref={tapsRef} data-cy="taps-portal" style={{ maxHeight: '360px' }}>
@@ -224,7 +242,7 @@ export const InlineChordPopover: FC = () => {
         </Popover>
       )
     }
-  } else if (inputTag === '/X' || inputTag === '/x') {
+  } else {
     return (
       customChordTapList.length && (
         <Popover ref={customRef} data-cy="frets-portal" style={{ maxHeight: '360px' }}>
@@ -237,6 +255,4 @@ export const InlineChordPopover: FC = () => {
       )
     )
   }
-
-  return null
 }

@@ -14,9 +14,7 @@
   border-radius: 4px;
   cursor: pointer;
   background: transparent;
-  transition-property: background;
-  transition-timing-function: ease;
-  transition-duration: 0.3s;
+  transition: all 0.3s ease;
   &:active,
   &--active {
     background: #444 !important;
@@ -54,7 +52,6 @@
 
 .fixed-taps-item {
   position: relative;
-  text-decoration: underline;
   display: inline-block;
   padding-top: 60px;
 }

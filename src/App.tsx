@@ -17,27 +17,27 @@ import './App.css'
 const App = () => {
   const editor = useMemo(() => withChords(withHistory(withReact(createEditor()))), [])
   const [value] = useState<Descendant[]>([
-    {
-      type: 'paragraph',
-      children: [
-        { text: 'There is an empty chord card here' },
-        {
-          type: 'inline-chord',
-          children: [{ text: '' }],
-          taps: { chordType: { name: '', name_zh: '', tag: '' }, chordTaps: [] },
-        },
-        { text: ", try typing '/c' and 'G' to get the G chord in the sentence." },
-      ],
-    },
+    // {
+    //   type: 'paragraph',
+    //   children: [
+    //     { text: 'There is an empty chord card here' },
+    //     {
+    //       type: 'inline-chord',
+    //       children: [{ text: '' }],
+    //       taps: { chordType: { name: '', name_zh: '', tag: '' }, chordTaps: [] },
+    //     },
+    //     { text: ", try typing '/c' and 'G' to get the G chord in the sentence." },
+    //   ],
+    // },
     {
       type: 'paragraph',
       children: [
         { text: 'This is ' },
-        {
-          text: 'G chord',
-          underlined: true,
-          taps: { chordType: { name: '', name_zh: '', tag: '' }, chordTaps: [] },
-        },
+        // {
+        //   text: 'G chord',
+        //   underlined: true,
+        //   taps: { chordType: { name: '', name_zh: '', tag: '' }, chordTaps: [] },
+        // },
         { text: ' popover.'},
       ],
     },
@@ -47,7 +47,7 @@ const App = () => {
   const renderLeaf = useCallback((props: RenderLeafProps) => <Leaf {...props} />, [])
 
   return (
-    <Slate editor={editor} initialValue={value}>
+    <Slate editor={editor} initialValue={value} onChange={(value) => console.log(value)}>
       <Editable className="slate-editable" renderElement={renderElement} renderLeaf={renderLeaf} />
       <FixedChordPopover />
       <InlineChordPopover/>

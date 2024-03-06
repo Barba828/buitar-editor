@@ -1,5 +1,5 @@
 import type { BoardChord } from '@buitar/to-guitar'
-import { type CustomTypes, Transforms } from 'slate'
+import { type CustomTypes, Transforms, Editor } from 'slate'
 import type { CustomInlineChordElement, CustomText } from './custom-types'
 
 export const withChords = (editor: CustomTypes['Editor']) => {
@@ -34,11 +34,19 @@ export const withChords = (editor: CustomTypes['Editor']) => {
       return
     }
     const chord: CustomText = {
+      text: text,
       taps,
+      underlined: true,
       concise: !!concise,
-      text: '',
     }
+
     Transforms.insertNodes(editor, chord)
+
+    Editor.removeMark(editor, 'underlined')
+    Editor.removeMark(editor, 'taps')
+    Editor.removeMark(editor, 'concise')
+
+    editor.insertText(' ') // 插入空格并移除 underlined 等效果
     Transforms.move(editor)
   }
 

@@ -10,7 +10,10 @@ import './components.scss'
 // }
 
 export interface PopoverRefs {
-  show: (elRect: Pick<DOMRect, 'left' | 'right' | 'top' | 'bottom'>) => void
+  show: (
+    elRect: Parameters<typeof popoverRefShow>[1],
+    option?: Parameters<typeof popoverRefShow>[2]
+  ) => void
   hide: () => void
 }
 
@@ -19,11 +22,11 @@ export const Popover = forwardRef<PopoverRefs, Omit<HTMLProps<HTMLDivElement>, '
     const containerRef = useRef<HTMLDivElement>()
 
     useImperativeHandle(ref, () => ({
-      show(elRect) {
+      show(elRect, option) {
         if (!containerRef.current) {
           return
         }
-        popoverRefShow(containerRef.current, elRect)
+        popoverRefShow(containerRef.current, elRect, option)
       },
       hide() {
         if (!containerRef.current) {
@@ -38,7 +41,7 @@ export const Popover = forwardRef<PopoverRefs, Omit<HTMLProps<HTMLDivElement>, '
         <div
           {...props}
           ref={containerRef as LegacyRef<HTMLDivElement>}
-          className={cx("popover-container", props.className)}
+          className={cx('popover-container', props.className)}
           tabIndex={0}
         >
           {children}
@@ -50,12 +53,17 @@ export const Popover = forwardRef<PopoverRefs, Omit<HTMLProps<HTMLDivElement>, '
 
 const popoverRefShow = (
   popEl: HTMLElement,
-  triggerRect: Pick<DOMRect, 'left' | 'right' | 'top' | 'bottom'>
+  triggerRect: Pick<DOMRect, 'left' | 'right' | 'top' | 'bottom'>,
+  option: {
+    placement?: 'top' | 'bottom'
+  } = {}
 ) => {
   const { left, right, top, bottom } = triggerRect
   const { width, height } = popEl.getBoundingClientRect()
+  const { placement = 'bottom' } = option
 
   popEl.style.opacity = '1'
+  // 默认和target左对齐
   if (left + width < window.innerWidth) {
     popEl.style.left = `${left + window.scrollX}px`
     popEl.style.right = 'unset'
@@ -63,11 +71,17 @@ const popoverRefShow = (
     popEl.style.right = `${window.innerWidth - right - window.scrollX}px`
     popEl.style.left = 'unset'
   }
-  if (bottom + height < window.innerHeight) {
+
+  // 1. 默认对齐target底部bottom，如果popover超出屏幕底部则对齐target顶部
+  // 2. 对齐target顶部top，如果popover不超出屏幕顶部则对齐target顶部
+  if (
+    (placement === 'bottom' && bottom + height < window.innerHeight) ||
+    (placement === 'top' && top - height < 0)
+  ) {
     popEl.style.top = `${bottom + window.scrollY + 6}px`
     popEl.style.bottom = 'unset'
   } else {
-    popEl.style.bottom = `${window.innerHeight - top - window.scrollY - 6}px`
+    popEl.style.bottom = `${window.innerHeight - top - window.scrollY + 6}px`
     popEl.style.top = 'unset'
   }
 }

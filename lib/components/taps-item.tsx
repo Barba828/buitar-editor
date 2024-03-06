@@ -38,6 +38,7 @@ export const InlineTapsItem = ({ attributes, element, children }: RenderElementP
   return (
     <span {...attributes} data-taps-title={title}>
       <SvgChord
+        contentEditable={false}
         points={transToSvgPoints(taps.chordTaps)}
         size={60}
         concise={concise}
@@ -61,6 +62,7 @@ export const FixedTapsItem = ({ leaf, children }: RenderLeafProps) => {
   return (
     <span className="fixed-taps-item" data-taps-title={title}>
       <SvgChord
+        contentEditable={false}
         points={transToSvgPoints(taps.chordTaps)}
         size={60}
         concise={concise}
