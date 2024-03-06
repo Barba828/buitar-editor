@@ -10,37 +10,32 @@ import {
   DefaultLeaf,
 } from 'slate-react'
 import { withHistory } from 'slate-history'
-import { withChords, InlineChordPopover, FixedChordPopover, InlineChordElement, FixedChordLeaf } from '../lib'
+import {
+  withChords,
+  InlineChordPopover,
+  FixedChordPopover,
+  InlineChordElement,
+  FixedChordLeaf,
+} from '../lib'
 
 import './App.css'
+import yellowJson from './yellow.json'
 
 const App = () => {
   const editor = useMemo(() => withChords(withHistory(withReact(createEditor()))), [])
   const [value] = useState<Descendant[]>([
-    // {
-    //   type: 'paragraph',
-    //   children: [
-    //     { text: 'There is an empty chord card here' },
-    //     {
-    //       type: 'inline-chord',
-    //       children: [{ text: '' }],
-    //       taps: { chordType: { name: '', name_zh: '', tag: '' }, chordTaps: [] },
-    //     },
-    //     { text: ", try typing '/c' and 'G' to get the G chord in the sentence." },
-    //   ],
-    // },
     {
       type: 'paragraph',
       children: [
-        { text: 'This is ' },
-        // {
-        //   text: 'G chord',
-        //   underlined: true,
-        //   taps: { chordType: { name: '', name_zh: '', tag: '' }, chordTaps: [] },
-        // },
-        { text: ' popover.'},
+        { text: 'There is an empty chord card here' },
+        {
+          type: 'inline-chord',
+          children: [{ text: '' }],
+          taps: { chordType: { name: '', name_zh: '', tag: '' }, chordTaps: [] },
+        },
       ],
     },
+    ...(yellowJson as Descendant[]),
   ])
   // const { ChordPopover } = useInlineChord(editor)
   const renderElement = useCallback((props: RenderElementProps) => <Element {...props} />, [])
@@ -50,7 +45,7 @@ const App = () => {
     <Slate editor={editor} initialValue={value} onChange={(value) => console.log(value)}>
       <Editable className="slate-editable" renderElement={renderElement} renderLeaf={renderLeaf} />
       <FixedChordPopover />
-      <InlineChordPopover/>
+      <InlineChordPopover />
     </Slate>
   )
 }
