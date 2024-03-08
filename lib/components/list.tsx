@@ -1,4 +1,4 @@
-import { HTMLProps, useCallback, useEffect, useState } from 'react'
+import { HTMLProps, useCallback, useEffect, useRef, useState } from 'react'
 import cx from 'classnames'
 
 import './components.scss'
@@ -16,6 +16,7 @@ export function List<T>({
   onItemClick,
   ...props
 }: ListProp<T>) {
+  const ref = useRef<HTMLDivElement>(null)
   const [checkedIndex, setCheckedIndex] = useState(0)
 
   const handleClickItem = useCallback(
@@ -54,6 +55,31 @@ export function List<T>({
     [checkedIndex, handleClickItem, lists]
   )
 
+  /**容器内滚动 */
+  useEffect(() => {
+    if (!ref.current || !lists?.length) {
+      return
+    }
+    const container = ref.current.parentElement || ref.current
+    const checkedTarget = ref.current.children[checkedIndex]
+    const { top, bottom } = container.getBoundingClientRect()
+    const { top: targetTop, bottom: targetBottom } = checkedTarget.getBoundingClientRect()
+
+    if (targetTop < top) {
+      checkedTarget.scrollIntoView({
+        block: 'start',
+        inline: 'nearest',
+        behavior: checkedIndex === 0 ? 'instant' : 'smooth',
+      })
+    } else if (targetBottom > bottom) {
+      checkedTarget.scrollIntoView({
+        block: 'end',
+        inline: 'nearest',
+        behavior: checkedIndex === lists.length - 1 ? 'instant' : 'smooth',
+      })
+    }
+  }, [checkedIndex, lists])
+
   useEffect(() => {
     setCheckedIndex(0)
   }, [lists])
@@ -69,21 +95,18 @@ export function List<T>({
         key={index}
         onClick={() => handleClickItem(item, index)}
         onMouseEnter={() => setCheckedIndex(index)}
-        className={cx('popover-item', index === checkedIndex && 'popover-item--active')}
+        className={cx('list-item', index === checkedIndex && 'list-item--active')}
         data-key={index}
       >
         {propRenderItem ? propRenderItem(item, index) : String(item)}
       </div>
     )
   }
-  const renderElement = () => {
-    return <>{lists?.map((it, i) => renderItem(it, i))}</>
-  }
 
   return (
-    <div {...props}>
+    <div {...props} ref={ref} className="chord-list">
       {children}
-      {renderElement()}
+      {lists?.map(renderItem)}
     </div>
   )
 }

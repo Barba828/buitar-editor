@@ -78,10 +78,10 @@ const popoverRefShow = (
     (placement === 'bottom' && bottom + height < window.innerHeight) ||
     (placement === 'top' && top - height < 0)
   ) {
-    popEl.style.top = `${bottom + window.scrollY + 6}px`
+    popEl.style.top = `${bottom + window.scrollY + 10}px`
     popEl.style.bottom = 'unset'
   } else {
-    popEl.style.bottom = `${window.innerHeight - top - window.scrollY + 6}px`
+    popEl.style.bottom = `${window.innerHeight - top - window.scrollY + 10}px`
     popEl.style.top = 'unset'
   }
 }

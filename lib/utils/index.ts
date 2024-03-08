@@ -1,8 +1,8 @@
 import type { ChordType, Point, Tone } from '@buitar/to-guitar'
-import type { SvgChordPoint } from '@buitar/svg-chord'
-import { rootToChord, transChordTaps, Board } from '@buitar/to-guitar'
+import { rootToChord, transChordTaps, Board, chordTagMap } from '@buitar/to-guitar'
 
 const _board = new Board()
+const tags = Array.from(chordTagMap.keys())
 
 /**
  * 根据pitch获取note
@@ -34,6 +34,31 @@ export const getNoteAndTag = (str: string) => {
   }
 }
 
+/**
+ * 根据搜索文本获取推荐和弦名称（note + tag）列表
+ * @param search 
+ * @returns 
+ */
+export const getChordListByStr = (search: string) => {
+  if (!search) {
+    return []
+  }
+  if (!['C', 'D', 'E', 'F', 'G', 'A', 'B'].includes(search[0].toLocaleUpperCase())) {
+    return []
+  }
+
+  const { note, tag } = getNoteAndTag(search)
+  if (search.length === 1) {
+    return ['', 'b', '#', ...tags.slice(1)].map((t) => note + t)
+  }
+  return tags.filter((t) => t.includes(tag)).map((t) => note + t)
+}
+
+/**
+ * 根据和弦名称获取taps列表
+ * @param chordName 
+ * @returns 
+ */
 export const getTapsByChordName = (chordName: string) => {
   if (!chordName.length) {
     return []
@@ -58,47 +83,6 @@ export const getChordName = (chordType: ChordType): string => {
       chordType.tone || 0
     )}`
   }
-}
-
-/**
- * ToGuitar.Point => SvgChord.Point
- * @param point
- * @returns
- */
-export const transToSvgPoint = (point: Point): SvgChordPoint => {
-  return {
-    fret: point.grade,
-    string: point.string,
-    tone: point.note,
-  }
-}
-
-/**
- * ToGuitar.Point[] => SvgChord.Point[]
- * @param points
- * @param stringNums 弦数
- * @returns
- */
-export const transToSvgPoints = (points: Point[], stringNums: number = 6): SvgChordPoint[] => {
-  const svgPoints = points.map(transToSvgPoint)
-  return makeUpGuitarPoints(svgPoints, stringNums)
-}
-
-/**
- * 补全String数
- */
-export const makeUpGuitarPoints = (points: SvgChordPoint[], num: number): SvgChordPoint[] => {
-  return new Array(num).fill(0).map((_, index) => {
-    const idx = points.findIndex((point) => point.string === index + 1)
-    if (idx === -1) {
-      return {
-        fret: -1,
-        string: index + 1,
-      }
-    } else {
-      return points[idx]
-    }
-  })
 }
 
 /**

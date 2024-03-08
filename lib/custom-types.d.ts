@@ -4,8 +4,9 @@ import type { HistoryEditor } from 'slate-history'
 import type { BoardChord } from '@buitar/to-guitar'
 
 type CustomChordType = {
-  taps?: BoardChord
+  taps: BoardChord
   concise?: boolean
+  popover?: boolean
 }
 
 type CustomElement = { type: 'paragraph'; children: Descendant[] }
@@ -18,12 +19,14 @@ type CustomText = {
   italic?: boolean
   code?: boolean
   underlined?: boolean
+  strike?: boolean
   text: string
-} & CustomChordType
+  chord?: CustomChordType
+}
 
 type CustomEditor = {
   insertInlineChord?: (taps: BoardChord, concise?: boolean) => void
-  insertFixedChord?: (text: string, taps: BoardChord, concise?: boolean) => void
+  insertFixedChord?: (text: string, chord: CustomText['chord']) => void
 }
 
 declare module 'slate' {

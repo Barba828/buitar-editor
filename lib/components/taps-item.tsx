@@ -2,9 +2,10 @@ import { memo } from 'react'
 import { type BoardChord } from '@buitar/to-guitar'
 import { SvgChord } from '@buitar/svg-chord'
 import { RenderElementProps, RenderLeafProps, useFocused, useSelected } from 'slate-react'
-import { getChordName, transToSvgPoints } from '../utils'
+import { getChordName } from '../utils'
 import { CustomInlineChordElement } from '../custom-types'
 import { isLightMode } from '../utils/media-query'
+import { transToSvgPoints } from '../utils/trans-svg'
 import cx from 'classnames'
 import './components.scss'
 
@@ -53,21 +54,21 @@ export const InlineTapsItem = ({ attributes, element, children }: RenderElementP
 }
 
 export const FixedTapsItem = ({ leaf, children }: RenderLeafProps) => {
-  const { taps, concise } = leaf
-  if (!taps) {
+  if (!leaf?.chord || !leaf.chord?.taps) {
     return children
   }
+  const { taps, concise, popover } = leaf.chord
   const title = getChordName(taps.chordType)
 
   return (
-    <span className="fixed-taps-item" data-taps-title={title}>
+    <span className={cx('fixed-taps-item', popover && 'popover-taps-item')} data-taps-title={title}>
       <SvgChord
         contentEditable={false}
         points={transToSvgPoints(taps.chordTaps)}
         size={60}
         concise={concise}
         title={title}
-        className={cx('fixed-taps-item__fixed')}
+        className={cx('fixed-taps-item__fixed', popover && 'popover-taps-item__fixed')}
         color={isLightMode() ? '#444' : '#ddd'}
         style={{ padding: concise ? undefined : '2px 3px' }}
       />

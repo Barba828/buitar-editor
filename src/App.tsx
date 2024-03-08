@@ -10,13 +10,8 @@ import {
   DefaultLeaf,
 } from 'slate-react'
 import { withHistory } from 'slate-history'
-import {
-  withChords,
-  InlineChordPopover,
-  FixedChordPopover,
-  InlineChordElement,
-  FixedChordLeaf,
-} from '../lib'
+import { withChords, InlineChordPopover, InlineChordElement, FixedChordLeaf } from '../lib'
+import { HoverToolbar } from './components/hover-toolbar'
 
 import './App.css'
 import yellowJson from './yellow.json'
@@ -37,14 +32,14 @@ const App = () => {
     },
     ...(yellowJson as Descendant[]),
   ])
-  // const { ChordPopover } = useInlineChord(editor)
+
   const renderElement = useCallback((props: RenderElementProps) => <Element {...props} />, [])
   const renderLeaf = useCallback((props: RenderLeafProps) => <Leaf {...props} />, [])
 
   return (
     <Slate editor={editor} initialValue={value} onChange={(value) => console.log(value)}>
       <Editable className="slate-editable" renderElement={renderElement} renderLeaf={renderLeaf} />
-      <FixedChordPopover />
+      <HoverToolbar />
       <InlineChordPopover />
     </Slate>
   )
@@ -77,7 +72,15 @@ const Leaf = (props: RenderLeafProps) => {
     children = <u>{children}</u>
   }
 
-  if (leaf.taps) {
+  if (leaf.strike) {
+    children = <s>{children}</s>
+  }
+
+  if (leaf.code) {
+    children = <code>{children}</code>
+  }
+
+  if (leaf.chord) {
     children = <FixedChordLeaf {...props}>{children}</FixedChordLeaf>
   }
 

@@ -28,23 +28,20 @@ export const withChords = (editor: CustomTypes['Editor']) => {
     Transforms.move(editor)
   }
 
-  editor.insertFixedChord = (text: string, taps: BoardChord, concise?: boolean) => {
-    if (!taps) {
+  editor.insertFixedChord = (text: string, chord: CustomText['chord']) => {
+    if (!chord || !chord.taps) {
       editor.insertText(text)
       return
     }
-    const chord: CustomText = {
+    const chordText: CustomText = {
       text: text,
-      taps,
-      underlined: true,
-      concise: !!concise,
+      chord: chord,
     }
 
-    Transforms.insertNodes(editor, chord)
+    Transforms.insertNodes(editor, chordText)
 
     Editor.removeMark(editor, 'underlined')
-    Editor.removeMark(editor, 'taps')
-    Editor.removeMark(editor, 'concise')
+    Editor.removeMark(editor, 'chord')
 
     editor.insertText(' ') // 插入空格并移除 underlined 等效果
     Transforms.move(editor)

@@ -2,22 +2,24 @@
   position: absolute;
   z-index: 999;
   padding: 4px;
-  max-height: 200px;
+  max-height: 360px;
   overflow-y: scroll;
   background-color: #222;
   border-radius: 4px;
-  box-shadow: 0 1px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
 }
 
-.popover-item {
-  padding: 1px 4px;
-  border-radius: 4px;
-  cursor: pointer;
-  background: transparent;
-  transition: all 0.3s ease;
-  &:active,
-  &--active {
-    background: #444 !important;
+.chord-list {
+  .list-item {
+    padding: 1px 4px;
+    border-radius: 4px;
+    cursor: pointer;
+    background: transparent;
+    transition: all 0.3s ease;
+    &:active,
+    &--active {
+      background: #444 !important;
+    }
   }
 }
 
@@ -44,6 +46,7 @@
   border-radius: 8px;
   background: #333;
   margin: 0.2rem 0.5rem;
+  cursor: pointer;
   &:active,
   &--active {
     background: #444;
@@ -54,6 +57,11 @@
   position: relative;
   display: inline-block;
   padding-top: 60px;
+  cursor: pointer;
+  &:hover,
+  &:active {
+    border-bottom: 1px dashed #aaa;
+  }
 }
 
 .fixed-taps-item__fixed {
@@ -69,11 +77,27 @@
   }
 }
 
+.popover-taps-item {
+  position: relative;
+  display: inline;
+  padding-top: unset;
+  opacity: 0.8;
+  &:hover .popover-taps-item__fixed {
+    opacity: 1;
+  }
+}
+
+.popover-taps-item__fixed {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background: #444;
+}
+
 @media (prefers-color-scheme: light) {
   .popover-container {
     background-color: #fff;
   }
-  .popover-item {
+  .list-item {
     &:active,
     &--active {
       background: #eee !important;
@@ -91,5 +115,8 @@
     &--active {
       background: #eee;
     }
+  }
+  .popover-taps-item__fixed {
+    background: #fff;
   }
 }

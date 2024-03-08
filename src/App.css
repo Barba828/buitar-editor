@@ -3,16 +3,15 @@
 }
 
 .slate-editable {
-  height: auto;
-  min-height: 90vh;
+  height: 100%;
   width: 90vw;
+  min-height: 100vh;
   max-width: 800px;
-  margin: 5vh auto;
-  padding: 12px 24px;
+  margin: auto;
+  padding: 40px;
   box-sizing: border-box;
   outline: unset;
   background-color: #1a1a1a;
-  border-radius: 10px;
 }
 
 @media (prefers-color-scheme: light) {
