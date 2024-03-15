@@ -9,17 +9,15 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
 }
 
-.chord-list {
-  .list-item {
-    padding: 1px 4px;
-    border-radius: 4px;
-    cursor: pointer;
-    background: transparent;
-    transition: all 0.3s ease;
-    &:active,
-    &--active {
-      background: #444 !important;
-    }
+.chord-list-item {
+  padding: 1px 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  background: transparent;
+  transition: all 0.3s ease;
+  &:active,
+  &--active {
+    background: #444;
   }
 }
 
@@ -56,11 +54,13 @@
 .fixed-taps-item {
   position: relative;
   display: inline-block;
-  padding-top: 60px;
+  padding-top: 64px;
   cursor: pointer;
+  box-sizing: border-box;
   &:hover,
   &:active {
-    border-bottom: 1px dashed #aaa;
+    text-decoration: dashed underline #aaa;
+    text-underline-offset: 4px;
   }
 }
 
@@ -82,8 +82,11 @@
   display: inline;
   padding-top: unset;
   opacity: 0.8;
-  &:hover .popover-taps-item__fixed {
+  &:hover {
     opacity: 1;
+    .popover-taps-item__fixed {
+      opacity: 1;
+    }
   }
 }
 
@@ -97,10 +100,10 @@
   .popover-container {
     background-color: #fff;
   }
-  .list-item {
+  .chord-list-item {
     &:active,
     &--active {
-      background: #eee !important;
+      background: #eee;
     }
   }
   .inline-taps-item {

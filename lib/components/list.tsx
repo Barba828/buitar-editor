@@ -95,7 +95,7 @@ export function List<T>({
         key={index}
         onClick={() => handleClickItem(item, index)}
         onMouseEnter={() => setCheckedIndex(index)}
-        className={cx('list-item', index === checkedIndex && 'list-item--active')}
+        className={cx('chord-list-item', index === checkedIndex && 'chord-list-item--active')}
         data-key={index}
       >
         {propRenderItem ? propRenderItem(item, index) : String(item)}

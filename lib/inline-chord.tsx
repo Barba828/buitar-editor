@@ -1,27 +1,22 @@
-import { useState, useRef, useMemo, useEffect, useCallback, FC } from 'react'
+import { useState, useRef, useMemo, useEffect, useCallback, FC, memo } from 'react'
 import { Range, Editor, Transforms, BaseOperation } from 'slate'
 import { ReactEditor, useSlate } from 'slate-react'
 import { type BoardChord } from '@buitar/to-guitar'
 import { getChordName } from './utils'
 import { Popover, type PopoverRefs } from './components/popover'
 import { useSearchList } from './utils/use-search-list'
+import { inputTags, ChordInputTag } from './config'
 
-/**
- * c - chord 自选inline和弦
- * x - custom 自定义inline和弦
- * t - tap 自选fixed和弦
- * r - rest 自定义fixed和弦
- * Uppercase - 详情和弦卡片
- */
-type ChordInputTag = '' | '/c' | '/C' | '/x' | '/X' | '/t' | '/T' | '/r' | '/R'
-const inputTags: ChordInputTag[] = ['/c', '/C', '/x', '/X', '/t', '/T', '/r', '/R']
-
-export const InlineChordPopover: FC = () => {
+export const InlineChordPopover: FC = memo(() => {
   const editor = useSlate()
   const ref = useRef<PopoverRefs>(null)
   const [inputTag, setInputTag] = useState<ChordInputTag | null>()
   const [target, setTarget] = useState<Range | null>()
   const [search, setSearch] = useState('')
+
+  useEffect(() => {
+    onChange()
+  }, [])
 
   const isConcise = useMemo(() => {
     return inputTag === inputTag?.toLowerCase()
@@ -131,4 +126,4 @@ export const InlineChordPopover: FC = () => {
       {list}
     </Popover>
   )
-}
+})

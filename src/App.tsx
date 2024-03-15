@@ -10,7 +10,7 @@ import {
   DefaultLeaf,
 } from 'slate-react'
 import { withHistory } from 'slate-history'
-import { withChords, InlineChordPopover, InlineChordElement, FixedChordLeaf } from '../lib'
+import { withChords, InlineChordElement, FixedChordLeaf, SlashToolbar } from '../lib'
 import { HoverToolbar } from './components/hover-toolbar'
 
 import './App.css'
@@ -40,7 +40,7 @@ const App = () => {
     <Slate editor={editor} initialValue={value} onChange={(value) => console.log(value)}>
       <Editable className="slate-editable" renderElement={renderElement} renderLeaf={renderLeaf} />
       <HoverToolbar />
-      <InlineChordPopover />
+      <SlashToolbar />
     </Slate>
   )
 }
