@@ -36,8 +36,8 @@ export const getNoteAndTag = (str: string) => {
 
 /**
  * 根据搜索文本获取推荐和弦名称（note + tag）列表
- * @param search 
- * @returns 
+ * @param search
+ * @returns
  */
 export const getChordListByStr = (search: string) => {
   if (!search) {
@@ -56,8 +56,8 @@ export const getChordListByStr = (search: string) => {
 
 /**
  * 根据和弦名称获取taps列表
- * @param chordName 
- * @returns 
+ * @param chordName
+ * @returns
  */
 export const getTapsByChordName = (chordName: string) => {
   if (!chordName.length) {
@@ -100,4 +100,11 @@ export const strsToTaps = (strs: string[]) => {
       }
     })
     .filter((it) => !!it) as Point[]
+}
+
+/**string 单词首字母大写 */
+export const capitalizeEveryWord = (sentence: string) => {
+  return sentence.replace(/\b\w/g, function (char) {
+    return char.toUpperCase()
+  })
 }

@@ -3,14 +3,19 @@ import { type CustomTypes, Transforms, Editor } from 'slate'
 import type { CustomInlineChordElement, CustomText } from './custom-types'
 
 export const withChords = (editor: CustomTypes['Editor']) => {
-  const { isInline, isVoid, markableVoid } = editor
+  const { isInline, isVoid, markableVoid, isElementReadOnly, isSelectable } = editor
 
   editor.isInline = (element: CustomTypes['Element']) => {
     return element.type === 'inline-chord' ? true : isInline(element)
   }
-
   editor.isVoid = (element: CustomTypes['Element']) => {
     return element.type === 'inline-chord' ? true : isVoid(element)
+  }
+  editor.isElementReadOnly = (element: CustomTypes['Element']) => {
+    return element.type === 'inline-chord' ? true : isElementReadOnly(element)
+  }
+  editor.isSelectable = (element: CustomTypes['Element']) => {
+    return element.type === 'inline-chord' ? false : isSelectable(element)
   }
 
   editor.markableVoid = (element: CustomTypes['Element']) => {

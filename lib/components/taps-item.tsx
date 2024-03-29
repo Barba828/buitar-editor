@@ -2,27 +2,26 @@ import { memo } from 'react'
 import { type BoardChord } from '@buitar/to-guitar'
 import { SvgChord } from '@buitar/svg-chord'
 import { RenderElementProps, RenderLeafProps, useFocused, useSelected } from 'slate-react'
-import { getChordName } from '../utils'
+import { capitalizeEveryWord, getChordName } from '../utils'
 import { CustomInlineChordElement } from '../custom-types'
 import { isLightMode } from '../utils/media-query'
 import { transToSvgPoints } from '../utils/trans-svg'
 import cx from 'classnames'
 import './components.scss'
 
-export const TapsListItem = memo(({ taps, size = 100 }: { taps: BoardChord; size?: number }) => {
+export const TapsListItem = memo(({ taps, size = 80 }: { taps: BoardChord; size?: number }) => {
   return (
-    <div className="taps-list-item ">
+    <div className="taps-list-item">
       <SvgChord
         points={transToSvgPoints(taps.chordTaps)}
         size={size}
         concise={false}
         color={isLightMode() ? '#444' : '#ddd'}
       />
-      <p className="taps-list-item__title">
-        <span className="taps-list-item__note">{getChordName(taps.chordType)}</span>
-        <br />
-        <span className="taps-list-item__name">{taps.chordType.name}</span>
-      </p>
+      <div className="taps-list-item__wrap flex-center flex-column">
+        <div className="taps-list-item__note">{getChordName(taps.chordType)}</div>
+        <div className="taps-list-item__name">{capitalizeEveryWord(taps.chordType.name)}</div>
+      </div>
     </div>
   )
 })

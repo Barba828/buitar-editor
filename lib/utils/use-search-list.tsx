@@ -3,6 +3,7 @@ import { getChordListByStr, getTapsByChordName, strsToTaps } from './index'
 import { BoardChord, pitchToChordType } from '@buitar/to-guitar'
 import { List } from '../components/list'
 import { TapsListItem } from '../components/taps-item'
+import { ChordNameItem } from '../components/chord-name-item'
 
 /**
  * 根据search文本获取和弦列表Element
@@ -109,7 +110,7 @@ export const useSearchList = (options: {
     list = customChordTapList && (
       <List
         lists={customChordTapList}
-        renderItem={(taps) => <TapsListItem taps={taps} size={140} />}
+        renderItem={(taps) => <TapsListItem taps={taps} size={120} />}
         onItemClick={onTapItemClick}
       ></List>
     )
@@ -122,7 +123,13 @@ export const useSearchList = (options: {
       ></List>
     )
   } else if (chordList) {
-    list = <List lists={chordList} onItemClick={onChordItemClick}></List>
+    list = (
+      <List
+        lists={chordList}
+        onItemClick={onChordItemClick}
+        renderItem={(chordName) => <ChordNameItem chordName={chordName} />}
+      ></List>
+    )
   }
 
   return {

@@ -22,12 +22,13 @@ const App = () => {
     {
       type: 'paragraph',
       children: [
-        { text: 'There is an empty chord card here' },
+        { text: 'There is an empty chord card ' },
         {
           type: 'inline-chord',
           children: [{ text: '' }],
           taps: { chordType: { name: '', name_zh: '', tag: '' }, chordTaps: [] },
         },
+        { text: 'here' },
       ],
     },
     ...(yellowJson as Descendant[]),
@@ -36,8 +37,12 @@ const App = () => {
   const renderElement = useCallback((props: RenderElementProps) => <Element {...props} />, [])
   const renderLeaf = useCallback((props: RenderLeafProps) => <Leaf {...props} />, [])
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const onChange = useCallback((value: Descendant[]) => {
+    // console.log(value)
+  }, [])
   return (
-    <Slate editor={editor} initialValue={value} onChange={(value) => console.log(value)}>
+    <Slate editor={editor} initialValue={value} onChange={onChange}>
       <Editable className="slate-editable" renderElement={renderElement} renderLeaf={renderLeaf} />
       <HoverToolbar />
       <SlashToolbar />

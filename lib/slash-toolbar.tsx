@@ -9,25 +9,25 @@ import './slash-toolbar.scss'
 const defaultSlashMenu = [
   {
     type: 'chord',
-    key: '/CAm7',
+    key: '/CA',
     title: 'Inline Chord',
     desc: 'Insert Inline Chord',
   },
   {
     type: 'chord',
-    key: '/Xx02010',
+    key: '/X00',
     title: 'Inline Custom Chord',
     desc: 'Insert Inline Custom Chord',
   },
   {
     type: 'chord',
-    key: '/TAm7',
+    key: '/TA',
     title: 'Fixed Chord',
     desc: 'Insert Fixed Chord',
   },
   {
     type: 'chord',
-    key: '/Rx02010',
+    key: '/Rx00',
     title: 'Fixed Custom Chord',
     desc: 'Insert Fixed Custom Chord',
   },

@@ -1,3 +1,5 @@
+@import url('./common.scss');
+
 .popover-container {
   position: absolute;
   z-index: 999;
@@ -10,7 +12,7 @@
 }
 
 .chord-list-item {
-  padding: 1px 4px;
+  padding: 4px;
   border-radius: 4px;
   cursor: pointer;
   background: transparent;
@@ -26,10 +28,9 @@
   align-items: center;
   gap: 12px;
 }
-.taps-list-item__title {
+.taps-list-item__wrap {
   font-weight: bold;
   opacity: 0.6;
-  text-align: center;
   margin-right: 12px;
 }
 .taps-list-item__note {
@@ -45,6 +46,7 @@
   background: #333;
   margin: 0.2rem 0.5rem;
   cursor: pointer;
+  user-select: none;
   &:active,
   &--active {
     background: #444;
@@ -57,6 +59,7 @@
   padding-top: 64px;
   cursor: pointer;
   box-sizing: border-box;
+  user-select: none;
   &:hover,
   &:active {
     text-decoration: dashed underline #aaa;
@@ -71,6 +74,8 @@
   left: 50%;
   transform: translateX(-50%);
   border-radius: 8px;
+  user-select: none;
+  pointer-events: none;
   &:active,
   &--active {
     background: #333;
@@ -94,6 +99,28 @@
   opacity: 0;
   transition: opacity 0.3s ease;
   background: #444;
+}
+
+.chord-key-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+}
+.chord-key-item__title {
+  opacity: 0.6;
+}
+.chord-key-item__constitute {
+  display: flex;
+  gap: 2px;
+  .constitute-number {
+    border-radius: 2px;
+    font-size: 10px;
+    opacity: 0.6;
+    background: #444;
+    padding: 0 2px;
+    height: 14px;
+  }
 }
 
 @media (prefers-color-scheme: light) {
@@ -121,5 +148,11 @@
   }
   .popover-taps-item__fixed {
     background: #fff;
+  }
+
+  .chord-key-item__constitute {
+    .constitute-number {
+      background: #eee;
+    }
   }
 }
