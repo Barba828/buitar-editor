@@ -1,0 +1,22 @@
+blockquote {
+  margin-inline-start: unset;
+  margin-inline-end: unset;
+  margin-block-start: unset;
+  margin-block-end: unset;
+
+  padding-inline-start: 2em;
+  padding-inline-end: 1em;
+  padding-block-start: 1em;
+  padding-block-end: 1em;
+
+  border-left: 4px solid $gray-1;
+}
+
+code {
+  border-radius: 0.4em;
+  border: 1px solid $gray-1;
+  color: $gray-8;
+  background-color: $gray-0;
+  padding: 0 0.2em;
+  margin: 0 0.2em;
+}

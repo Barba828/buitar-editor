@@ -1,15 +1,24 @@
 import { useEffect, useCallback, useState, FC, HTMLProps } from 'react'
 import { CustomTypes, Editor, Range, Element as SlateElement, Transforms } from 'slate'
 import { useSlate } from 'slate-react'
-import { Popover, InputChordPopover, getSelectedRect, isBlockActive, isMarkActive } from '../../lib'
+import {
+  Popover,
+  InputChordPopover,
+  getSelectedRect,
+  isBlockActive,
+  isMarkActive,
+  getSelectedBlockType,
+} from '../../lib'
 import type { BlockFormat, TextFormat } from '../../lib'
-import cx from 'classnames'
 import { TextTypePopover } from './text-type-popover'
+import { chordTypeMenu, textTypeMenu } from './text-type.config'
 
+import cx from 'classnames'
 import './hover-toolbar.scss'
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list']
 const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify']
+const flatTypeArr = [...textTypeMenu, ...chordTypeMenu]
 
 const toggleMark = (editor: Editor, format: TextFormat) => {
   const isActive = isMarkActive(editor, format)
@@ -60,6 +69,7 @@ export const HoverToolbar = () => {
   const [visible, setVisible] = useState<boolean>(false)
   const [chordPopoverVisible, setChordPopoverVisible] = useState<boolean>(false)
   const [textPopoverVisible, setTextPopoverVisible] = useState<boolean>(false)
+  const [blockType, setBlockType] = useState<(typeof flatTypeArr)[0]>(flatTypeArr[0])
   const editor = useSlate()
   const { selection } = editor
 
@@ -70,7 +80,12 @@ export const HoverToolbar = () => {
         selection && !Range.isCollapsed(selection) && Editor.string(editor, selection).length > 0
       )
     )
-    setChordPopoverVisible(false)
+    chordPopoverVisible && setChordPopoverVisible(false)
+    textPopoverVisible && setTextPopoverVisible(false)
+
+    const format = getSelectedBlockType(editor)
+    const blockType = flatTypeArr.find((item) => item.key === format)
+    setBlockType(blockType)
   }, [editor, selection])
 
   /**显示toolbar位置 */
@@ -111,7 +126,7 @@ export const HoverToolbar = () => {
             className="toolbar-menu-item"
             onClick={() => setTextPopoverVisible(!textPopoverVisible)}
           >
-            Text
+            {blockType.title}
           </div>
         </div>
         <div className="toolbar-menu-group">

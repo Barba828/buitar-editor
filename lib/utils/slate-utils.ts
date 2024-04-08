@@ -28,6 +28,20 @@ export const isBlockActive = (editor: Editor, format: BlockFormat, blockType = '
   return !!match
 }
 
+export const getSelectedBlockType = (editor: Editor) => {
+  // 获取当前选区的位置
+  const { selection } = editor
+
+  if (!selection) {
+    return undefined
+  }
+
+  const [fisrtNode] = Array.from(
+    Editor.nodes(editor, { at: selection, match: SlateElement.isElement })
+  )
+  return fisrtNode?.[0].type
+}
+
 /**
  * 根据 selection 判断选中的是否是paragraph文本内容
  * @param editor

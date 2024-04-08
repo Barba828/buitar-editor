@@ -15,8 +15,10 @@ import { HoverToolbar } from './components/hover-toolbar'
 
 import type { ParagraphElement } from './custom-types'
 
-import './App.css'
-// import yellowJson from './yellow.json'
+import './App.scss'
+import './style/theme.scss'
+
+import yellowJson from './yellow.json'
 
 const App = () => {
   const editor = useMemo(() => withChords(withHistory(withReact(createEditor()))), [])
@@ -25,15 +27,15 @@ const App = () => {
       type: 'paragraph',
       children: [
         { text: 'There is an empty chord card ' },
-        // {
-        //   type: 'inline-chord',
-        //   children: [{ text: '' }],
-        //   taps: { chordType: { name: '', name_zh: '', tag: '' }, chordTaps: [] },
-        // },
-        // { text: 'here' },
+        {
+          type: 'inline-chord',
+          children: [{ text: '' }],
+          taps: { chordType: { name: '', name_zh: '', tag: '' }, chordTaps: [] },
+        },
+        { text: 'here' },
       ],
     },
-    // ...(yellowJson as Descendant[]),
+    ...(yellowJson as Descendant[]),
   ])
 
   const renderElement = useCallback((props: RenderElementProps) => <Element {...props} />, [])
