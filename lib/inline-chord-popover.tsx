@@ -1,15 +1,15 @@
-import { useState, useRef, useMemo, useEffect, useCallback, FC, memo } from 'react'
+import { useState, useMemo, useEffect, useCallback, FC, memo } from 'react'
 import { Range, Editor, Transforms, BaseOperation } from 'slate'
 import { ReactEditor, useSlate } from 'slate-react'
 import { type BoardChord } from '@buitar/to-guitar'
 import { getChordName } from './utils'
-import { Popover, type PopoverRefs } from './components/popover'
-import { useSearchList } from './utils/use-search-list'
+import { Popover, type PopoverProps } from './components/popover'
 import { inputTags, ChordInputTag } from './config'
+import { SearchList } from './search-list'
 
-export const InlineChordPopover: FC = memo(() => {
+export const InlineChordPopover: FC<PopoverProps> = memo(() => {
   const editor = useSlate()
-  const ref = useRef<PopoverRefs>(null)
+  const [rect, setRect] = useState<DOMRect | null>(null)
   const [inputTag, setInputTag] = useState<ChordInputTag | null>()
   const [target, setTarget] = useState<Range | null>()
   const [search, setSearch] = useState('')
@@ -53,21 +53,16 @@ export const InlineChordPopover: FC = memo(() => {
     }
   }
 
-  const { list } = useSearchList({
-    search,
-    isCustom,
-    onSelectTaps,
-    onSelectChord,
-  })
-
   /**根据 input tag 显示对应 taps */
   useEffect(() => {
-    if (list && ref.current && target) {
+    if (target) {
       const domRange = ReactEditor.toDOMRange(editor, target)
       const rect = domRange.getBoundingClientRect()
-      ref.current.show(rect)
+      setRect(rect)
+    } else {
+      setRect(null)
     }
-  }, [editor, list, target])
+  }, [editor, target])
 
   const onChange = useCallback(() => {
     const { selection } = editor
@@ -117,13 +112,23 @@ export const InlineChordPopover: FC = memo(() => {
   }, [editor, onChange])
 
   /**输入检测 input tag 并设置 target 和 search*/
-  if (!target || !search || !inputTag) {
+  if (!target || !search || !inputTag || !rect) {
     return null
   }
 
   return (
-    <Popover ref={ref} data-cy="inline-chord-portal" style={{ maxHeight: '360px' }}>
-      {list}
+    <Popover
+      rect={rect}
+      data-cy="inline-chord-portal"
+      style={{ maxHeight: '360px' }}
+      onClose={() => setTarget(null)}
+    >
+      <SearchList
+        search={search}
+        onSelectTaps={onSelectTaps}
+        onSelectChord={onSelectChord}
+        isCustom={isCustom}
+      />
     </Popover>
   )
 })

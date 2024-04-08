@@ -1,7 +1,16 @@
-import { HTMLProps, LegacyRef, forwardRef, useImperativeHandle, useRef } from 'react'
+import {
+  HTMLProps,
+  LegacyRef,
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+} from 'react'
 import { Portal } from './portal'
 import cx from 'classnames'
-import './components.scss'
+
+import './popover.scss'
 
 // declare module 'react' {
 //   function forwardRef<T, P = unknown>(
@@ -17,35 +26,96 @@ export interface PopoverRefs {
   hide: () => void
 }
 
-export const Popover = forwardRef<PopoverRefs, Omit<HTMLProps<HTMLDivElement>, 'ref'>>(
-  ({ children, ...props }, ref) => {
+export type PopoverProps = Omit<HTMLProps<HTMLDivElement>, 'ref'> & {
+  overlay?: boolean
+  rect?: Parameters<typeof popoverRefShow>[1] | null
+  option?: Parameters<typeof popoverRefShow>[2]
+  onClose?: () => void
+  onShow?: () => void
+  onVisibleChange?: (visible: boolean) => void
+}
+
+export const Popover = forwardRef<PopoverRefs, PopoverProps>(
+  ({ children, overlay = true, rect, option, onShow, onClose, onVisibleChange, ...props }, ref) => {
     const containerRef = useRef<HTMLDivElement>()
 
-    useImperativeHandle(ref, () => ({
-      show(elRect, option) {
+    const hide = useCallback(() => {
+      if (!containerRef.current) {
+        return
+      }
+      containerRef.current.style.opacity = '0'
+      onClose?.()
+      onVisibleChange?.(false)
+    }, [onClose, onVisibleChange])
+
+    const show: PopoverRefs['show'] = useCallback(
+      (elRect, option) => {
         if (!containerRef.current) {
           return
         }
         popoverRefShow(containerRef.current, elRect, option)
+        onShow?.()
+        onVisibleChange?.(true)
       },
-      hide() {
-        if (!containerRef.current) {
-          return
-        }
-        containerRef.current.style.opacity = '0'
-      },
+      [onShow, onVisibleChange]
+    )
+
+    useImperativeHandle(ref, () => ({
+      show,
+      hide,
     }))
+
+    const handleKeyDown = useCallback(
+      (event: KeyboardEvent) => {
+        if (event.key === 'Escape') {
+          event.stopPropagation()
+          event.preventDefault()
+          hide()
+        }
+      },
+      [hide]
+    )
+
+    useEffect(() => {
+      document.addEventListener('keydown', handleKeyDown)
+      return () => {
+        document.removeEventListener('keydown', handleKeyDown)
+      }
+    }, [handleKeyDown])
+
+    useEffect(() => {
+      if (!rect) {
+        return
+      }
+      show(rect, option)
+    }, [rect, option, show])
+
+    const content = (
+      <div
+        {...props}
+        onClick={(e) => {
+          // 阻止冒泡到overlay
+          e.stopPropagation()
+          e.preventDefault()
+          props?.onClick?.(e)
+        }}
+        ref={containerRef as LegacyRef<HTMLDivElement>}
+        className={cx('popover-container', props.className)}
+        tabIndex={0}
+      >
+        {children}
+      </div>
+    )
 
     return (
       <Portal>
-        <div
-          {...props}
-          ref={containerRef as LegacyRef<HTMLDivElement>}
-          className={cx('popover-container', props.className)}
-          tabIndex={0}
-        >
-          {children}
-        </div>
+        {overlay ? (
+          <div className="popover-overlay" onClick={hide}>
+            {content}
+          </div>
+        ) : (
+          content
+        )}
       </Portal>
     )
   }

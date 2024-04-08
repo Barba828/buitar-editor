@@ -1,0 +1,21 @@
+.chord-key-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+}
+.chord-key-item__title {
+  opacity: 0.6;
+}
+.chord-key-item__constitute {
+  display: flex;
+  gap: 2px;
+  .constitute-number {
+    border-radius: 2px;
+    font-size: 10px;
+    opacity: 0.6;
+    background: $gray-0--hover;
+    padding: 0 2px;
+    height: 14px;
+  }
+}

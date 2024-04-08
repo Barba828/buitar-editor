@@ -1,0 +1,23 @@
+.chord-list__nested {
+  &:not(:first-child) {
+    border-top: 1px solid $gray-0;
+    margin-top: 4px;
+  }
+  &-title {
+    font-size: 12px;
+    opacity: 0.6;
+    padding: 0 4px;
+  }
+}
+
+.chord-list-item {
+  padding: 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  background: transparent;
+  transition: all 0.3s ease;
+  &:active,
+  &--active {
+    background: $gray-0;
+  }
+}

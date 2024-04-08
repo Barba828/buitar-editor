@@ -8,38 +8,22 @@
     padding: 2px 4px;
     opacity: 0.6;
     font-weight: 600;
-    border: 1.6px solid #3a3a3a;
+    border: 1.6px solid $gray-0;
     background: transparent;
     width: 100%;
     box-sizing: border-box;
     &:focus,
     &:hover,
     &:active {
-      background: #3a3a3a;
+      background: $gray-0;
       outline: none;
     }
     &::placeholder {
-      color: #666;
+      color: $gray-3;
     }
 
-    &:not(:last-child){
-        margin-bottom: 6px;
-    }
-  }
-}
-
-@media (prefers-color-scheme: light) {
-  .input-container {
-    input {
-      border: 1.6px solid #efefef;
-      &:focus,
-      &:hover,
-      &:active {
-        background: #efefef;
-      }
-      &::placeholder {
-        color: #aaa;
-      }
+    &:not(:last-child) {
+      margin-bottom: 6px;
     }
   }
 }

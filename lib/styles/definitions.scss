@@ -1,0 +1,71 @@
+$mobileLayout: '(max-width: 499px)';
+$pcLayout: 'only screen and (min-width: 499px)';
+
+:root {
+  --white-1: #fff;
+  --gray-0: #eee;
+  --gray-0--hover: #e5e5e5;
+  --gray-1: #ddd;
+  --gray-1--hover: #d5d5d5;
+  --gray-2: #ccc;
+  --gray-3: #bbb;
+  --gray-4: #aaa;
+  --gray-5: #999;
+  --gray-6: #888;
+  --gray-7: #666;
+  --gray-8: #555;
+  --gray-9: #444;
+  --gray-10: #333;
+  @media (prefers-color-scheme: dark) {
+    --white-1: #222;
+    --gray-0: #333;
+    --gray-0: #383838;
+    --gray-1: #444;
+    --gray-1: #484848;
+    --gray-2: #555;
+    --gray-3: #666;
+    --gray-4: #777;
+    --gray-5: #888;
+    --gray-6: #999;
+    --gray-7: #bbb;
+    --gray-8: #ccc;
+    --gray-9: #ddd;
+    --gray-10: #eee;
+  }
+}
+
+$gray-0: var(--gray-0);
+$gray-0--hover: var(--gray-0--hover);
+$gray-1: var(--gray-1);
+$gray-1--hover: var(--gray-1--hover);
+$gray-2: var(--gray-2);
+$gray-3: var(--gray-3);
+$gray-4: var(--gray-4);
+$gray-5: var(--gray-5);
+$gray-6: var(--gray-6);
+$gray-7: var(--gray-7);
+$gray-8: var(--gray-8);
+$gray-9: var(--gray-9);
+$gray-10: var(--gray-10);
+
+$blue-1: #3c46ff;
+$white-1: var(--white-1);
+
+$shadow-popover: 0 4px 20px rgba(0, 0, 0, 0.18);
+
+$zIndex-1: 100;
+$zIndex-2: 200;
+$zIndex-3: 300;
+$zIndex-4: 400;
+$zIndex-5: 500;
+$zIndex-6: 600;
+$zIndex-7: 700;
+$zIndex-8: 800;
+$zIndex-9: 900;
+$zIndex-10: 1000;
+
+$zIndex-navbar: $zIndex-1;
+$zIndex-dropdown: $zIndex-1;
+$zIndex-sticky: $zIndex-2;
+$zIndex-overlay: $zIndex-4;
+$zIndex-dialog: $zIndex-5;

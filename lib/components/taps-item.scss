@@ -1,0 +1,77 @@
+.taps-list-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.taps-list-item__wrap {
+  font-weight: bold;
+  opacity: 0.6;
+  margin-right: 12px;
+}
+.taps-list-item__note {
+  font-size: 28px;
+}
+.taps-list-item__name {
+  opacity: 0.6;
+}
+
+.inline-taps-item {
+  vertical-align: middle;
+  border-radius: 8px;
+  background: $gray-0;
+  margin: 0.2rem 0.5rem;
+  cursor: pointer;
+  user-select: none;
+  &:active,
+  &--active {
+    background: $gray-1;
+  }
+}
+
+.fixed-taps-item {
+  position: relative;
+  display: inline-block;
+  padding-top: 64px;
+  cursor: pointer;
+  box-sizing: border-box;
+  user-select: none;
+  &:hover,
+  &:active {
+    text-decoration: dashed underline $gray-6;
+    text-underline-offset: 4px;
+  }
+}
+
+.fixed-taps-item__fixed {
+  position: absolute;
+  display: inline-block;
+  bottom: 1.2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 8px;
+  user-select: none;
+  pointer-events: none;
+  &:active,
+  &--active {
+    background: $gray-0;
+  }
+}
+
+.popover-taps-item {
+  position: relative;
+  display: inline;
+  padding-top: unset;
+  opacity: 0.8;
+  &:hover {
+    opacity: 1;
+    .popover-taps-item__fixed {
+      opacity: 1;
+    }
+  }
+}
+
+.popover-taps-item__fixed {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background: $gray-1;
+}

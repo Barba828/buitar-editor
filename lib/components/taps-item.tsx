@@ -3,11 +3,11 @@ import { type BoardChord } from '@buitar/to-guitar'
 import { SvgChord } from '@buitar/svg-chord'
 import { RenderElementProps, RenderLeafProps, useFocused, useSelected } from 'slate-react'
 import { capitalizeEveryWord, getChordName } from '../utils'
-import { CustomInlineChordElement } from '../custom-types'
+import { CustomInlineChordElement } from '../custom-types.d'
 import { isLightMode } from '../utils/media-query'
 import { transToSvgPoints } from '../utils/trans-svg'
 import cx from 'classnames'
-import './components.scss'
+import './taps-item.scss'
 
 export const TapsListItem = memo(({ taps, size = 80 }: { taps: BoardChord; size?: number }) => {
   return (

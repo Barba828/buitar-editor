@@ -7,7 +7,7 @@
 .toolbar-menu-group {
   display: flex;
   &:not(:last-child) {
-    border-right: 1px solid #333;
+    border-right: 1px solid $gray-1;
   }
 }
 
@@ -22,29 +22,18 @@
   opacity: 0.8;
   cursor: pointer;
   transition: all 0.3s ease;
+  user-select: none;
   &:hover,
   &:active {
-    background: #333;
+    background: $gray-0;
     opacity: 1;
   }
   &--active {
-    color: #3c46ff;
+    color: $blue-1;
+    opacity: 1;
   }
 
   &:only-child {
     padding: 0 0.4rem;
-  }
-}
-@media (prefers-color-scheme: light) {
-  .toolbar-menu-group {
-    &:not(:last-child) {
-      border-right: 1px solid #efefef;
-    }
-  }
-  .toolbar-menu-item {
-    &:hover,
-    &:active {
-      background: #efefef;
-    }
   }
 }

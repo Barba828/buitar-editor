@@ -107,14 +107,14 @@ export const useSearchList = (options: {
 
   let list
   if (isCustom) {
-    list = customChordTapList && (
+    list = customChordTapList?.length && (
       <List
         lists={customChordTapList}
         renderItem={(taps) => <TapsListItem taps={taps} size={120} />}
         onItemClick={onTapItemClick}
       ></List>
     )
-  } else if (chordTapList) {
+  } else if (chordTapList?.length) {
     list = (
       <List
         lists={chordTapList}
@@ -122,7 +122,7 @@ export const useSearchList = (options: {
         onItemClick={onTapItemClick}
       ></List>
     )
-  } else if (chordList) {
+  } else if (chordList?.length) {
     list = (
       <List
         lists={chordList}

@@ -1,41 +1,14 @@
-import { useState, useRef, useMemo, useEffect, useCallback, FC, HTMLProps } from 'react'
+import { useState, useMemo, useEffect, useCallback, FC, HTMLProps } from 'react'
 import { Range, Editor, BaseOperation, Transforms } from 'slate'
 import { ReactEditor, useSlate } from 'slate-react'
-import { InlineChordPopover, List, Popover, PopoverRefs } from './index'
-import { inputTags } from './config'
+import { InlineChordPopover, List, Popover } from './index'
+import { inputTags, slashChordMenu } from './config'
 
 import './slash-toolbar.scss'
 
-const defaultSlashMenu = [
-  {
-    type: 'chord',
-    key: '/CA',
-    title: 'Inline Chord',
-    desc: 'Insert Inline Chord',
-  },
-  {
-    type: 'chord',
-    key: '/X00',
-    title: 'Inline Custom Chord',
-    desc: 'Insert Inline Custom Chord',
-  },
-  {
-    type: 'chord',
-    key: '/TA',
-    title: 'Fixed Chord',
-    desc: 'Insert Fixed Chord',
-  },
-  {
-    type: 'chord',
-    key: '/Rx00',
-    title: 'Fixed Custom Chord',
-    desc: 'Insert Fixed Custom Chord',
-  },
-]
-
 export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
   const editor = useSlate()
-  const ref = useRef<PopoverRefs>(null)
+  const [rect, setRect] = useState<DOMRect | null>(null)
   const [target, setTarget] = useState<Range | null>()
   const [search, setSearch] = useState('')
 
@@ -50,18 +23,18 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
     }
 
     if (search.length === 1) {
-      return defaultSlashMenu
+      return slashChordMenu
     }
 
     const text = search.slice(1)
-    return defaultSlashMenu.filter((item) => item.title.includes(text) || item.desc.includes(text))
+    return slashChordMenu.filter((item) => item.title.includes(text) || item.desc.includes(text))
   }, [search])
 
   useEffect(() => {
-    if (ref.current && target) {
+    if (target) {
       const domRange = ReactEditor.toDOMRange(editor, target)
       const rect = domRange.getBoundingClientRect()
-      ref.current.show(rect)
+      setRect(rect)
     }
   }, [editor, target])
 
@@ -109,7 +82,7 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
     }
   }, [editor, onChange])
 
-  const renderItem = (item: (typeof defaultSlashMenu)[0], index: number) => {
+  const renderItem = (item: (typeof slashChordMenu)[0], index: number) => {
     return (
       <div key={index} className="toolbar-chord-item">
         <div className="toolbar-chord-item--title">{item.title}</div>
@@ -118,21 +91,25 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
     )
   }
 
+  const cleanSearch = useCallback(() => {
+    setTarget(null)
+    setSearch('')
+    setRect(null)
+  }, [])
+
   const onItemClick = useCallback(
-    (item: (typeof defaultSlashMenu)[0]) => {
+    (item: (typeof slashChordMenu)[0]) => {
       if (item.type === 'chord' && target) {
         Transforms.select(editor, target)
         editor.insertText(item.key)
       }
-
-      setTarget(null)
-      setSearch('')
+      cleanSearch()
     },
-    [editor, target]
+    [cleanSearch, editor, target]
   )
 
   /**输入检测 input tag 并设置 target 和 search*/
-  if (!target || !search) {
+  if (!target || !search || !rect) {
     return null
   }
 
@@ -140,8 +117,17 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
     return <InlineChordPopover />
   }
 
+  if (!filterList.length) {
+    return null
+  }
+
   return (
-    <Popover ref={ref} data-cy="input-toolbar-portal" style={{ maxHeight: '360px' }}>
+    <Popover
+      data-cy="input-toolbar-portal"
+      style={{ maxHeight: '360px' }}
+      rect={rect}
+      onClose={cleanSearch}
+    >
       <List lists={filterList} renderItem={renderItem} onItemClick={onItemClick}>
         {props.children}
       </List>

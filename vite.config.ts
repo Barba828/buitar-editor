@@ -10,6 +10,13 @@ export default defineConfig({
       entryRoot: './lib',
     }),
   ],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: '@import "/lib/styles/definitions.scss";', // 预处理
+      },
+    },
+  },
   build: {
     lib: {
       entry: '/lib/index.ts',

@@ -2,7 +2,7 @@ import { chordTagMap } from '@buitar/to-guitar'
 import { FC } from 'react'
 import { getNoteAndTag } from '../utils'
 
-import './components.scss'
+import './chord-name-item.scss'
 
 export const ChordNameItem: FC<{ chordName: string }> = ({ chordName }) => {
   const { tag } = getNoteAndTag(chordName)

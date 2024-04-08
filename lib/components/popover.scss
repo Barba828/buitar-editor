@@ -1,0 +1,20 @@
+.popover-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: $zIndex-overlay;
+}
+
+.popover-container {
+  position: absolute;
+  z-index: 999;
+  padding: 4px;
+  max-height: 360px;
+  overflow-y: scroll;
+  background-color: $white-1;
+  border-radius: 4px;
+  box-shadow: $shadow-popover;
+  outline: none;
+}
