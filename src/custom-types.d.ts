@@ -2,7 +2,7 @@ import type { BaseEditor, Descendant } from 'slate'
 import type { ReactEditor } from 'slate-react'
 import type { HistoryEditor } from 'slate-history'
 
-import type { CustomInlineChordElement, CustomChordText, ChordEditor } from '../lib'
+import type { CustomInlineChordElement, CustomChordText, ChordEditor, BlockFormat } from '../lib'
 
 export type ParagraphElement = {
   type: 'paragraph'
@@ -10,47 +10,48 @@ export type ParagraphElement = {
   children: Descendant[]
 }
 
-type BlockQuoteElement = {
+export type BlockQuoteElement = {
   type: 'block-quote'
   align?: string
   children: Descendant[]
 }
 
-type BulletedListElement = {
+export type BulletedListElement = {
   type: 'bulleted-list'
   align?: string
   children: Descendant[]
 }
 
-type OrderedListElement = {
+export type OrderedListElement = {
   type: 'numbered-list'
   align?: string
+  start?: number
   children: Descendant[]
 }
 
-type CheckListItemElement = {
+export type CheckListItemElement = {
   type: 'check-list-item'
   checked?: boolean
   children: Descendant[]
 }
 
-type HeadingElement = {
-  type: 'heading-1' | 'heading-2' | 'heading-3' | 'heading-4' | 'heading-5'
+export type HeadingElement = {
+  type: 'heading-1' | 'heading-2' | 'heading-3' | 'heading-4' | 'heading-5' | 'heading-6'
   align?: string
   children: Descendant[]
 }
 
-type ImageElement = {
+export type ImageElement = {
   type: 'image'
   url?: string
   children: CustomText[]
 }
 
-type LinkElement = { type: 'link'; url?: string; children: Descendant[] }
+export type LinkElement = { type: 'link'; url?: string; children: Descendant[] }
 
-type ListItemElement = { type: 'list-item'; children: Descendant[] }
+export type ListItemElement = { type: 'list-item'; children: Descendant[] }
 
-type CustomElement =
+export type CustomElement =
   | ParagraphElement
   | BlockQuoteElement
   | BulletedListElement
@@ -62,9 +63,15 @@ type CustomElement =
   | ListItemElement
   | OrderedListElement
 
-type CustomEditor = ChordEditor & BaseEditor & ReactEditor & HistoryEditor
+export type BuitarEditor = {
+  isList?: (format: BlockFormat) => boolean
+  toggleMark?: (format: TextFormat) => void
+  toggleBlock?: (format: BlockFormat) => void
+}
 
-type CustomText = {
+export type CustomEditor = BuitarEditor & ChordEditor & BaseEditor & ReactEditor & HistoryEditor
+
+export type CustomText = {
   bold?: boolean
   italic?: boolean
   code?: boolean

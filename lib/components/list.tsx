@@ -107,7 +107,10 @@ export function List<T>({
     return (
       <div
         key={index}
-        onClick={() => handleClickItem(item, index)}
+        onMouseDown={(e) => {
+          e.preventDefault()
+          handleClickItem(item, index)
+        }}
         onMouseMove={() => setCheckedIndex(index)}
         className={cx('chord-list-item', index === checkedIndex && 'chord-list-item--active')}
         data-key={index}

@@ -28,6 +28,11 @@ export const isBlockActive = (editor: Editor, format: BlockFormat, blockType = '
   return !!match
 }
 
+/**
+ * 获取当前 selection 的blockType
+ * @param editor
+ * @returns
+ */
 export const getSelectedBlockType = (editor: Editor) => {
   // 获取当前选区的位置
   const { selection } = editor

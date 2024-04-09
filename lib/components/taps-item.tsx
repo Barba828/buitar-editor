@@ -1,11 +1,18 @@
 import { memo } from 'react'
 import { type BoardChord } from '@buitar/to-guitar'
 import { SvgChord } from '@buitar/svg-chord'
-import { RenderElementProps, RenderLeafProps, useFocused, useSelected } from 'slate-react'
+import {
+  RenderElementProps,
+  RenderLeafProps,
+  useFocused,
+  useReadOnly,
+  useSelected,
+} from 'slate-react'
 import { capitalizeEveryWord, getChordName } from '../utils'
 import { CustomInlineChordElement } from '../custom-types.d'
 import { isLightMode } from '../utils/media-query'
 import { transToSvgPoints } from '../utils/trans-svg'
+
 import cx from 'classnames'
 import './taps-item.scss'
 
@@ -53,6 +60,7 @@ export const InlineTapsItem = ({ attributes, element, children }: RenderElementP
 }
 
 export const FixedTapsItem = ({ leaf, children }: RenderLeafProps) => {
+  const readOnly = useReadOnly()
   if (!leaf?.chord || !leaf.chord?.taps) {
     return children
   }
@@ -71,7 +79,9 @@ export const FixedTapsItem = ({ leaf, children }: RenderLeafProps) => {
         color={isLightMode() ? '#444' : '#ddd'}
         style={{ padding: concise ? undefined : '2px 3px' }}
       />
-      {children}
+      <span contentEditable={!readOnly} suppressContentEditableWarning>
+        {children}
+      </span>
     </span>
   )
 }

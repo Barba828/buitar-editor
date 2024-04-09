@@ -25,6 +25,12 @@ export const textTypeMenu = [
   },
   {
     type: 'text',
+    key: 'check-list-item',
+    title: 'Check List Item',
+    desc: '',
+  },
+  {
+    type: 'text',
     key: 'heading-1',
     title: 'Heading-1',
     desc: '',
@@ -33,6 +39,30 @@ export const textTypeMenu = [
     type: 'text',
     key: 'heading-2',
     title: 'Heading-2',
+    desc: '',
+  },
+  {
+    type: 'text',
+    key: 'heading-3',
+    title: 'Heading-3',
+    desc: '',
+  },
+  {
+    type: 'text',
+    key: 'heading-4',
+    title: 'Heading-4',
+    desc: '',
+  },
+  {
+    type: 'text',
+    key: 'heading-5',
+    title: 'Heading-5',
+    desc: '',
+  },
+  {
+    type: 'text',
+    key: 'heading-6',
+    title: 'Heading-6',
     desc: '',
   },
 ]

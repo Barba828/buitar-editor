@@ -11,6 +11,9 @@ import {
 } from 'slate-react'
 import { withHistory } from 'slate-history'
 import { withChords, InlineChordElement, FixedChordLeaf, SlashToolbar } from '../lib'
+import { withDeleteBackward } from './plugins/with-backward'
+import { withToggle } from './plugins/with-toggle'
+import { CheckListItemElement } from './components/elements/check-list-item'
 import { HoverToolbar } from './components/hover-toolbar'
 
 import type { ParagraphElement } from './custom-types'
@@ -18,24 +21,27 @@ import type { ParagraphElement } from './custom-types'
 import './App.scss'
 import './style/theme.scss'
 
-import yellowJson from './yellow.json'
+// import yellowJson from './yellow.json'
 
 const App = () => {
-  const editor = useMemo(() => withChords(withHistory(withReact(createEditor()))), [])
+  const editor = useMemo(
+    () => withChords(withDeleteBackward(withToggle(withHistory(withReact(createEditor()))))),
+    []
+  )
   const [value] = useState<Descendant[]>([
     {
       type: 'paragraph',
       children: [
         { text: 'There is an empty chord card ' },
-        {
-          type: 'inline-chord',
-          children: [{ text: '' }],
-          taps: { chordType: { name: '', name_zh: '', tag: '' }, chordTaps: [] },
-        },
-        { text: 'here' },
+        // {
+        //   type: 'inline-chord',
+        //   children: [{ text: '' }],
+        //   taps: { chordType: { name: '', name_zh: '', tag: '' }, chordTaps: [] },
+        // },
+        // { text: 'here' },
       ],
     },
-    ...(yellowJson as Descendant[]),
+    // ...(yellowJson as Descendant[]),
   ])
 
   const renderElement = useCallback((props: RenderElementProps) => <Element {...props} />, [])
@@ -47,7 +53,13 @@ const App = () => {
   }, [])
   return (
     <Slate editor={editor} initialValue={value} onChange={onChange}>
-      <Editable className="slate-editable" renderElement={renderElement} renderLeaf={renderLeaf} />
+      <Editable
+        className="slate-editable"
+        renderElement={renderElement}
+        renderLeaf={renderLeaf}
+        spellCheck
+        autoFocus
+      />
       <HoverToolbar />
       <SlashToolbar />
     </Slate>
@@ -60,6 +72,8 @@ const Element = (props: RenderElementProps) => {
   switch (element.type) {
     case 'inline-chord':
       return <InlineChordElement {...props} />
+    case 'check-list-item':
+      return <CheckListItemElement {...props} />
     case 'block-quote':
       return (
         <blockquote style={style} {...attributes}>
@@ -74,7 +88,7 @@ const Element = (props: RenderElementProps) => {
       )
     case 'numbered-list':
       return (
-        <ol style={style} {...attributes}>
+        <ol style={style} start={element.start} {...attributes}>
           {children}
         </ol>
       )
@@ -113,6 +127,12 @@ const Element = (props: RenderElementProps) => {
         <h5 style={style} {...attributes}>
           {children}
         </h5>
+      )
+    case 'heading-6':
+      return (
+        <h6 style={style} {...attributes}>
+          {children}
+        </h6>
       )
     default:
       return <DefaultElement {...props} />

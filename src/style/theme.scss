@@ -20,3 +20,54 @@ code {
   padding: 0 0.2em;
   margin: 0 0.2em;
 }
+
+ol,
+ul {
+  padding-inline-start: 1.4em;
+  margin-block-start: 0.6em;
+  margin-block-end: 0.6em;
+}
+
+input[type='checkbox'] {
+  appearance: none;
+  position: relative;
+  width: 1.2em;
+  height: 1.2em;
+  border-radius: 0.2em;
+  outline: none;
+  border: 2px solid $gray-1;
+  transition: all ease 0.2s;
+  margin: 0px;
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    background-color: $gray-0--hover;
+    border-color: $gray-0--hover;
+  }
+
+  &:active {
+    opacity: 0.6;
+  }
+
+  &:checked {
+    background-color: $blue-1;
+    border-color: $blue-1;
+    &:hover {
+      background-color: $blue-1--hover;
+      border-color: $blue-1--hover;
+    }
+    &::after {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      color: #eee;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}

@@ -19,9 +19,9 @@ $pcLayout: 'only screen and (min-width: 499px)';
   @media (prefers-color-scheme: dark) {
     --white-1: #222;
     --gray-0: #333;
-    --gray-0: #383838;
+    --gray-0--hover: #383838;
     --gray-1: #444;
-    --gray-1: #484848;
+    --gray-1--hover: #484848;
     --gray-2: #555;
     --gray-3: #666;
     --gray-4: #777;
@@ -49,6 +49,7 @@ $gray-9: var(--gray-9);
 $gray-10: var(--gray-10);
 
 $blue-1: #3c46ff;
+$blue-1--hover: #353ee9;
 $white-1: var(--white-1);
 
 $shadow-popover: 0 4px 20px rgba(0, 0, 0, 0.18);

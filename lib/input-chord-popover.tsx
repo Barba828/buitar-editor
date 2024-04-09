@@ -35,8 +35,8 @@ export const InputChordPopover: FC<InputChordPopoverProps> = memo(
 
       // 选中文本内容中，已有chord内容 -> 写入第一个chord名称
       const chordLeaves = getSelectedLeavesFormat(editor, 'chord')
-      if (chordLeaves.length && chordLeaves[0].chord?.taps.chordType) {
-        setSearch(getChordName(chordLeaves[0].chord?.taps.chordType))
+      if (chordLeaves.length && chordLeaves[0].chord?.taps?.chordType) {
+        setSearch(getChordName(chordLeaves[0].chord.taps.chordType))
       }
 
       setText(editor.string(selection))

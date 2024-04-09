@@ -1,0 +1,18 @@
+.check-list-item--checked {
+  .check-list-item__text {
+    margin-left: 0.75em;
+    text-decoration: line-through;
+    opacity: 0.6;
+  }
+}
+
+.check-list-item__checkbox {
+  vertical-align: middle;
+}
+
+.check-list-item__text {
+  margin-left: 0.75em;
+  &:focus {
+    outline: none;
+  }
+}

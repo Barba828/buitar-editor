@@ -1,68 +1,21 @@
-import { useEffect, useCallback, useState, FC, HTMLProps } from 'react'
-import { CustomTypes, Editor, Range, Element as SlateElement, Transforms } from 'slate'
+import { useEffect, useCallback, useState, FC, HTMLProps, MouseEventHandler } from 'react'
+import { Editor, Range } from 'slate'
 import { useSlate } from 'slate-react'
 import {
   Popover,
   InputChordPopover,
   getSelectedRect,
-  isBlockActive,
   isMarkActive,
   getSelectedBlockType,
 } from '../../lib'
-import type { BlockFormat, TextFormat } from '../../lib'
+import type { TextFormat } from '../../lib'
 import { TextTypePopover } from './text-type-popover'
 import { chordTypeMenu, textTypeMenu } from './text-type.config'
 
 import cx from 'classnames'
 import './hover-toolbar.scss'
 
-const LIST_TYPES = ['numbered-list', 'bulleted-list']
-const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify']
 const flatTypeArr = [...textTypeMenu, ...chordTypeMenu]
-
-const toggleMark = (editor: Editor, format: TextFormat) => {
-  const isActive = isMarkActive(editor, format)
-
-  if (isActive) {
-    Editor.removeMark(editor, format)
-  } else {
-    Editor.addMark(editor, format, true)
-  }
-}
-
-const toggleBlock = (editor: Editor, format: BlockFormat) => {
-  const isActive = isBlockActive(
-    editor,
-    format,
-    TEXT_ALIGN_TYPES.includes(format) ? 'align' : 'type'
-  )
-  const isList = LIST_TYPES.includes(format)
-
-  Transforms.unwrapNodes(editor, {
-    match: (n) =>
-      !Editor.isEditor(n) &&
-      SlateElement.isElement(n) &&
-      LIST_TYPES.includes(n.type) &&
-      !TEXT_ALIGN_TYPES.includes(format),
-    split: true,
-  })
-  let newProperties: Partial<SlateElement>
-  if (TEXT_ALIGN_TYPES.includes(format)) {
-    newProperties = {
-      align: isActive ? undefined : format,
-    }
-  } else {
-    newProperties = {
-      type: isActive ? 'paragraph' : isList ? 'list-item' : format,
-    }
-  }
-  Transforms.setNodes<SlateElement>(editor, newProperties)
-
-  if (!isActive && isList) {
-    const block = { type: format, children: [] }
-    Transforms.wrapNodes(editor, block as CustomTypes['Element'])
-  }
-}
 
 export const HoverToolbar = () => {
   const [rect, setRect] = useState<DOMRect | null>(null)
@@ -85,7 +38,9 @@ export const HoverToolbar = () => {
 
     const format = getSelectedBlockType(editor)
     const blockType = flatTypeArr.find((item) => item.key === format)
-    setBlockType(blockType)
+    if (blockType) {
+      setBlockType(blockType)
+    }
   }, [editor, selection])
 
   /**显示toolbar位置 */
@@ -124,7 +79,7 @@ export const HoverToolbar = () => {
         <div className="toolbar-menu-group">
           <div
             className="toolbar-menu-item"
-            onClick={() => setTextPopoverVisible(!textPopoverVisible)}
+            onMouseDown={() => setTextPopoverVisible(!textPopoverVisible)}
           >
             {blockType.title}
           </div>
@@ -147,9 +102,15 @@ export const HoverToolbar = () => {
           </FormatButton>
         </div>
         <div className="toolbar-menu-group">
-          <FormatButton format="chord" onClick={() => setChordPopoverVisible(!chordPopoverVisible)}>
+          <div
+            className={cx(
+              'toolbar-menu-item',
+              isMarkActive(editor, 'chord') && 'toolbar-menu-item--active'
+            )}
+            onMouseDown={() => setChordPopoverVisible(!chordPopoverVisible)}
+          >
             C
-          </FormatButton>
+          </div>
           <FormatChordButton option={'concise'}>D</FormatChordButton>
           <FormatChordButton option={'popover'}>P</FormatChordButton>
           <FormatChordButton option={''} style={{ color: '#c21500' }} onClick={cleanInputChord}>
@@ -157,11 +118,7 @@ export const HoverToolbar = () => {
           </FormatChordButton>
         </div>
       </Popover>
-      <TextTypePopover
-        visible={textPopoverVisible}
-        onVisibleChange={setTextPopoverVisible}
-        toggleBlock={toggleBlock}
-      />
+      <TextTypePopover visible={textPopoverVisible} onVisibleChange={setTextPopoverVisible} />
       <InputChordPopover visible={chordPopoverVisible} onVisibleChange={setChordPopoverVisible} />
     </>
   )
@@ -174,10 +131,14 @@ const FormatButton: FC<{ format: TextFormat } & HTMLProps<HTMLDivElement>> = ({
 }) => {
   const editor = useSlate()
   const active = isMarkActive(editor, format)
+  const onMouseDown: MouseEventHandler<HTMLDivElement> = useCallback((e) => {
+    e.preventDefault()
+    editor.toggleMark?.(format)
+  }, [])
   return (
     <div
       className={cx('toolbar-menu-item', active && 'toolbar-menu-item--active')}
-      onClick={() => toggleMark(editor, format)}
+      onMouseDown={onMouseDown}
       {...props}
     >
       {children}
@@ -194,10 +155,14 @@ const FormatChordButton: FC<{ option: string } & HTMLProps<HTMLDivElement>> = ({
   const marks = Editor.marks(editor)
   const active = marks?.chord ? (marks.chord as never)?.[option] : false
 
-  const onClick = useCallback(() => {
-    const chord = Editor.marks(editor)?.['chord']
-    Editor.addMark(editor, 'chord', { ...chord, [option]: !active })
-  }, [active, editor, option])
+  const onMouseDown: MouseEventHandler<HTMLDivElement> = useCallback(
+    (e) => {
+      e.preventDefault()
+      const chord = Editor.marks(editor)?.['chord']
+      Editor.addMark(editor, 'chord', { ...chord, [option]: !active })
+    },
+    [active, editor, option]
+  )
 
   if (!marks?.chord) {
     return null
@@ -206,7 +171,7 @@ const FormatChordButton: FC<{ option: string } & HTMLProps<HTMLDivElement>> = ({
   return (
     <div
       className={cx('toolbar-menu-item', active && 'toolbar-menu-item--active')}
-      onClick={onClick}
+      onMouseDown={onMouseDown}
       {...props}
     >
       {children}

@@ -93,11 +93,11 @@ export const Popover = forwardRef<PopoverRefs, PopoverProps>(
     const content = (
       <div
         {...props}
-        onClick={(e) => {
+        onMouseDown={(e) => {
           // 阻止冒泡到overlay
           e.stopPropagation()
           e.preventDefault()
-          props?.onClick?.(e)
+          props?.onMouseDown?.(e)
         }}
         ref={containerRef as LegacyRef<HTMLDivElement>}
         className={cx('popover-container', props.className)}
@@ -110,7 +110,7 @@ export const Popover = forwardRef<PopoverRefs, PopoverProps>(
     return (
       <Portal>
         {overlay ? (
-          <div className="popover-overlay" onClick={hide}>
+          <div className="popover-overlay" onMouseDown={hide}>
             {content}
           </div>
         ) : (
