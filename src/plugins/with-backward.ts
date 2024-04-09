@@ -1,4 +1,4 @@
-import { Transforms, Element as SlateElement, Editor, Range, Point } from 'slate'
+import { Transforms, Element as SlateElement, Editor, Range, Point, Path } from 'slate'
 import { BlockFormat } from '../../lib'
 
 const SHORTCUTS: Record<string, BlockFormat> = {
@@ -63,6 +63,7 @@ export const withDeleteBackward = (editor: Editor) => {
       if (type) {
         Transforms.select(editor, range)
 
+        // 删除原有markdown标记文本（*/-/+/#/....）
         if (!Range.isCollapsed(range)) {
           Transforms.delete(editor)
         }
@@ -135,6 +136,7 @@ export const withDeleteBackward = (editor: Editor) => {
 
 /**
  * 判断在当前段落开始位置，若在开始位置，并且当前block不是paragraph，则重置为paragraph
+ * feature: 若父级存在List， 则将当前block设置为list-item，否则仍是paragraph
  * @param editor
  * @returns
  */
@@ -157,8 +159,10 @@ const cleanTypeOnStart = (editor: Editor) => {
         block.type !== 'paragraph' &&
         Point.equals(selection.anchor, start)
       ) {
+        /** feature: 若父级存在List， 则将当前block设置为list-item，否则仍是paragraph */
+        const parentHasList = hasListWrapper(editor, path.slice(0, -1))
         const newProperties: Partial<SlateElement> = {
-          type: 'paragraph',
+          type: parentHasList ? 'list-item' : 'paragraph',
         }
         Transforms.setNodes(editor, newProperties)
 
@@ -175,4 +179,20 @@ const cleanTypeOnStart = (editor: Editor) => {
       }
     }
   }
+}
+
+// 判断当前列表项是否还有外部的有序列表或无序列表包裹
+const hasListWrapper = (editor: Editor, listItemPath: Path): boolean => {
+  const [parent] = Editor.node(editor, listItemPath.slice(0, -1)) // 获取列表项的父节点
+
+  if (!parent || !SlateElement.isElement(parent)) {
+    return false // 如果父节点不存在或不是元素节点，直接返回 false
+  }
+
+  if (editor.isList?.(parent.type)) {
+    return true // 如果父节点是列表类型，则说明当前列表项有外部列表包裹，返回 true
+  }
+
+  // 递归向上遍历父节点的祖先节点，继续判断是否有外部列表包裹
+  return hasListWrapper(editor, listItemPath.slice(0, -1))
 }
