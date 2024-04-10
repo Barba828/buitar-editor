@@ -1,0 +1,14 @@
+.abc-editor {
+  background: $gray-0;
+  border-radius: 1em;
+  padding: 1em;
+  margin: 1em 0;
+  color: $gray-8;
+  font-size: 0.9em;
+
+  &:hover,
+  &:active,
+  &:focus {
+    background: $gray-0--hover;
+  }
+}

@@ -24,6 +24,7 @@
   "dependencies": {
     "@buitar/svg-chord": "^0.0.3",
     "@buitar/to-guitar": "^0.0.14",
+    "abcjs": "^6.3.0",
     "classnames": "^2.5.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

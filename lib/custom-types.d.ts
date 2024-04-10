@@ -11,6 +11,17 @@ export type CustomInlineChordElement = {
   children?: CustomText[]
 } & CustomChordType
 
+export type ABCTablatureElement = {
+  type: 'abc-tablature'
+  previewer?: boolean
+  children?: CustomText[]
+}
+
+export type GTPPreviewerElement = {
+  type: 'gtp-previewer'
+  children?: CustomText[]
+}
+
 export type CustomChordText = {
   text: string
   chord?: CustomChordType

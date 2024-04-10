@@ -5,6 +5,7 @@ export * from './custom-types.d'
 export { withChords } from './with-chords'
 export { InlineChordPopover } from './inline-chord-popover'
 export { InputChordPopover } from './input-chord-popover'
+export { ABCElement } from './abc-element'
 
 export * from './components/popover'
 export * from './components/list'

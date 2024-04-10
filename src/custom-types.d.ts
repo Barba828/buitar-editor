@@ -2,7 +2,13 @@ import type { BaseEditor, Descendant } from 'slate'
 import type { ReactEditor } from 'slate-react'
 import type { HistoryEditor } from 'slate-history'
 
-import type { CustomInlineChordElement, CustomChordText, ChordEditor } from '~chord'
+import type {
+  CustomInlineChordElement,
+  ABCTablatureElement,
+  GTPPreviewerElement,
+  CustomChordText,
+  ChordEditor,
+} from '~chord'
 
 export type ParagraphElement = {
   type: 'paragraph'
@@ -56,12 +62,14 @@ export type CustomElement =
   | BlockQuoteElement
   | BulletedListElement
   | CheckListItemElement
-  | CustomInlineChordElement
   | HeadingElement
   | ImageElement
   | LinkElement
   | ListItemElement
   | OrderedListElement
+  | ABCTablatureElement
+  | CustomInlineChordElement
+  | GTPPreviewerElement
 
 export type BuitarEditor = {
   isList?: (format: BlockFormat) => boolean

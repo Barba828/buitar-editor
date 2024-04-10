@@ -35,7 +35,6 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      // 在这里添加路径别名的配置
       '~chord': path.resolve(__dirname, './lib'),
     },
   },

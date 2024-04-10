@@ -10,8 +10,14 @@ import {
   DefaultLeaf,
 } from 'slate-react'
 import { withHistory } from 'slate-history'
-import { withChords, InlineChordElement, FixedChordLeaf, InlineChordPopover } from '~chord'
-import { withDeleteBackward } from './plugins/with-backward'
+import {
+  withChords,
+  InlineChordElement,
+  FixedChordLeaf,
+  InlineChordPopover,
+  ABCElement,
+} from '~chord'
+import { withOnChange } from './plugins/with-on-change'
 import { withToggle } from './plugins/with-toggle'
 import { CheckListItemElement } from './components/elements/check-list-item'
 import { HoverToolbar } from './components/hover-toolbar'
@@ -24,9 +30,27 @@ import './style/theme.scss'
 
 // import yellowJson from './yellow.json'
 
+/**
+ * 
+ *  @TODO 解决包裹问题
+ * 1. 不包裹，换行会新增block
+ * 2. 包裹，无法通过退格以及换行移除block
+ * 3. 处理需要「退格以及换行移除block」的元素，各种类型表现不一致
+    {
+      type: 'block-quote',
+      children: [{ type: 'paragraph', children: [{ text: '77779999' }] }],
+    }
+    区别于
+    {
+      type: 'block-quote',
+      children: [{ text: '77779999' }],
+    },
+
+ */
+
 const App = () => {
   const editor = useMemo(
-    () => withChords(withDeleteBackward(withToggle(withHistory(withReact(createEditor()))))),
+    () => withChords(withOnChange(withToggle(withHistory(withReact(createEditor()))))),
     []
   )
   const [value] = useState<Descendant[]>([
@@ -35,6 +59,23 @@ const App = () => {
       children: [
         { text: 'There is an empty chord card ' },
         // {
+        //   type: 'abc-tablature',
+        //   children: [
+        //     {
+        //       text: `X:1
+        //       T:The Legacy Jig
+        //       M:6/8
+        //       L:1/8
+        //       R:jig
+        //       K:G
+        //       GFG BAB | gfg gab | GFG BAB | d2A AFD |
+        //       GFG BAB | gfg gab | age edB |1 dBA AFD :|2 dBA ABd |:
+        //       efe edB | dBA ABd | efe edB | gdB ABd |
+        //       efe edB | d2d def | gfe edB |1 dBA ABd :|2 dBA AFD |]`,
+        //     },
+        //   ],
+        // },
+        // {
         //   type: 'inline-chord',
         //   children: [{ text: '' }],
         //   taps: { chordType: { name: '', name_zh: '', tag: '' }, chordTaps: [] },
@@ -42,6 +83,15 @@ const App = () => {
         // { text: 'here' },
       ],
     },
+    {
+      type: 'abc-tablature',
+      children: [{ type: 'paragraph', children: [{ text: '77779999' }] }],
+    },
+    {
+      type: 'block-quote',
+      children: [{ type: 'paragraph', children: [{ text: '77779999' }] }],
+    },
+
     // ...(yellowJson as Descendant[]),
   ])
 
@@ -50,7 +100,7 @@ const App = () => {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onChange = useCallback((_value: Descendant[]) => {
-    // console.log(value)
+    console.log(_value)
   }, [])
   return (
     <Slate editor={editor} initialValue={value} onChange={onChange}>
@@ -75,6 +125,8 @@ const Element = (props: RenderElementProps) => {
   switch (element.type) {
     case 'inline-chord':
       return <InlineChordElement {...props} />
+    case 'abc-tablature':
+      return <ABCElement {...props} />
     case 'check-list-item':
       return <CheckListItemElement {...props} />
     case 'block-quote':

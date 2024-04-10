@@ -41,7 +41,7 @@ const clearInBlockType: BlockFormat[] = [
   'heading-6',
 ]
 
-export const withDeleteBackward = (editor: Editor) => {
+export const withOnChange = (editor: Editor) => {
   const { insertText, insertBreak, deleteBackward } = editor
 
   editor.insertText = (text) => {
