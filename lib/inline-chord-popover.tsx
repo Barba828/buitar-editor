@@ -3,11 +3,11 @@ import { Range, Editor, Transforms, BaseOperation } from 'slate'
 import { ReactEditor, useSlate } from 'slate-react'
 import { type BoardChord } from '@buitar/to-guitar'
 import { getChordName } from './utils'
-import { Popover, type PopoverProps } from './components/popover'
+import { Popover, type CommonPopoverProps } from './components/popover'
 import { inputTags, ChordInputTag } from './config'
 import { SearchList } from './search-list'
 
-export const InlineChordPopover: FC<PopoverProps> = memo(() => {
+export const InlineChordPopover: FC<CommonPopoverProps> = memo((props) => {
   const editor = useSlate()
   const [rect, setRect] = useState<DOMRect | null>(null)
   const [inputTag, setInputTag] = useState<ChordInputTag | null>()
@@ -22,10 +22,10 @@ export const InlineChordPopover: FC<PopoverProps> = memo(() => {
     return inputTag === inputTag?.toLowerCase()
   }, [inputTag])
   const isCustom = useMemo(() => {
-    return inputTag === '/X' || inputTag === '/x' || inputTag === '/R' || inputTag === '/r'
+    return inputTag === '-X' || inputTag === '-x' || inputTag === '-R' || inputTag === '-r'
   }, [inputTag])
   const isFixed = useMemo(() => {
-    return inputTag === '/T' || inputTag === '/t' || inputTag === '/R' || inputTag === '/r'
+    return inputTag === '-T' || inputTag === '-t' || inputTag === '-R' || inputTag === '-r'
   }, [inputTag])
 
   const onSelectChord = (chordName: string) => {
@@ -122,6 +122,7 @@ export const InlineChordPopover: FC<PopoverProps> = memo(() => {
       data-cy="inline-chord-portal"
       style={{ maxHeight: '360px' }}
       onClose={() => setTarget(null)}
+      {...props}
     >
       <SearchList
         search={search}

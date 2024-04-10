@@ -10,7 +10,7 @@ import {
   DefaultLeaf,
 } from 'slate-react'
 import { withHistory } from 'slate-history'
-import { withChords, InlineChordElement, FixedChordLeaf } from '~chord'
+import { withChords, InlineChordElement, FixedChordLeaf, InlineChordPopover } from '~chord'
 import { withDeleteBackward } from './plugins/with-backward'
 import { withToggle } from './plugins/with-toggle'
 import { CheckListItemElement } from './components/elements/check-list-item'
@@ -63,6 +63,8 @@ const App = () => {
       />
       <HoverToolbar />
       <SlashToolbar />
+
+      <InlineChordPopover />
     </Slate>
   )
 }

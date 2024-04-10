@@ -1,8 +1,14 @@
 import { useState, useMemo, useEffect, useCallback, FC, HTMLProps } from 'react'
 import { Range, Editor, BaseOperation, Transforms } from 'slate'
 import { ReactEditor, useSlate } from 'slate-react'
-import { List, ListItem, Popover, useInlineChordPopover } from '~chord'
-import { slashChordMenu } from '~chord/config'
+import { List, ListItem, Popover } from '~chord'
+import {
+  textTypeMenu,
+  tablatureTypeMenu,
+  chordTypeMenu,
+  flatTypeArr,
+  type ToolType,
+} from './tools.config'
 
 export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
   const editor = useSlate()
@@ -10,20 +16,38 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
   const [target, setTarget] = useState<Range | null>()
   const [search, setSearch] = useState('')
 
-  const inlineChordPopover = useInlineChordPopover(search)
-
   const filterList = useMemo(() => {
-    if (!search) {
+    if (!search || search.length < 2) {
       return []
     }
 
-    if (search.length === 1) {
-      return slashChordMenu
-    }
-
-    const text = search.slice(1)
-    return slashChordMenu.filter((item) => item.title.includes(text) || item.desc.includes(text))
+    const text = search.slice(1) // 截取掉前面‘/’
+    return flatTypeArr.filter(
+      (item) =>
+        item.title.toLocaleLowerCase().includes(text.toLocaleLowerCase()) ||
+        item.desc.toLocaleLowerCase().includes(text.toLocaleLowerCase())
+    )
   }, [search])
+
+  const nestedList = useMemo(() => {
+    if (filterList.length) {
+      return []
+    }
+    return [
+      {
+        title: 'Basic blocks',
+        list: textTypeMenu.slice(0, 8),
+      },
+      {
+        title: 'Tablature blocks',
+        list: tablatureTypeMenu,
+      },
+      {
+        title: 'Inline cards',
+        list: chordTypeMenu,
+      },
+    ]
+  }, [filterList.length])
 
   useEffect(() => {
     if (target) {
@@ -77,7 +101,7 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
     }
   }, [editor, onChange])
 
-  const renderItem = useCallback((item: (typeof slashChordMenu)[0]) => {
+  const renderItem = useCallback((item: ToolType) => {
     return <ListItem item={item} />
   }, [])
 
@@ -88,26 +112,43 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
   }, [])
 
   const onItemClick = useCallback(
-    (item: (typeof slashChordMenu)[0]) => {
-      if (item.type === 'chord' && target) {
+    (item: ToolType) => {
+      if (target) {
+        // 清除slash前缀
         Transforms.select(editor, target)
-        editor.insertText(item.key)
+        editor.delete()
       }
+      switch (item.type) {
+        case 'text':
+          editor.insertBlock?.(item.key)
+          break
+
+        case 'chord':
+          //插入inline-chord前缀标记
+          editor.insertText(item.key)
+          break
+
+        case 'tablature':
+          /**
+           * @TODO
+           */
+          editor.insertBlock?.('paragraph')
+          break
+
+        default:
+          break
+      }
+
       cleanSearch()
     },
     [cleanSearch, editor, target]
   )
 
-  if (inlineChordPopover) {
-    return inlineChordPopover
-  }
-
-  /**输入检测 input tag 并设置 target 和 search*/
-  if (!target || !search || !rect) {
+  if (!filterList.length && !nestedList.length) {
     return null
   }
 
-  if (!filterList.length) {
+  if (!target || !search || !rect) {
     return null
   }
 
@@ -118,7 +159,12 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
       rect={rect}
       onClose={cleanSearch}
     >
-      <List lists={filterList} renderItem={renderItem} onItemClick={onItemClick}>
+      <List
+        nestedLists={nestedList}
+        lists={filterList}
+        renderItem={renderItem}
+        onItemClick={onItemClick}
+      >
         {props.children}
       </List>
     </Popover>

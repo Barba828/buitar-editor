@@ -1,18 +1,17 @@
 import { memo, useEffect, FC, useCallback, useState, ChangeEventHandler } from 'react'
 import { useSlate } from 'slate-react'
-import { Popover } from './components/popover'
 import { BoardChord } from '@buitar/to-guitar'
-import { getChordName } from './utils'
-import { getSelectedLeavesFormat, getSelectedRect, isSelectedParagraph } from './utils/slate-utils'
+import { CommonPopoverProps, Popover, SearchList } from '~chord'
+import { getChordName } from '~chord/utils'
+import {
+  getSelectedLeavesFormat,
+  getSelectedRect,
+  isSelectedParagraph,
+} from '~chord/utils/slate-utils'
 
 import './input-chord-popover.scss'
-import { SearchList } from './search-list'
 
-interface InputChordPopoverProps {
-  visible?: boolean
-  onVisibleChange?: (visible: boolean) => void
-}
-export const InputChordPopover: FC<InputChordPopoverProps> = memo(
+export const InputChordPopover: FC<CommonPopoverProps> = memo(
   ({ visible = true, onVisibleChange }) => {
     const [search, setSearch] = useState('')
     const [text, setText] = useState('')

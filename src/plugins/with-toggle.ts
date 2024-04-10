@@ -50,7 +50,7 @@ export const toggleBlock = (editor: Editor, format: BlockFormat) => {
   Transforms.setNodes<SlateElement>(editor, newProperties)
 
   /**
-   * List类型需根据 format 在外部包裹 ol/ul
+   * List类型需根据 format 在外部还原包裹 ol/ul
    * 内部是list-item li
    */
   if (!isActive && isList) {
@@ -59,9 +59,30 @@ export const toggleBlock = (editor: Editor, format: BlockFormat) => {
   }
 }
 
+export const insertBlock = (editor: Editor, format: BlockFormat) => {
+  let node: SlateElement = {
+    type: format,
+    children: [{ text: '' }],
+  }
+  if (isListFunc(format)) {
+    // Transforms.wrapNodes(editor, node, { split: true })
+    node = {
+      type: format,
+      children: [
+        {
+          type: 'list-item',
+          children: [{ text: '' }],
+        },
+      ],
+    }
+  }
+  Transforms.insertNodes(editor, node)
+}
+
 export const withToggle = (editor: Editor) => {
   editor.isList = isListFunc
   editor.toggleBlock = (format) => toggleBlock(editor, format)
   editor.toggleMark = (format) => toggleMark(editor, format)
+  editor.insertBlock = (format) => insertBlock(editor, format)
   return editor
 }

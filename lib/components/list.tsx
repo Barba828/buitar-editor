@@ -104,6 +104,7 @@ export function List<T>({
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [handleKeyDown])
 
+  /**列表项 */
   const renderItem = (item: T, index: number) => {
     return (
       <div
@@ -112,7 +113,10 @@ export function List<T>({
           e.preventDefault()
           handleClickItem(item, index)
         }}
-        onMouseMove={() => setCheckedIndex(index)}
+        onMouseMove={() => {
+          ref.current?.focus()
+          setCheckedIndex(index)
+        }}
         className={cx('chord-list-item', index === checkedIndex && 'chord-list-item--active')}
         data-key={index}
       >
@@ -121,9 +125,11 @@ export function List<T>({
     )
   }
 
+  let offset = 0
+  /**嵌套列表 */
   const renderNestedItem = (item: { list: T[]; title?: string }, index: number) => {
     const { list, title } = item
-    const offset = index > 0 && nestedLists ? nestedLists?.[index - 1].list.length : 0
+    offset += index > 0 && nestedLists ? nestedLists?.[index - 1].list.length : 0
     return (
       <div className="chord-list__nested" key={`nested-${index}`}>
         {title && <div className="chord-list__nested-title">{title}</div>}

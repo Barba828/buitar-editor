@@ -3,7 +3,7 @@ import { type CustomTypes, Transforms, Editor } from 'slate'
 import type { CustomInlineChordElement, CustomChordText } from './custom-types.d'
 
 export const withChords = (editor: CustomTypes['Editor']) => {
-  const { isInline, isVoid, markableVoid, isElementReadOnly, isSelectable } = editor
+  const { isInline, isVoid, markableVoid } = editor
 
   editor.isInline = (element: CustomTypes['Element']) => {
     return element.type === 'inline-chord' ? true : isInline(element)
@@ -11,12 +11,12 @@ export const withChords = (editor: CustomTypes['Editor']) => {
   editor.isVoid = (element: CustomTypes['Element']) => {
     return element.type === 'inline-chord' ? true : isVoid(element)
   }
-  editor.isElementReadOnly = (element: CustomTypes['Element']) => {
-    return element.type === 'inline-chord' ? true : isElementReadOnly(element)
-  }
-  editor.isSelectable = (element: CustomTypes['Element']) => {
-    return element.type === 'inline-chord' ? false : isSelectable(element)
-  }
+  // editor.isElementReadOnly = (element: CustomTypes['Element']) => {
+  //   return element.type === 'inline-chord' ? true : isElementReadOnly(element)
+  // }
+  // editor.isSelectable = (element: CustomTypes['Element']) => {
+  //   return element.type === 'inline-chord' ? false : isSelectable(element)
+  // }
 
   editor.markableVoid = (element: CustomTypes['Element']) => {
     return element.type === 'inline-chord' || markableVoid(element)
@@ -45,10 +45,8 @@ export const withChords = (editor: CustomTypes['Editor']) => {
 
     Transforms.insertNodes(editor, chordText)
 
-    // Editor.removeMark(editor, 'underlined')
     Editor.removeMark(editor, 'chord')
-
-    editor.insertText(' ') // 插入空格并移除 underlined 等效果
+    editor.insertText(' ')
     Transforms.move(editor)
   }
 

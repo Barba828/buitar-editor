@@ -1,14 +1,10 @@
 import { memo, useEffect, FC, useState, useCallback, useMemo } from 'react'
 import { useSlate } from 'slate-react'
-import { getSelectedRect, Popover, List, ListItem } from '~chord'
+import { getSelectedRect, Popover, List, ListItem, type CommonPopoverProps } from '~chord'
 
-import { textTypeMenu, chordTypeMenu, type ToolType } from './tools.config'
+import { textTypeMenu, tablatureTypeMenu, type ToolType } from './tools.config'
 
-interface TextTypePopoverProps {
-  visible?: boolean
-  onVisibleChange?: (visible: boolean) => void
-}
-export const TextTypePopover: FC<TextTypePopoverProps> = memo(
+export const TextTypePopover: FC<CommonPopoverProps> = memo(
   ({ visible = true, onVisibleChange }) => {
     const editor = useSlate()
     const [rect, setRect] = useState<DOMRect | null>(null)
@@ -29,8 +25,8 @@ export const TextTypePopover: FC<TextTypePopoverProps> = memo(
           list: textTypeMenu,
         },
         {
-          title: 'music',
-          list: chordTypeMenu,
+          title: 'tablature',
+          list: tablatureTypeMenu,
         },
       ]
     }, [])

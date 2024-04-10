@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react'
-import { chordTypeMenu, textTypeMenu, ToolType } from '../tools.config'
+import { flatTypeArr, ToolType } from '../tools.config'
 import { useSlateStatic } from 'slate-react'
 import { getSelectedBlockType } from '~chord'
-
-const flatTypeArr = [...textTypeMenu, ...chordTypeMenu]
 
 export const useBlockType = () => {
   const editor = useSlateStatic()

@@ -9,6 +9,7 @@ export { InputChordPopover } from './input-chord-popover'
 export * from './components/popover'
 export * from './components/list'
 export * from './components/list-item'
+export * from './search-list'
 export {
   InlineTapsItem as InlineChordElement,
   FixedTapsItem as FixedChordLeaf,

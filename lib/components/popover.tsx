@@ -18,6 +18,11 @@ import './popover.scss'
 //   ): (props: P & React.RefAttributes<T>) => React.ReactNode | null
 // }
 
+export interface CommonPopoverProps {
+  visible?: boolean
+  onVisibleChange?: (visible: boolean) => void
+}
+
 export interface PopoverRefs {
   show: (
     elRect: Parameters<typeof popoverRefShow>[1],
@@ -26,14 +31,14 @@ export interface PopoverRefs {
   hide: () => void
 }
 
-export type PopoverProps = Omit<HTMLProps<HTMLDivElement>, 'ref'> & {
-  overlay?: boolean
-  rect?: Parameters<typeof popoverRefShow>[1] | null
-  option?: Parameters<typeof popoverRefShow>[2]
-  onClose?: () => void
-  onShow?: () => void
-  onVisibleChange?: (visible: boolean) => void
-}
+export type PopoverProps = Omit<HTMLProps<HTMLDivElement>, 'ref'> &
+  CommonPopoverProps & {
+    overlay?: boolean
+    rect?: Parameters<typeof popoverRefShow>[1] | null
+    option?: Parameters<typeof popoverRefShow>[2]
+    onClose?: () => void
+    onShow?: () => void
+  }
 
 export const Popover = forwardRef<PopoverRefs, PopoverProps>(
   ({ children, overlay = true, rect, option, onShow, onClose, onVisibleChange, ...props }, ref) => {
