@@ -71,7 +71,8 @@ export function List<T>({
       return
     }
     const container = ref.current.parentElement || ref.current
-    const checkedTarget = ref.current.children[checkedIndex]
+    const checkedTarget = ref.current.querySelector(`.chord-list-item[data-key="${checkedIndex}"]`)
+
     if (!container || !checkedTarget) {
       return
     }

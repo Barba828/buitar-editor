@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import path from 'path'
 
 const baseUrl = process.env.BASE_URL || '/'
 
@@ -15,5 +16,11 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist-demo',
+  },
+  resolve: {
+    alias: {
+      // 在这里添加路径别名的配置
+      '~chord': path.resolve(__dirname, './lib'),
+    },
   },
 })

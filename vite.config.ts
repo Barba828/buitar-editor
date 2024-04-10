@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import dts from 'vite-plugin-dts'
+import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -30,6 +31,12 @@ export default defineConfig({
           'react-dom': 'ReactDOM',
         },
       },
+    },
+  },
+  resolve: {
+    alias: {
+      // 在这里添加路径别名的配置
+      '~chord': path.resolve(__dirname, './lib'),
     },
   },
 })

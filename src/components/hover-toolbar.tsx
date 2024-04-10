@@ -1,30 +1,22 @@
 import { useEffect, useCallback, useState, FC, HTMLProps, MouseEventHandler } from 'react'
 import { Editor, Range } from 'slate'
 import { useSlate } from 'slate-react'
-import {
-  Popover,
-  InputChordPopover,
-  getSelectedRect,
-  isMarkActive,
-  getSelectedBlockType,
-} from '../../lib'
-import type { TextFormat } from '../../lib'
+import { Popover, InputChordPopover, getSelectedRect, isMarkActive } from '~chord'
 import { TextTypePopover } from './text-type-popover'
-import { chordTypeMenu, textTypeMenu } from './text-type.config'
+import { useBlockType } from './utils/use-block-type'
 
 import cx from 'classnames'
 import './hover-toolbar.scss'
-
-const flatTypeArr = [...textTypeMenu, ...chordTypeMenu]
 
 export const HoverToolbar = () => {
   const [rect, setRect] = useState<DOMRect | null>(null)
   const [visible, setVisible] = useState<boolean>(false)
   const [chordPopoverVisible, setChordPopoverVisible] = useState<boolean>(false)
   const [textPopoverVisible, setTextPopoverVisible] = useState<boolean>(false)
-  const [blockType, setBlockType] = useState<(typeof flatTypeArr)[0]>(flatTypeArr[0])
   const editor = useSlate()
   const { selection } = editor
+
+  const blockType = useBlockType()
 
   /**判断是否显示toolbar */
   useEffect(() => {
@@ -35,12 +27,6 @@ export const HoverToolbar = () => {
     )
     chordPopoverVisible && setChordPopoverVisible(false)
     textPopoverVisible && setTextPopoverVisible(false)
-
-    const format = getSelectedBlockType(editor)
-    const blockType = flatTypeArr.find((item) => item.key === format)
-    if (blockType) {
-      setBlockType(blockType)
-    }
   }, [editor, selection])
 
   /**显示toolbar位置 */

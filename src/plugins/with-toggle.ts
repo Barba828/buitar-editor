@@ -1,6 +1,5 @@
 import { CustomTypes, Editor, Element as SlateElement, Transforms } from 'slate'
-import { isBlockActive, isMarkActive } from '../../lib'
-import type { BlockFormat, TextFormat } from '../../lib'
+import { isBlockActive, isMarkActive } from '~chord'
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list']
 const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify']

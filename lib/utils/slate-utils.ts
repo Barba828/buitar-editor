@@ -1,15 +1,14 @@
 import { CustomTypes, Range, Editor, Element as SlateElement, Text } from 'slate'
 import { ReactEditor } from 'slate-react'
 
-export type BlockFormat = CustomTypes['Element']['type']
-export type TextFormat = keyof Omit<CustomTypes['Text'], 'text'>
+type TextFormat = keyof Omit<CustomTypes['Text'], 'text'>
 
 export const isMarkActive = (editor: Editor, format: TextFormat) => {
   const marks = Editor.marks(editor)
   return marks ? !!marks[format] : false
 }
 
-export const isBlockActive = (editor: Editor, format: BlockFormat, blockType = 'type') => {
+export const isBlockActive = (editor: Editor, format: SlateElement['type'], blockType = 'type') => {
   const { selection } = editor
   if (!selection) {
     return false

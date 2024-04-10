@@ -2,7 +2,7 @@ import type { BaseEditor, Descendant } from 'slate'
 import type { ReactEditor } from 'slate-react'
 import type { HistoryEditor } from 'slate-history'
 
-import type { CustomInlineChordElement, CustomChordText, ChordEditor, BlockFormat } from '../lib'
+import type { CustomInlineChordElement, CustomChordText, ChordEditor } from '~chord'
 
 export type ParagraphElement = {
   type: 'paragraph'

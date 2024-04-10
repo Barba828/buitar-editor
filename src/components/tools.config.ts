@@ -1,4 +1,13 @@
-export const textTypeMenu = [
+import { Element as SlateElement } from 'slate'
+
+export type ToolType = {
+  type: 'text' | 'chord'
+  key: SlateElement['type']
+  title: string
+  desc: string
+}
+
+export const textTypeMenu: ToolType[] = [
   {
     type: 'text',
     key: 'paragraph',
@@ -67,7 +76,7 @@ export const textTypeMenu = [
   },
 ]
 
-export const chordTypeMenu = [
+export const chordTypeMenu: ToolType[] = [
   {
     type: 'chord',
     key: 'block-quote',

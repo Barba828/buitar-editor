@@ -1,5 +1,4 @@
 import { Transforms, Element as SlateElement, Editor, Range, Point, Path } from 'slate'
-import { BlockFormat } from '../../lib'
 
 const SHORTCUTS: Record<string, BlockFormat> = {
   '*': 'bulleted-list',
@@ -112,8 +111,9 @@ export const withDeleteBackward = (editor: Editor) => {
     }
 
     insertBreak(...args)
-    const { selection } = editor
+
     // 换行后，判断是否需要清理格式
+    const { selection } = editor
     if (selection && Range.isCollapsed(selection)) {
       const match = Editor.above(editor, {
         match: (n) =>
@@ -181,7 +181,12 @@ const cleanTypeOnStart = (editor: Editor) => {
   }
 }
 
-// 判断当前列表项是否还有外部的有序列表或无序列表包裹
+/**
+ * 判断当前列表项是否还有外部的有序列表或无序列表包裹
+ * @param editor
+ * @param listItemPath
+ * @returns
+ */
 const hasListWrapper = (editor: Editor, listItemPath: Path): boolean => {
   const [parent] = Editor.node(editor, listItemPath.slice(0, -1)) // 获取列表项的父节点
 

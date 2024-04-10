@@ -10,11 +10,12 @@ import {
   DefaultLeaf,
 } from 'slate-react'
 import { withHistory } from 'slate-history'
-import { withChords, InlineChordElement, FixedChordLeaf, SlashToolbar } from '../lib'
+import { withChords, InlineChordElement, FixedChordLeaf } from '~chord'
 import { withDeleteBackward } from './plugins/with-backward'
 import { withToggle } from './plugins/with-toggle'
 import { CheckListItemElement } from './components/elements/check-list-item'
 import { HoverToolbar } from './components/hover-toolbar'
+import { SlashToolbar } from './components/slash-toolbar'
 
 import type { ParagraphElement } from './custom-types'
 

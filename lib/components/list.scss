@@ -16,6 +16,7 @@
   cursor: pointer;
   background: transparent;
   transition: all 0.3s ease;
+  box-sizing: border-box;
   &:active,
   &--active {
     background: $gray-0;

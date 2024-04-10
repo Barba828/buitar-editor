@@ -9,6 +9,8 @@
 
 .popover-container {
   position: absolute;
+  top: -100vh;
+  left: -100vw;
   z-index: 999;
   padding: 4px;
   max-height: 360px;

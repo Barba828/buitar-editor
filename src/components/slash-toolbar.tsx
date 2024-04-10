@@ -1,10 +1,8 @@
 import { useState, useMemo, useEffect, useCallback, FC, HTMLProps } from 'react'
 import { Range, Editor, BaseOperation, Transforms } from 'slate'
 import { ReactEditor, useSlate } from 'slate-react'
-import { InlineChordPopover, List, Popover } from './index'
-import { inputTags, slashChordMenu } from './config'
-
-import './slash-toolbar.scss'
+import { List, ListItem, Popover, useInlineChordPopover } from '~chord'
+import { slashChordMenu } from '~chord/config'
 
 export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
   const editor = useSlate()
@@ -12,10 +10,7 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
   const [target, setTarget] = useState<Range | null>()
   const [search, setSearch] = useState('')
 
-  /**显示inlineChord Popover（隐藏menu Popover） */
-  const isShowInlineChord = useMemo(() => {
-    return inputTags.find((tag) => search.startsWith(tag)) && search.length > 2
-  }, [search])
+  const inlineChordPopover = useInlineChordPopover(search)
 
   const filterList = useMemo(() => {
     if (!search) {
@@ -82,14 +77,9 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
     }
   }, [editor, onChange])
 
-  const renderItem = (item: (typeof slashChordMenu)[0], index: number) => {
-    return (
-      <div key={index} className="toolbar-chord-item">
-        <div className="toolbar-chord-item--title">{item.title}</div>
-        <div className="toolbar-chord-item--desc">{item.desc}</div>
-      </div>
-    )
-  }
+  const renderItem = useCallback((item: (typeof slashChordMenu)[0]) => {
+    return <ListItem item={item} />
+  }, [])
 
   const cleanSearch = useCallback(() => {
     setTarget(null)
@@ -108,13 +98,13 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
     [cleanSearch, editor, target]
   )
 
+  if (inlineChordPopover) {
+    return inlineChordPopover
+  }
+
   /**输入检测 input tag 并设置 target 和 search*/
   if (!target || !search || !rect) {
     return null
-  }
-
-  if (isShowInlineChord) {
-    return <InlineChordPopover />
   }
 
   if (!filterList.length) {

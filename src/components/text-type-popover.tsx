@@ -1,8 +1,8 @@
 import { memo, useEffect, FC, useState, useCallback, useMemo } from 'react'
 import { useSlate } from 'slate-react'
-import { getSelectedRect, Popover, List, BlockFormat } from '../../lib'
+import { getSelectedRect, Popover, List, ListItem } from '~chord'
 
-import { textTypeMenu, chordTypeMenu } from './text-type.config'
+import { textTypeMenu, chordTypeMenu, type ToolType } from './tools.config'
 
 interface TextTypePopoverProps {
   visible?: boolean
@@ -35,19 +35,14 @@ export const TextTypePopover: FC<TextTypePopoverProps> = memo(
       ]
     }, [])
 
-    const renderItem = (item: (typeof textTypeMenu)[0], index: number) => {
-      return (
-        <div key={index} className="toolbar-chord-item">
-          <div className="toolbar-chord-item--title">{item.title}</div>
-          <div className="toolbar-chord-item--desc">{item.desc}</div>
-        </div>
-      )
-    }
+    const renderItem = useCallback((item: ToolType) => {
+      return <ListItem item={item} />
+    }, [])
 
     const onItemClick = useCallback(
-      (item: (typeof textTypeMenu)[0]) => {
+      (item: ToolType) => {
         if (item.type === 'text') {
-          editor.toggleBlock?.(item.key as BlockFormat)
+          editor.toggleBlock?.(item.key)
           setRect(null)
           onVisibleChange?.(false)
         }
