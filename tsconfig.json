@@ -16,7 +16,9 @@
     "esModuleInterop": true,
     "paths": {
       "~chord": ["./lib"],
-      "~chord/*": ["./lib/*"]
+      "~chord/*": ["./lib/*"],
+      "~common": ["./common"],
+      "~common/*": ["./common/*"]
     },
 
     /* Linting */
@@ -25,6 +27,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "lib"],
+  "include": ["src", "lib", "common", "types"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

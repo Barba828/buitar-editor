@@ -9,8 +9,8 @@ import {
   useSelected,
 } from 'slate-react'
 import { capitalizeEveryWord, getChordName } from '../utils'
-import { CustomInlineChordElement } from '../custom-types.d'
-import { isLightMode } from '../utils/media-query'
+import { isLightMode } from '~common'
+import { type CustomInlineChordElement } from '~chord'
 import { transToSvgPoints } from '../utils/trans-svg'
 
 import cx from 'classnames'

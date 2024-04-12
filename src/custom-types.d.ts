@@ -74,8 +74,8 @@ export type CustomElement =
 export type BuitarEditor = {
   isList?: (format: BlockFormat) => boolean
   toggleMark?: (format: TextFormat) => void
-  toggleBlock?: (format: BlockFormat) => void
-  insertBlock?: (format: BlockFormat) => void
+  toggleBlock?: (element: Partial<CustomElement>) => void
+  insertBlock?: (element: Partial<CustomElement>) => void
 }
 
 export type CustomEditor = BuitarEditor & ChordEditor & BaseEditor & ReactEditor & HistoryEditor

@@ -1,4 +1,4 @@
-import { Transforms, Element as SlateElement, Editor, Range, Point, Path } from 'slate'
+import { Transforms, Element as SlateElement, Editor, Range, Point, Path, NodeEntry } from 'slate'
 
 const SHORTCUTS: Record<string, BlockFormat> = {
   '*': 'bulleted-list',
@@ -67,24 +67,10 @@ export const withOnChange = (editor: Editor) => {
           Transforms.delete(editor)
         }
 
-        const newProperties: Partial<SlateElement> = {
-          type: editor.isList?.(type) ? 'list-item' : type,
-        }
-        Transforms.setNodes<SlateElement>(editor, newProperties, {
-          match: (n) => SlateElement.isElement(n) && Editor.isBlock(editor, n),
+        editor.insertBlock?.({
+          type,
+          start: orderedListStart ? Number(orderedListStart) : undefined,
         })
-
-        if (editor.isList?.(type)) {
-          const list = {
-            type,
-            start: Number(orderedListStart),
-            children: [],
-          } as SlateElement
-          Transforms.wrapNodes(editor, list, {
-            match: (n) =>
-              !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'list-item',
-          })
-        }
 
         return
       }
@@ -143,41 +129,39 @@ export const withOnChange = (editor: Editor) => {
 const cleanTypeOnStart = (editor: Editor) => {
   const { selection } = editor
 
-  if (selection && Range.isCollapsed(selection)) {
-    const match = Editor.above(editor, {
-      match: (n) => SlateElement.isElement(n) && Editor.isBlock(editor, n),
-    })
+  if (!selection || !Range.isCollapsed(selection)) {
+    return
+  }
 
-    if (match) {
-      const [block, path] = match
-      const start = Editor.start(editor, path)
+  const match = Editor.above(editor, {
+    match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && Editor.isBlock(editor, n),
+  })
 
-      /** start 处于当前block开始位置，并且当前block不是paragraph，则重置为paragraph */
-      if (
-        !Editor.isEditor(block) &&
-        SlateElement.isElement(block) &&
-        block.type !== 'paragraph' &&
-        Point.equals(selection.anchor, start)
-      ) {
-        /** feature: 若父级存在List， 则将当前block设置为list-item，否则仍是paragraph */
-        const parentHasList = hasListWrapper(editor, path.slice(0, -1))
-        const newProperties: Partial<SlateElement> = {
-          type: parentHasList ? 'list-item' : 'paragraph',
-        }
-        Transforms.setNodes(editor, newProperties)
+  if (!match) {
+    return
+  }
 
-        /**重置时如果是list-item 则解除外部ol/ul包裹 */
-        if (block.type === 'list-item') {
-          Transforms.unwrapNodes(editor, {
-            match: (n) =>
-              !Editor.isEditor(n) && SlateElement.isElement(n) && !!editor.isList?.(n.type),
-            split: true,
-          })
-        }
+  const [block, path] = match as NodeEntry<SlateElement>
+  const start = Editor.start(editor, path)
 
-        return true
-      }
+  /** start 处于当前block开始位置，并且当前block不是paragraph，则重置为paragraph */
+  if (block.type !== 'paragraph' && Point.equals(selection.anchor, start)) {
+    /** feature: 若父级存在List， 则将当前block设置为list-item，否则仍是paragraph */
+    const parentHasList = hasListWrapper(editor, path.slice(0, -1))
+    const newProperties: Partial<SlateElement> = {
+      type: parentHasList ? 'list-item' : 'paragraph',
     }
+    Transforms.setNodes(editor, newProperties)
+
+    /**重置时如果是list-item 则解除外部ol/ul包裹 */
+    if (block.type === 'list-item') {
+      Transforms.unwrapNodes(editor, {
+        match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && !!editor.isList?.(n.type),
+        split: true,
+      })
+    }
+
+    return true
   }
 }
 

@@ -1,8 +1,8 @@
-import { CustomTypes, Editor, Element as SlateElement, Transforms } from 'slate'
-import { isBlockActive, isMarkActive } from '~chord'
+import { Editor, Element as SlateElement, Transforms } from 'slate'
+import { isBlockActive, isMarkActive } from '~common'
 
-const LIST_TYPES = ['numbered-list', 'bulleted-list']
-const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify']
+const LIST_TYPES: BlockFormat[] = ['numbered-list', 'bulleted-list']
+const NEED_WRAP_TYPES: BlockFormat[] = [...LIST_TYPES, 'block-quote', 'abc-tablature']
 
 export const isListFunc = (format: BlockFormat) => LIST_TYPES.includes(format)
 
@@ -16,13 +16,9 @@ export const toggleMark = (editor: Editor, format: TextFormat) => {
   }
 }
 
-export const toggleBlock = (editor: Editor, format: BlockFormat) => {
-  const isActive = isBlockActive(
-    editor,
-    format,
-    TEXT_ALIGN_TYPES.includes(format) ? 'align' : 'type'
-  )
-  const isList = isListFunc(format)
+export const toggleBlock = (editor: Editor, { type: format }: SlateElement) => {
+  const isActive = isBlockActive(editor, format)
+  const isNeedWrap = NEED_WRAP_TYPES.includes(format)
 
   /**
    * 先解除 isList 的包裹
@@ -30,59 +26,85 @@ export const toggleBlock = (editor: Editor, format: BlockFormat) => {
    */
   Transforms.unwrapNodes(editor, {
     match: (n) =>
-      !Editor.isEditor(n) &&
-      SlateElement.isElement(n) &&
-      LIST_TYPES.includes(n.type) &&
-      !TEXT_ALIGN_TYPES.includes(format),
+      !Editor.isEditor(n) && SlateElement.isElement(n) && NEED_WRAP_TYPES.includes(n.type),
     split: true,
   })
 
-  let newProperties: Partial<SlateElement>
-  if (TEXT_ALIGN_TYPES.includes(format)) {
-    newProperties = {
-      align: isActive ? undefined : format,
-    }
-  } else {
-    newProperties = {
-      type: isActive ? 'paragraph' : isList ? 'list-item' : format,
+  let newProperties: Partial<SlateElement> = {
+    type: 'paragraph',
+  }
+
+  if (!isActive) {
+    switch (format) {
+      case 'numbered-list':
+      case 'bulleted-list':
+        newProperties = {
+          type: 'list-item',
+        }
+        break
+      case 'block-quote':
+      case 'abc-tablature':
+        newProperties = {
+          type: 'paragraph',
+        }
+        break
+      default:
+        newProperties = { type: format }
     }
   }
+
   Transforms.setNodes<SlateElement>(editor, newProperties)
 
   /**
    * List类型需根据 format 在外部还原包裹 ol/ul
    * 内部是list-item li
    */
-  if (!isActive && isList) {
+  if (!isActive && isNeedWrap) {
     const block = { type: format, children: [] }
-    Transforms.wrapNodes(editor, block as CustomTypes['Element'])
+    Transforms.wrapNodes(editor, block as SlateElement)
   }
 }
 
-export const insertBlock = (editor: Editor, format: BlockFormat) => {
-  let node: SlateElement = {
-    type: format,
+export const insertBlock = (editor: Editor, element: SlateElement) => {
+  let node = {
+    ...element,
     children: [{ text: '' }],
-  }
-  if (isListFunc(format)) {
-    // Transforms.wrapNodes(editor, node, { split: true })
-    node = {
-      type: format,
-      children: [
-        {
-          type: 'list-item',
-          children: [{ text: '' }],
-        },
-      ],
-    }
+  } as SlateElement
+
+  switch (element.type) {
+    case 'numbered-list':
+    case 'bulleted-list':
+      node = {
+        ...element,
+        children: [
+          {
+            type: 'list-item',
+            children: [{ text: '' }],
+          },
+        ],
+      }
+      break
+    case 'block-quote':
+      node = {
+        ...element,
+        children: [
+          {
+            type: 'paragraph',
+            children: [{ text: '' }],
+          },
+        ],
+      }
+      break
+    default:
+      break
   }
   Transforms.insertNodes(editor, node)
 }
 
 export const withToggle = (editor: Editor) => {
   editor.isList = isListFunc
-  editor.toggleBlock = (format) => toggleBlock(editor, format)
   editor.toggleMark = (format) => toggleMark(editor, format)
-  editor.insertBlock = (format) => insertBlock(editor, format)
+  editor.toggleBlock = (element) => toggleBlock(editor, element as SlateElement)
+  editor.insertBlock = (element) => insertBlock(editor, element as SlateElement)
   return editor
 }

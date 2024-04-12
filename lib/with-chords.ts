@@ -1,7 +1,7 @@
 /* eslint-disable indent */
 import type { BoardChord } from '@buitar/to-guitar'
 import { type CustomTypes, Transforms, Editor } from 'slate'
-import type { CustomInlineChordElement, CustomChordText } from './custom-types.d'
+import type { CustomInlineChordElement, CustomChordText } from './chord-types.d'
 
 export const withChords = (editor: CustomTypes['Editor']) => {
   const { isInline, isVoid, markableVoid } = editor

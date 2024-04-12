@@ -78,7 +78,7 @@ export const textTypeMenu: ToolType[] = [
 export const tablatureTypeMenu: ToolType[] = [
   {
     type: 'tablature',
-    key: 'block-quote',
+    key: 'abc-tablature',
     title: 'ABC Editor',
     desc: 'Simple music & tablature editor',
   },

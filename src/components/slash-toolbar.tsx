@@ -120,7 +120,7 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
       }
       switch (item.type) {
         case 'text':
-          editor.insertBlock?.(item.key)
+          editor.insertBlock?.({ type: item.key as BlockFormat })
           break
 
         case 'chord':
@@ -132,7 +132,7 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
           /**
            * @TODO
            */
-          editor.insertBlock?.('paragraph')
+          editor.insertBlock?.({ type: item.key as BlockFormat })
           break
 
         default:

@@ -33,7 +33,6 @@ export interface PopoverRefs {
 
 export type PopoverProps = Omit<HTMLProps<HTMLDivElement>, 'ref'> &
   CommonPopoverProps & {
-    overlay?: boolean
     rect?: Parameters<typeof popoverRefShow>[1] | null
     option?: Parameters<typeof popoverRefShow>[2]
     onClose?: () => void
@@ -41,7 +40,7 @@ export type PopoverProps = Omit<HTMLProps<HTMLDivElement>, 'ref'> &
   }
 
 export const Popover = forwardRef<PopoverRefs, PopoverProps>(
-  ({ children, overlay = true, rect, option, onShow, onClose, onVisibleChange, ...props }, ref) => {
+  ({ children, rect, option, onShow, onClose, onVisibleChange, ...props }, ref) => {
     const containerRef = useRef<HTMLDivElement>()
 
     const hide = useCallback(() => {
@@ -81,12 +80,33 @@ export const Popover = forwardRef<PopoverRefs, PopoverProps>(
       [hide]
     )
 
+    // const handleClickOutside = useCallback(
+    //   (event: MouseEvent) => {
+    //     if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+    //       hide()
+    //     }
+    //   },
+    //   [hide]
+    // )
+
     useEffect(() => {
+      if (!rect) {
+        return
+      }
+      // /**
+      //  * ugly
+      //  * 1. 避免 popover 闪烁
+      //  * 2. 或者由 mousedown 同时触发 show & hide
+      //  */
+      // setTimeout(() => {
+      //   document.addEventListener('mousedown', handleClickOutside)
+      // }, 300)
       document.addEventListener('keydown', handleKeyDown)
       return () => {
         document.removeEventListener('keydown', handleKeyDown)
+        // document.removeEventListener('mousedown', handleClickOutside)
       }
-    }, [handleKeyDown])
+    }, [handleKeyDown, rect])
 
     useEffect(() => {
       if (!rect) {
@@ -95,32 +115,20 @@ export const Popover = forwardRef<PopoverRefs, PopoverProps>(
       show(rect, option)
     }, [rect, option, show])
 
-    const content = (
-      <div
-        {...props}
-        onMouseDown={(e) => {
-          // 阻止冒泡到overlay
-          e.stopPropagation()
-          e.preventDefault()
-          props?.onMouseDown?.(e)
-        }}
-        ref={containerRef as LegacyRef<HTMLDivElement>}
-        className={cx('popover-container', props.className)}
-        tabIndex={0}
-      >
-        {children}
-      </div>
-    )
-
     return (
       <Portal>
-        {overlay ? (
-          <div className="popover-overlay" onMouseDown={hide}>
-            {content}
-          </div>
-        ) : (
-          content
-        )}
+        <div
+          {...props}
+          onMouseDown={(e) => {
+            e.preventDefault()
+            props?.onMouseDown?.(e)
+          }}
+          ref={containerRef as LegacyRef<HTMLDivElement>}
+          className={cx('popover-container', props.className)}
+          tabIndex={0}
+        >
+          {children}
+        </div>
       </Portal>
     )
   }

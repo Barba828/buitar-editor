@@ -1,6 +1,7 @@
 import { memo, useEffect, FC, useState, useCallback, useMemo } from 'react'
 import { useSlate } from 'slate-react'
-import { getSelectedRect, Popover, List, ListItem, type CommonPopoverProps } from '~chord'
+import { Popover, List, ListItem, type CommonPopoverProps } from '~chord'
+import { getSelectedRect } from '~common'
 
 import { textTypeMenu, tablatureTypeMenu, type ToolType } from './tools.config'
 
@@ -37,11 +38,9 @@ export const TextTypePopover: FC<CommonPopoverProps> = memo(
 
     const onItemClick = useCallback(
       (item: ToolType) => {
-        if (item.type === 'text') {
-          editor.toggleBlock?.(item.key)
-          setRect(null)
-          onVisibleChange?.(false)
-        }
+        editor.toggleBlock?.({ type: item.key as BlockFormat })
+        setRect(null)
+        onVisibleChange?.(false)
       },
       [editor, onVisibleChange]
     )
@@ -51,7 +50,12 @@ export const TextTypePopover: FC<CommonPopoverProps> = memo(
     }
 
     return (
-      <Popover data-cy="text-type-portal" rect={rect} onVisibleChange={onVisibleChange}>
+      <Popover
+        data-cy="text-type-portal"
+        rect={rect}
+        onVisibleChange={onVisibleChange}
+        onClose={() => setRect(null)}
+      >
         <List nestedLists={nestedList} renderItem={renderItem} onItemClick={onItemClick}></List>
       </Popover>
     )

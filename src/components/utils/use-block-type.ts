@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { flatTypeArr, ToolType } from '../tools.config'
 import { useSlateStatic } from 'slate-react'
-import { getSelectedBlockType } from '~chord'
+import { getSelectedBlock } from '~common'
 
 export const useBlockType = () => {
   const editor = useSlateStatic()
@@ -9,7 +9,8 @@ export const useBlockType = () => {
   const [blockType, setBlockType] = useState<ToolType>(flatTypeArr[0])
 
   useEffect(() => {
-    const format = getSelectedBlockType(editor)
+    const block = getSelectedBlock(editor)
+    const format = block?.type || 'paragraph'
     const blockType = flatTypeArr.find((item) => item.key === format)
     if (blockType) {
       setBlockType(blockType)

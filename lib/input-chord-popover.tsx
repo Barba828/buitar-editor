@@ -1,13 +1,9 @@
 import { memo, useEffect, FC, useCallback, useState, ChangeEventHandler } from 'react'
 import { useSlate } from 'slate-react'
 import { BoardChord } from '@buitar/to-guitar'
+import { getSelectedLeavesFormat, getSelectedRect } from '~common'
 import { CommonPopoverProps, Popover, SearchList } from '~chord'
 import { getChordName } from '~chord/utils'
-import {
-  getSelectedLeavesFormat,
-  getSelectedRect,
-  isSelectedParagraph,
-} from '~chord/utils/slate-utils'
 
 import './input-chord-popover.scss'
 
@@ -23,12 +19,6 @@ export const InputChordPopover: FC<CommonPopoverProps> = memo(
       const selectedRect = getSelectedRect(editor)
       // 未选中内容 -> 不能添加chord
       if (!selectedRect || !selection || !visible) {
-        return
-      }
-
-      // 选中非Paragraph文本内容 -> 不能添加chord
-      const isParagraph = isSelectedParagraph(editor)
-      if (!isParagraph) {
         return
       }
 

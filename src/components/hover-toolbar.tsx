@@ -1,7 +1,8 @@
 import { useEffect, useCallback, useState, FC, HTMLProps, MouseEventHandler } from 'react'
 import { Editor, Range } from 'slate'
 import { useSlate } from 'slate-react'
-import { Popover, InputChordPopover, getSelectedRect, isMarkActive } from '~chord'
+import { Popover, InputChordPopover } from '~chord'
+import { getSelectedRect, isMarkActive } from '~common'
 import { TextTypePopover } from './text-type-popover'
 import { useBlockType } from './utils/use-block-type'
 

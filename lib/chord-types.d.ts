@@ -1,4 +1,5 @@
 import type { BoardChord } from '@buitar/to-guitar'
+import { CustomTypes } from 'slate'
 
 type CustomChordType = {
   taps: BoardChord
@@ -8,18 +9,18 @@ type CustomChordType = {
 
 export type CustomInlineChordElement = {
   type: 'inline-chord'
-  children?: CustomText[]
+  children?: CustomTypes['Text']
 } & CustomChordType
 
 export type ABCTablatureElement = {
   type: 'abc-tablature'
   previewer?: boolean
-  children?: CustomText[]
+  children?: CustomTypes['Text']
 }
 
 export type GTPPreviewerElement = {
   type: 'gtp-previewer'
-  children?: CustomText[]
+  children?: CustomTypes['Text']
 }
 
 export type CustomChordText = {
@@ -29,5 +30,5 @@ export type CustomChordText = {
 
 export type ChordEditor = {
   insertInlineChord?: (taps: BoardChord, concise?: boolean) => void
-  insertFixedChord?: (text: string, chord: CustomText['chord']) => void
+  insertFixedChord?: (text: string, chord: CustomChordType) => void
 }
