@@ -1,4 +1,4 @@
-import { CSSProperties, useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { Descendant, createEditor } from 'slate'
 import {
   Slate,
@@ -9,111 +9,70 @@ import {
   RenderLeafProps,
   DefaultLeaf,
 } from 'slate-react'
-import { withHistory } from 'slate-history'
-import {
-  withChords,
-  InlineChordElement,
-  FixedChordLeaf,
-  InlineChordPopover,
-  ABCElement,
-} from '~chord'
-import { withOnChange } from './plugins/with-on-change'
-import { withToggle } from './plugins/with-toggle'
+import { InlineChordElement, FixedChordLeaf, InlineChordPopover, ABCElement } from '~chord'
 import { CheckListItemElement } from './components/elements/check-list-item'
-import { HoverToolbar } from './components/hover-toolbar'
+import { SelectToolbar } from './components/select-toolbar'
 import { SlashToolbar } from './components/slash-toolbar'
-
-import type { ParagraphElement } from './custom-types'
 
 import './App.scss'
 import './style/theme.scss'
 
-// import yellowJson from './yellow.json'
-
-/**
- * 
- *  @TODO 解决包裹问题
- * 1. 不包裹，换行会新增block
- * 2. 包裹，无法通过退格以及换行移除block
- * 3. 处理需要「退格以及换行移除block」的元素，各种类型表现不一致
-    {
-      type: 'block-quote',
-      children: [{ type: 'paragraph', children: [{ text: '77779999' }] }],
-    }
-    区别于
-    {
-      type: 'block-quote',
-      children: [{ text: '77779999' }],
-    },
-
- */
+import { BlockQuoteItem } from './components/elements/block-quote-item'
+import { useHoverToolbar } from './hooks/use-hover-toolbar'
+import { withPlugins } from './plugins'
 
 const App = () => {
-  const editor = useMemo(
-    () => withChords(withOnChange(withToggle(withHistory(withReact(createEditor()))))),
-    []
-  )
+  const editor = useMemo(() => withPlugins(withReact(createEditor())), [])
   const [value] = useState<Descendant[]>([
+    {
+      type: 'paragraph',
+      children: [{ text: 'demo' }],
+    },
     {
       type: 'paragraph',
       children: [
         { text: 'There is an empty chord card ' },
         // {
-        //   type: 'abc-tablature',
-        //   children: [
-        //     {
-        //       text: `X:1
-        //       T:The Legacy Jig
-        //       M:6/8
-        //       L:1/8
-        //       R:jig
-        //       K:G
-        //       GFG BAB | gfg gab | GFG BAB | d2A AFD |
-        //       GFG BAB | gfg gab | age edB |1 dBA AFD :|2 dBA ABd |:
-        //       efe edB | dBA ABd | efe edB | gdB ABd |
-        //       efe edB | d2d def | gfe edB |1 dBA ABd :|2 dBA AFD |]`,
-        //     },
-        //   ],
-        // },
-        // {
         //   type: 'inline-chord',
         //   children: [{ text: '' }],
         //   taps: { chordType: { name: '', name_zh: '', tag: '' }, chordTaps: [] },
         // },
-        // { text: 'here' },
+        { text: 'here' },
       ],
     },
     {
-      type: 'abc-tablature',
-      children: [{ type: 'paragraph', children: [{ text: '77779999' }] }],
-    },
-    {
       type: 'block-quote',
+      extend: true,
       children: [{ type: 'paragraph', children: [{ text: '77779999' }] }],
     },
-
     // ...(yellowJson as Descendant[]),
+    // ...(ABCJson as Descendant[]),
   ])
-
-  const renderElement = useCallback((props: RenderElementProps) => <Element {...props} />, [])
-  const renderLeaf = useCallback((props: RenderLeafProps) => <Leaf {...props} />, [])
+  const {
+    attrs: { handleMouseOver },
+    HoverToolbar,
+  } = useHoverToolbar(editor)
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const onChange = useCallback((_value: Descendant[]) => {
-    console.log(_value)
+  const handleChange = useCallback((_value: Descendant[]) => {
+    // console.log(_value)
+    // console.log(editor)
   }, [])
+
   return (
-    <Slate editor={editor} initialValue={value} onChange={onChange}>
+    <Slate editor={editor} initialValue={value} onChange={handleChange}>
       <Editable
         className="slate-editable"
-        renderElement={renderElement}
-        renderLeaf={renderLeaf}
-        spellCheck
+        renderElement={Element}
+        renderLeaf={Leaf}
+        onMouseOver={handleMouseOver}
+        spellCheck={false}
         autoFocus
       />
-      <HoverToolbar />
+      <SelectToolbar />
       <SlashToolbar />
 
+      <HoverToolbar />
       <InlineChordPopover />
     </Slate>
   )
@@ -121,7 +80,6 @@ const App = () => {
 
 const Element = (props: RenderElementProps) => {
   const { element, attributes, children } = props
-  const style = { textAlign: (element as ParagraphElement).align } as CSSProperties
   switch (element.type) {
     case 'inline-chord':
       return <InlineChordElement {...props} />
@@ -130,65 +88,29 @@ const Element = (props: RenderElementProps) => {
     case 'check-list-item':
       return <CheckListItemElement {...props} />
     case 'block-quote':
-      return (
-        <blockquote style={style} {...attributes}>
-          {children}
-        </blockquote>
-      )
+      return <BlockQuoteItem {...props} />
     case 'list-item':
-      return (
-        <li style={style} {...attributes}>
-          {children}
-        </li>
-      )
+      return <li {...attributes}>{children}</li>
     case 'numbered-list':
       return (
-        <ol style={style} start={element.start} {...attributes}>
+        <ol start={element.start} {...attributes}>
           {children}
         </ol>
       )
     case 'bulleted-list':
-      return (
-        <ul style={style} {...attributes}>
-          {children}
-        </ul>
-      )
+      return <ul {...attributes}>{children}</ul>
     case 'heading-1':
-      return (
-        <h1 style={style} {...attributes}>
-          {children}
-        </h1>
-      )
+      return <h1 {...attributes}>{children}</h1>
     case 'heading-2':
-      return (
-        <h2 style={style} {...attributes}>
-          {children}
-        </h2>
-      )
+      return <h2 {...attributes}>{children}</h2>
     case 'heading-3':
-      return (
-        <h3 style={style} {...attributes}>
-          {children}
-        </h3>
-      )
+      return <h3 {...attributes}>{children}</h3>
     case 'heading-4':
-      return (
-        <h4 style={style} {...attributes}>
-          {children}
-        </h4>
-      )
+      return <h4 {...attributes}>{children}</h4>
     case 'heading-5':
-      return (
-        <h5 style={style} {...attributes}>
-          {children}
-        </h5>
-      )
+      return <h5 {...attributes}>{children}</h5>
     case 'heading-6':
-      return (
-        <h6 style={style} {...attributes}>
-          {children}
-        </h6>
-      )
+      return <h6 {...attributes}>{children}</h6>
     default:
       return <DefaultElement {...props} />
   }

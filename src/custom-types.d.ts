@@ -12,25 +12,23 @@ import type {
 
 export type ParagraphElement = {
   type: 'paragraph'
-  align?: string
   children: Descendant[]
 }
 
 export type BlockQuoteElement = {
   type: 'block-quote'
-  align?: string
+  extend?: boolean
+  toggle?: CustomText[]
   children: Descendant[]
 }
 
 export type BulletedListElement = {
   type: 'bulleted-list'
-  align?: string
   children: Descendant[]
 }
 
 export type OrderedListElement = {
   type: 'numbered-list'
-  align?: string
   start?: number
   children: Descendant[]
 }
@@ -43,7 +41,6 @@ export type CheckListItemElement = {
 
 export type HeadingElement = {
   type: 'heading-1' | 'heading-2' | 'heading-3' | 'heading-4' | 'heading-5' | 'heading-6'
-  align?: string
   children: Descendant[]
 }
 

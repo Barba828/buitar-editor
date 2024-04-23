@@ -1,4 +1,6 @@
 import { Transforms, Element as SlateElement, Editor, Range, Point, Path, NodeEntry } from 'slate'
+import { isBlockActive } from '~common'
+import { BlockQuoteElement } from '../custom-types'
 
 const SHORTCUTS: Record<string, BlockFormat> = {
   '*': 'bulleted-list',
@@ -59,7 +61,7 @@ export const withOnChange = (editor: Editor) => {
       const beforeText = Editor.string(editor, range) + text.slice(0, -1) // 截取start开始的文本，并去掉最后一位空格
       const { type, start: orderedListStart } = getTypeForMD(beforeText)
 
-      if (type) {
+      if (type && !isBlockActive(editor, 'abc-tablature')) {
         Transforms.select(editor, range)
 
         // 删除原有markdown标记文本（*/-/+/#/....）
@@ -98,7 +100,7 @@ export const withOnChange = (editor: Editor) => {
 
     insertBreak(...args)
 
-    // 换行后，判断是否需要清理格式
+    // 若在段落block有内容位置回车，换行后，判断是否需要清理格式
     const { selection } = editor
     if (selection && Range.isCollapsed(selection)) {
       const match = Editor.above(editor, {
@@ -106,12 +108,29 @@ export const withOnChange = (editor: Editor) => {
           SlateElement.isElement(n) && Editor.isBlock(editor, n) && n.type !== 'paragraph',
       })
       if (match) {
-        const [block] = match
+        const [block, path] = match
+
+        // 换行清理格式
         if (clearInBlockType.includes((block as SlateElement).type)) {
           const newProperties: Partial<SlateElement> = {
             type: 'paragraph',
           }
           Transforms.setNodes(editor, newProperties)
+        }
+
+        // block-quote && !extend 换行则展开 => extend
+        if (
+          (block as SlateElement)?.type === 'block-quote' &&
+          !(block as BlockQuoteElement).extend
+        ) {
+          Transforms.setNodes(
+            editor,
+            {
+              type: 'block-quote',
+              extend: true,
+            },
+            { at: path }
+          )
         }
       }
     }

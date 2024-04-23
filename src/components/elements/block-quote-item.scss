@@ -1,0 +1,14 @@
+.block-quote-item {
+  //   :not(:first-child) {
+  //     display: none;
+  //   }
+}
+
+.block-quote-item__header {
+  display: flex;
+  margin-inline-start: -2em;
+}
+.block-quote-item__trigger {
+  width: 2em;
+  cursor: pointer;
+}

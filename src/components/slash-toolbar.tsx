@@ -9,6 +9,7 @@ import {
   flatTypeArr,
   type ToolType,
 } from './tools.config'
+import { isBlockActive } from '~common'
 
 export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
   const editor = useSlate()
@@ -33,6 +34,9 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
     if (filterList.length) {
       return []
     }
+    if (search && search.length > 1) {
+      return []
+    }
     return [
       {
         title: 'Basic blocks',
@@ -43,11 +47,11 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
         list: tablatureTypeMenu,
       },
       {
-        title: 'Inline cards',
+        title: 'Chord cards',
         list: chordTypeMenu,
       },
     ]
-  }, [filterList.length])
+  }, [filterList.length, search])
 
   useEffect(() => {
     if (target) {
@@ -59,7 +63,7 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
 
   const onChange = useCallback(() => {
     const { selection } = editor
-    if (!(selection && Range.isCollapsed(selection))) {
+    if (!selection || !Range.isCollapsed(selection) || isBlockActive(editor, 'abc-tablature')) {
       setTarget(null)
       return
     }
@@ -120,19 +124,13 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
       }
       switch (item.type) {
         case 'text':
+        case 'tablature':
           editor.insertBlock?.({ type: item.key as BlockFormat })
           break
 
         case 'chord':
           //插入inline-chord前缀标记
           editor.insertText(item.key)
-          break
-
-        case 'tablature':
-          /**
-           * @TODO
-           */
-          editor.insertBlock?.({ type: item.key as BlockFormat })
           break
 
         default:

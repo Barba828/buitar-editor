@@ -47,7 +47,7 @@ export const Popover = forwardRef<PopoverRefs, PopoverProps>(
       if (!containerRef.current) {
         return
       }
-      containerRef.current.style.opacity = '0'
+      popoverRefHide(containerRef.current)
       onClose?.()
       onVisibleChange?.(false)
     }, [onClose, onVisibleChange])
@@ -90,23 +90,12 @@ export const Popover = forwardRef<PopoverRefs, PopoverProps>(
     // )
 
     useEffect(() => {
-      if (!rect) {
-        return
-      }
-      // /**
-      //  * ugly
-      //  * 1. 避免 popover 闪烁
-      //  * 2. 或者由 mousedown 同时触发 show & hide
-      //  */
-      // setTimeout(() => {
-      //   document.addEventListener('mousedown', handleClickOutside)
-      // }, 300)
       document.addEventListener('keydown', handleKeyDown)
       return () => {
         document.removeEventListener('keydown', handleKeyDown)
         // document.removeEventListener('mousedown', handleClickOutside)
       }
-    }, [handleKeyDown, rect])
+    }, [handleKeyDown])
 
     useEffect(() => {
       if (!rect) {
@@ -114,7 +103,6 @@ export const Popover = forwardRef<PopoverRefs, PopoverProps>(
       }
       show(rect, option)
     }, [rect, option, show])
-
     return (
       <Portal>
         <div
@@ -167,4 +155,14 @@ const popoverRefShow = (
     popEl.style.bottom = `${window.innerHeight - top - window.scrollY + 10}px`
     popEl.style.top = 'unset'
   }
+}
+
+const popoverRefHide = (popEl: HTMLElement) => {
+  popEl.style.opacity = '0'
+  popEl.style.right = 'unset'
+  popEl.style.left = 'unset'
+  popEl.style.bottom = 'unset'
+  popEl.style.top = 'unset'
+
+  console.log('lnz end hide')
 }

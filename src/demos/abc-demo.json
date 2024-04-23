@@ -1,0 +1,96 @@
+[
+  {
+    "type": "paragraph",
+    "children": [
+      {
+        "text": "ABC Tablature demo",
+        "bold": true
+      }
+    ]
+  },
+  {
+    "type": "abc-tablature",
+    "children": [
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "text": "X:1"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "text": "T:The Legacy Jig"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "text": "M:6/8"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "text": "L:1/8"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "text": "R:jig"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "text": "K:G"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "text": "GFG BAB | gfg gab | GFG BAB | d2A AFD |"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "text": "GFG BAB | gfg gab | age edB |1 dBA AFD :|2 dBA ABd |:"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "text": "efe edB | dBA ABd | efe edB | gdB ABd |"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "text": "efe edB | d2d def | gfe edB |1 dBA ABd :|2 dBA AFD |]"
+          }
+        ]
+      }
+    ]
+  }
+]

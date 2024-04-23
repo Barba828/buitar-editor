@@ -1,15 +1,15 @@
-import { useEffect, useCallback, useState, FC, HTMLProps, MouseEventHandler } from 'react'
+import { useEffect, useCallback, useState, FC, HTMLProps, MouseEventHandler, useMemo } from 'react'
 import { Editor, Range } from 'slate'
 import { useSlate } from 'slate-react'
 import { Popover, InputChordPopover } from '~chord'
-import { getSelectedRect, isMarkActive } from '~common'
+import { getSelectedRect, isBlockActive, isMarkActive } from '~common'
 import { TextTypePopover } from './text-type-popover'
 import { useBlockType } from './utils/use-block-type'
 
 import cx from 'classnames'
-import './hover-toolbar.scss'
+import './select-toolbar.scss'
 
-export const HoverToolbar = () => {
+export const SelectToolbar = () => {
   const [rect, setRect] = useState<DOMRect | null>(null)
   const [visible, setVisible] = useState<boolean>(false)
   const [chordPopoverVisible, setChordPopoverVisible] = useState<boolean>(false)
@@ -41,7 +41,12 @@ export const HoverToolbar = () => {
       return
     }
     setRect(selectedRect)
-  }, [editor, visible])
+  }, [editor, visible, selection])
+
+  /**当前展示是否是基本文本Tool */
+  const isBasicToolbar = useMemo(() => {
+    return isBlockActive(editor, 'abc-tablature')
+  }, [editor, selection])
 
   const cleanInputChord = useCallback(() => {
     setChordPopoverVisible(false)
@@ -51,6 +56,10 @@ export const HoverToolbar = () => {
     }
   }, [editor])
 
+  const cleanFormat = useCallback(() => {
+    editor.toggleBlock?.({ type: 'paragraph' })
+  }, [editor])
+
   if (!visible || !rect) {
     return null
   }
@@ -58,7 +67,7 @@ export const HoverToolbar = () => {
   return (
     <>
       <Popover
-        className="hover-toolbar"
+        className="select-toolbar"
         onVisibleChange={setVisible}
         rect={rect}
         option={{ placement: 'top' }}
@@ -70,6 +79,11 @@ export const HoverToolbar = () => {
           >
             {blockType.title}
           </div>
+          {blockType.key !== 'paragraph' && (
+            <div className="toolbar-menu-item" onMouseDown={cleanFormat}>
+              🖌️
+            </div>
+          )}
         </div>
         <div className="toolbar-menu-group">
           <FormatButton format="bold">
@@ -84,26 +98,30 @@ export const HoverToolbar = () => {
           <FormatButton format="strike">
             <s>S</s>
           </FormatButton>
-          <FormatButton format="code">
-            <strong style={{ fontSize: '0.8rem' }}>{`</>`}</strong>
-          </FormatButton>
+          {!isBasicToolbar && (
+            <FormatButton format="code">
+              <strong style={{ fontSize: '0.8rem' }}>{`</>`}</strong>
+            </FormatButton>
+          )}
         </div>
-        <div className="toolbar-menu-group">
-          <div
-            className={cx(
-              'toolbar-menu-item',
-              isMarkActive(editor, 'chord') && 'toolbar-menu-item--active'
-            )}
-            onMouseDown={() => setChordPopoverVisible(!chordPopoverVisible)}
-          >
-            C
+        {!isBasicToolbar && (
+          <div className="toolbar-menu-group">
+            <div
+              className={cx(
+                'toolbar-menu-item',
+                isMarkActive(editor, 'chord') && 'toolbar-menu-item--active'
+              )}
+              onMouseDown={() => setChordPopoverVisible(!chordPopoverVisible)}
+            >
+              C
+            </div>
+            <FormatChordButton option={'concise'}>D</FormatChordButton>
+            <FormatChordButton option={'popover'}>P</FormatChordButton>
+            <FormatChordButton option={''} style={{ color: '#c21500' }} onClick={cleanInputChord}>
+              X
+            </FormatChordButton>
           </div>
-          <FormatChordButton option={'concise'}>D</FormatChordButton>
-          <FormatChordButton option={'popover'}>P</FormatChordButton>
-          <FormatChordButton option={''} style={{ color: '#c21500' }} onClick={cleanInputChord}>
-            X
-          </FormatChordButton>
-        </div>
+        )}
       </Popover>
       <TextTypePopover visible={textPopoverVisible} onVisibleChange={setTextPopoverVisible} />
       <InputChordPopover visible={chordPopoverVisible} onVisibleChange={setChordPopoverVisible} />

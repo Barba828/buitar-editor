@@ -9,8 +9,9 @@
 
 .popover-container {
   position: absolute;
-  top: -100vh;
-  left: -100vw;
+  // top: -100vh;
+  // left: -100vw;
+  opacity: 0;
   z-index: 999;
   padding: 4px;
   max-height: 360px;
@@ -19,4 +20,5 @@
   border-radius: 4px;
   box-shadow: $shadow-popover;
   outline: none;
+  transition: opacity 0.3s ease-in-out;
 }

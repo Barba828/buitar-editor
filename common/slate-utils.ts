@@ -1,4 +1,4 @@
-import { CustomTypes, Range, Editor, Element as SlateElement, Text } from 'slate'
+import { CustomTypes, Range, Editor, Element as SlateElement, Text, Node } from 'slate'
 import { ReactEditor } from 'slate-react'
 
 type TextFormat = keyof Omit<CustomTypes['Text'], 'text'>
@@ -28,12 +28,7 @@ export const getSelectedBlockActive = (editor: Editor, format: SlateElement['typ
     Editor.nodes(editor, {
       at: Editor.unhangRange(editor, selection),
       match: (n) => {
-        return (
-          !Editor.isEditor(n) && SlateElement.isElement(n)
-          // &&
-          // n.type !== 'paragraph' &&
-          // n.type !== 'list-item'
-        )
+        return !Editor.isEditor(n) && SlateElement.isElement(n)
       },
     })
   )
@@ -54,30 +49,6 @@ export const getSelectedBlock = (editor: Editor) => {
   if (!selection) {
     return null
   }
-
-  // // 自顶而下获取当前选区的所有Element（paragraph与list-item除外）
-  // const nodes = Array.from(
-  //   Editor.nodes(editor, {
-  //     // at: selection,
-  //     at: Editor.unhangRange(editor, selection),
-  //     match: (n) => {
-  //       return (
-  //         !Editor.isEditor(n) &&
-  //         SlateElement.isElement(n) &&
-  //         n.type !== 'paragraph' &&
-  //         n.type !== 'list-item'
-  //       )
-  //     },
-  //   })
-  // )
-
-  // /**
-  //  * 默认选择当前最后一位有效element
-  //  * @todo 多个类型element被选中时，获取最后一个显然是不可靠的（return null ?）
-  //  */
-  // if (nodes.length && nodes[nodes.length - 1]?.[0]) {
-  //   return nodes[nodes.length - 1][0] as SlateElement
-  // }
 
   const match = Editor.above(editor, {
     match: (n) =>
@@ -132,6 +103,18 @@ export const getSelectedRect = (editor: CustomTypes['Editor']) => {
     return null
   }
 
-  const range = ReactEditor.toDOMRange(editor, selection)
+  const [start] = Range.edges(selection)
+  const range = ReactEditor.toDOMRange(editor, Editor.range(editor, start))
   return range.getBoundingClientRect()
+}
+
+/**
+ * 获取node的文本（带换行/n）
+ * @param element
+ * @returns
+ */
+export const getElementText = (element: SlateElement) => {
+  return Array.from(Node.texts(element))
+    .map(([node, path]) => (path[path.length - 1] > 0 ? '' : '\n') + node.text)
+    .join('')
 }

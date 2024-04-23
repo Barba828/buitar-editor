@@ -56,8 +56,9 @@ export const toggleBlock = (editor: Editor, { type: format }: SlateElement) => {
   Transforms.setNodes<SlateElement>(editor, newProperties)
 
   /**
-   * List类型需根据 format 在外部还原包裹 ol/ul
-   * 内部是list-item li
+   * 比如
+   * 1. List类型需根据 format 在外部还原包裹 ol/ul（内部是list-item li）
+   * 2. block-quote 外部包裹 block （内部是 paragraph p）
    */
   if (!isActive && isNeedWrap) {
     const block = { type: format, children: [] }
@@ -67,9 +68,13 @@ export const toggleBlock = (editor: Editor, { type: format }: SlateElement) => {
 
 export const insertBlock = (editor: Editor, element: SlateElement) => {
   let node = {
-    ...element,
     children: [{ text: '' }],
+    ...element,
   } as SlateElement
+
+  const { selection } = editor
+  if (!selection) return
+  const [, currentPath] = Editor.node(editor, selection)
 
   switch (element.type) {
     case 'numbered-list':
@@ -85,12 +90,13 @@ export const insertBlock = (editor: Editor, element: SlateElement) => {
       }
       break
     case 'block-quote':
+    case 'abc-tablature':
       node = {
         ...element,
         children: [
           {
             type: 'paragraph',
-            children: [{ text: '' }],
+            children: [{ text: ' ' }],
           },
         ],
       }
@@ -98,7 +104,15 @@ export const insertBlock = (editor: Editor, element: SlateElement) => {
     default:
       break
   }
-  Transforms.insertNodes(editor, node)
+
+  /**
+   * 位于行首则在当前行插入，否则在下一行插入
+   */
+  if (Editor.string(editor, currentPath).length === 0) {
+    Transforms.insertNodes(editor, node, { at: currentPath })
+  } else {
+    Transforms.insertNodes(editor, node)
+  }
 }
 
 export const withToggle = (editor: Editor) => {
