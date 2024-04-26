@@ -1,5 +1,5 @@
-import { Transforms, Element as SlateElement, Editor, Range, Point, Path, NodeEntry } from 'slate'
-import { isBlockActive } from '~common'
+import { Transforms, Element as SlateElement, Editor, Range, Point, NodeEntry } from 'slate'
+import { getSelectedBlockActive, isBlockActive } from '~common'
 import { BlockQuoteElement } from '../custom-types'
 
 const SHORTCUTS: Record<string, BlockFormat> = {
@@ -7,6 +7,7 @@ const SHORTCUTS: Record<string, BlockFormat> = {
   '-': 'bulleted-list',
   '+': 'bulleted-list',
   '>': 'block-quote',
+  '```': 'code-block',
   '#': 'heading-1',
   '##': 'heading-2',
   '###': 'heading-3',
@@ -48,7 +49,6 @@ export const withOnChange = (editor: Editor) => {
 
   editor.insertText = (text) => {
     const { selection } = editor
-
     // 空格结尾，判断是否是markdown标记
     if (text.endsWith(' ') && selection && Range.isCollapsed(selection)) {
       const { anchor } = selection
@@ -57,10 +57,14 @@ export const withOnChange = (editor: Editor) => {
       })
       const path = block ? block[1] : []
       const start = Editor.start(editor, path)
+      const end = Editor.end(editor, path)
       const range = { anchor, focus: start }
+
       const beforeText = Editor.string(editor, range) + text.slice(0, -1) // 截取start开始的文本，并去掉最后一位空格
+      const afterText = Editor.string(editor, { anchor, focus: end }) // select到结尾的文本，作为 children 插入内容
       const { type, start: orderedListStart } = getTypeForMD(beforeText)
 
+      // abc-tablature 内不支持markdown快捷键
       if (type && !isBlockActive(editor, 'abc-tablature')) {
         Transforms.select(editor, range)
 
@@ -69,11 +73,12 @@ export const withOnChange = (editor: Editor) => {
           Transforms.delete(editor)
         }
 
-        editor.insertBlock?.({
+        const newProperties = {
           type,
           start: orderedListStart ? Number(orderedListStart) : undefined,
-        })
+        }
 
+        editor.toggleBlock?.({ ...newProperties, children: [{ text: afterText }] })
         return
       }
     }
@@ -103,26 +108,26 @@ export const withOnChange = (editor: Editor) => {
     // 若在段落block有内容位置回车，换行后，判断是否需要清理格式
     const { selection } = editor
     if (selection && Range.isCollapsed(selection)) {
-      const match = Editor.above(editor, {
+      // 换行清理 heading 等格式
+      const matchClosestHeading = Editor.above(editor, {
         match: (n) =>
-          SlateElement.isElement(n) && Editor.isBlock(editor, n) && n.type !== 'paragraph',
+          SlateElement.isElement(n) &&
+          Editor.isBlock(editor, n) &&
+          n.type !== 'paragraph' &&
+          clearInBlockType.includes(n.type),
       })
-      if (match) {
-        const [block, path] = match
-
-        // 换行清理格式
-        if (clearInBlockType.includes((block as SlateElement).type)) {
-          const newProperties: Partial<SlateElement> = {
-            type: 'paragraph',
-          }
-          Transforms.setNodes(editor, newProperties)
+      if (matchClosestHeading) {
+        const newProperties: Partial<SlateElement> = {
+          type: 'paragraph',
         }
+        Transforms.setNodes(editor, newProperties)
+      }
 
-        // block-quote && !extend 换行则展开 => extend
-        if (
-          (block as SlateElement)?.type === 'block-quote' &&
-          !(block as BlockQuoteElement).extend
-        ) {
+      // 换行展开 block-quote
+      const matchBlockQuote = getSelectedBlockActive(editor, 'block-quote')
+      if (matchBlockQuote) {
+        const [block, path] = matchBlockQuote
+        if (!(block as BlockQuoteElement).extend) {
           Transforms.setNodes(
             editor,
             {
@@ -141,7 +146,6 @@ export const withOnChange = (editor: Editor) => {
 
 /**
  * 判断在当前段落开始位置，若在开始位置，并且当前block不是paragraph，则重置为paragraph
- * feature: 若父级存在List， 则将当前block设置为list-item，否则仍是paragraph
  * @param editor
  * @returns
  */
@@ -153,7 +157,11 @@ const cleanTypeOnStart = (editor: Editor) => {
   }
 
   const match = Editor.above(editor, {
-    match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && Editor.isBlock(editor, n),
+    match: (n) =>
+      !Editor.isEditor(n) &&
+      SlateElement.isElement(n) &&
+      Editor.isBlock(editor, n) &&
+      n.type !== 'paragraph',
   })
 
   if (!match) {
@@ -163,44 +171,40 @@ const cleanTypeOnStart = (editor: Editor) => {
   const [block, path] = match as NodeEntry<SlateElement>
   const start = Editor.start(editor, path)
 
-  /** start 处于当前block开始位置，并且当前block不是paragraph，则重置为paragraph */
-  if (block.type !== 'paragraph' && Point.equals(selection.anchor, start)) {
-    /** feature: 若父级存在List， 则将当前block设置为list-item，否则仍是paragraph */
-    const parentHasList = hasListWrapper(editor, path.slice(0, -1))
-    const newProperties: Partial<SlateElement> = {
-      type: parentHasList ? 'list-item' : 'paragraph',
-    }
-    Transforms.setNodes(editor, newProperties)
-
-    /**重置时如果是list-item 则解除外部ol/ul包裹 */
-    if (block.type === 'list-item') {
-      Transforms.unwrapNodes(editor, {
-        match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && !!editor.isList?.(n.type),
-        split: true,
-      })
-    }
-
-    return true
+  /** start 处于当前block开始位置 */
+  if (!Point.equals(selection.anchor, start)) {
+    return
   }
+
+  /**当前block不是paragraph，则重置为paragraph */
+  Transforms.setNodes(editor, { type: 'paragraph' }, { at: path })
+  /**当前是list-item，则解除ol/ul包裹 */
+  if (block.type === 'list-item') {
+    Transforms.unwrapNodes(editor, {
+      match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && !!editor.isList?.(n.type),
+      split: true,
+    })
+  }
+  return true
 }
 
-/**
- * 判断当前列表项是否还有外部的有序列表或无序列表包裹
- * @param editor
- * @param listItemPath
- * @returns
- */
-const hasListWrapper = (editor: Editor, listItemPath: Path): boolean => {
-  const [parent] = Editor.node(editor, listItemPath.slice(0, -1)) // 获取列表项的父节点
+// /**
+//  * 判断当前列表项是否还有外部的有序列表或无序列表包裹
+//  * @param editor
+//  * @param listItemPath
+//  * @returns
+//  */
+// const hasListWrapper = (editor: Editor, listItemPath: Path) => {
+//   const [parent] = Editor.node(editor, listItemPath.slice(0, -1)) // 获取列表项的父节点
 
-  if (!parent || !SlateElement.isElement(parent)) {
-    return false // 如果父节点不存在或不是元素节点，直接返回 false
-  }
+//   if (!parent || !SlateElement.isElement(parent)) {
+//     return false // 如果父节点不存在或不是元素节点，直接返回 false
+//   }
 
-  if (editor.isList?.(parent.type)) {
-    return true // 如果父节点是列表类型，则说明当前列表项有外部列表包裹，返回 true
-  }
+//   if (editor.isList?.(parent.type)) {
+//     return parent // 如果父节点是列表类型，则说明当前列表项有外部列表包裹，返回 true
+//   }
 
-  // 递归向上遍历父节点的祖先节点，继续判断是否有外部列表包裹
-  return hasListWrapper(editor, listItemPath.slice(0, -1))
-}
+//   // 递归向上遍历父节点的祖先节点，继续判断是否有外部列表包裹
+//   return hasListWrapper(editor, listItemPath.slice(0, -1))
+// }

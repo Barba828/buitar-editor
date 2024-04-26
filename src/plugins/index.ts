@@ -5,6 +5,17 @@ import { withToggle } from './with-toggle'
 
 import { CustomEditor } from '../custom-types'
 
+const plugins = [withHistory, withToggle, withOnChange, withChords]
+
+/**
+ * @refer https://github.com/objectlegal/slate-snippets?tab=readme-ov-file#create-a-withplugins-hook--composer
+ */
 export const withPlugins = (editor: CustomEditor) => {
-  return withChords(withOnChange(withToggle(withHistory(editor))))
+  for (const plugin in plugins) {
+    if (typeof plugins[plugin] !== 'function') continue
+    const pluginEditor = plugins[plugin](editor)
+    if (pluginEditor !== editor) continue // Invalid plugin
+    editor = pluginEditor
+  }
+  return editor
 }

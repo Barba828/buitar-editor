@@ -22,6 +22,17 @@ export type BlockQuoteElement = {
   children: Descendant[]
 }
 
+export type CodeBlockElement = {
+  type: 'code-block'
+  language: string
+  children: Descendant[]
+}
+
+export type CodeLineElement = {
+  type: 'code-line'
+  children: Descendant[]
+}
+
 export type BulletedListElement = {
   type: 'bulleted-list'
   children: Descendant[]
@@ -58,6 +69,8 @@ export type CustomElement =
   | ParagraphElement
   | BlockQuoteElement
   | BulletedListElement
+  | CodeBlockElement
+  | CodeLineElement
   | CheckListItemElement
   | HeadingElement
   | ImageElement

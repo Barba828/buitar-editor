@@ -2,6 +2,7 @@ import { Editor, Element as SlateElement, Transforms } from 'slate'
 import { isBlockActive, isMarkActive } from '~common'
 
 const LIST_TYPES: BlockFormat[] = ['numbered-list', 'bulleted-list']
+// const NEED_WRAP_TYPES: BlockFormat[] = [...LIST_TYPES]
 const NEED_WRAP_TYPES: BlockFormat[] = [...LIST_TYPES, 'block-quote', 'abc-tablature']
 
 export const isListFunc = (format: BlockFormat) => LIST_TYPES.includes(format)
@@ -44,6 +45,10 @@ export const toggleBlock = (editor: Editor, { type: format }: SlateElement) => {
         break
       case 'block-quote':
       case 'abc-tablature':
+        // newProperties = {
+        //   type: format,
+        //   children: [{ type: 'paragraph', text: '77' }],
+        // }
         newProperties = {
           type: 'paragraph',
         }
@@ -67,36 +72,46 @@ export const toggleBlock = (editor: Editor, { type: format }: SlateElement) => {
 }
 
 export const insertBlock = (editor: Editor, element: SlateElement) => {
-  let node = {
-    children: [{ text: '' }],
-    ...element,
-  } as SlateElement
-
   const { selection } = editor
   if (!selection) return
   const [, currentPath] = Editor.node(editor, selection)
 
+  /**
+   * 位于行首则在当前行转化block
+   */
+  if (Editor.string(editor, currentPath).length === 0) {
+    editor.toggleBlock?.(element)
+    return
+  }
+
+  let newProperties = {
+    children: [{ text: '' }],
+    ...element,
+  } as SlateElement
+  /**
+   * 更新node 插入block
+   */
   switch (element.type) {
     case 'numbered-list':
     case 'bulleted-list':
-      node = {
+      newProperties = {
         ...element,
         children: [
           {
             type: 'list-item',
-            children: [{ text: '' }],
+            children: element.children || [{ text: '' }],
           },
         ],
       }
       break
     case 'block-quote':
     case 'abc-tablature':
-      node = {
+      newProperties = {
         ...element,
         children: [
           {
             type: 'paragraph',
-            children: [{ text: ' ' }],
+            children: element.children || [{ text: '' }],
           },
         ],
       }
@@ -104,15 +119,7 @@ export const insertBlock = (editor: Editor, element: SlateElement) => {
     default:
       break
   }
-
-  /**
-   * 位于行首则在当前行插入，否则在下一行插入
-   */
-  if (Editor.string(editor, currentPath).length === 0) {
-    Transforms.insertNodes(editor, node, { at: currentPath })
-  } else {
-    Transforms.insertNodes(editor, node)
-  }
+  Transforms.insertNodes(editor, newProperties)
 }
 
 export const withToggle = (editor: Editor) => {

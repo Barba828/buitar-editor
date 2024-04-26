@@ -122,7 +122,7 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
         Transforms.select(editor, target)
         editor.delete()
       }
-      switch (item.type) {
+      switch (item.tag) {
         case 'text':
         case 'tablature':
           editor.insertBlock?.({ type: item.key as BlockFormat })

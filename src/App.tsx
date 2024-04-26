@@ -23,28 +23,29 @@ import { withPlugins } from './plugins'
 
 const App = () => {
   const editor = useMemo(() => withPlugins(withReact(createEditor())), [])
+  window.editor = editor
   const [value] = useState<Descendant[]>([
     {
       type: 'paragraph',
-      children: [{ text: 'demo' }],
+      children: [{ text: '' }],
     },
-    {
-      type: 'paragraph',
-      children: [
-        { text: 'There is an empty chord card ' },
-        // {
-        //   type: 'inline-chord',
-        //   children: [{ text: '' }],
-        //   taps: { chordType: { name: '', name_zh: '', tag: '' }, chordTaps: [] },
-        // },
-        { text: 'here' },
-      ],
-    },
-    {
-      type: 'block-quote',
-      extend: true,
-      children: [{ type: 'paragraph', children: [{ text: '77779999' }] }],
-    },
+    // {
+    //   type: 'paragraph',
+    //   children: [
+    //     { text: 'There is an empty chord card ' },
+    //     {
+    //       type: 'inline-chord',
+    //       children: [{ text: '' }],
+    //       taps: { chordType: { name: '', name_zh: '', tag: '' }, chordTaps: [] },
+    //     },
+    //     { text: 'here' },
+    //   ],
+    // },
+    // {
+    //   type: 'block-quote',
+    //   extend: true,
+    //   children: [{ type: 'paragraph', children: [{ text: '77779999' }] }],
+    // },
     // ...(yellowJson as Descendant[]),
     // ...(ABCJson as Descendant[]),
   ])
@@ -55,7 +56,7 @@ const App = () => {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleChange = useCallback((_value: Descendant[]) => {
-    // console.log(_value)
+    console.log(_value)
     // console.log(editor)
   }, [])
 
@@ -72,7 +73,7 @@ const App = () => {
       <SelectToolbar />
       <SlashToolbar />
 
-      <HoverToolbar />
+      {/* <HoverToolbar /> */}
       <InlineChordPopover />
     </Slate>
   )

@@ -1,4 +1,13 @@
-import { FC, FormEventHandler, memo, useCallback, useEffect, useRef, useState } from 'react'
+import {
+  FC,
+  FormEventHandler,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { Transforms } from 'slate'
 import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react'
 import { type ABCTablatureElement, Selector } from '~chord'
@@ -56,6 +65,13 @@ export const ABCElement: FC<RenderElementProps> = memo(({ attributes, element, c
     }
   }, [short])
 
+  useEffect(() => {
+    /**初始空数据则设置为可编辑 */
+    if (!abcNotation.length) {
+      setEditable(true)
+    }
+  }, [])
+
   const handleABCIntrumentChange: FormEventHandler<HTMLSelectElement> = useCallback(
     (event) => {
       const nextInstrument = (event.target as HTMLSelectElement).value as TablatureInstrument
@@ -91,6 +107,14 @@ export const ABCElement: FC<RenderElementProps> = memo(({ attributes, element, c
     })
   }, [abcNotation])
 
+  const showSetShortBtn = useMemo(
+    () =>
+      !fullscreen &&
+      musicSheetRef.current?.scrollHeight &&
+      musicSheetRef.current.scrollHeight > 200,
+    [fullscreen]
+  )
+
   return (
     <div
       className={cx(
@@ -98,9 +122,11 @@ export const ABCElement: FC<RenderElementProps> = memo(({ attributes, element, c
         { 'abc-editor--fullscreen': fullscreen },
         { 'abc-editor--short': short }
       )}
+      {...attributes}
       spellCheck={false}
       data-slate-tablature={instrument}
-      {...attributes}
+      contentEditable={editable}
+      suppressContentEditableWarning
     >
       <div className="abc-editor__btns" contentEditable={false}>
         <div className="abc-editor__trigger" onClick={handleCopy}>
@@ -126,8 +152,12 @@ export const ABCElement: FC<RenderElementProps> = memo(({ attributes, element, c
       </div>
 
       <div className="abc-editor__btns abc-editor__footer-btns" contentEditable={false}>
-        {!fullscreen && (
-          <div className="abc-editor__trigger" onClick={() => setShort(!short)}>
+        {showSetShortBtn && (
+          <div
+            className="abc-editor__trigger"
+            onClick={() => setShort(!short)}
+            style={{ transform: `rotate(90deg)` }}
+          >
             {short ? '⬌' : 'X'}
           </div>
         )}

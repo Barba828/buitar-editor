@@ -1,4 +1,12 @@
-import { CustomTypes, Range, Editor, Element as SlateElement, Text, Node } from 'slate'
+import {
+  CustomTypes,
+  Range,
+  Editor,
+  Element as SlateElement,
+  Text,
+  Node,
+  EditorNodesOptions,
+} from 'slate'
 import { ReactEditor } from 'slate-react'
 
 type TextFormat = keyof Omit<CustomTypes['Text'], 'text'>
@@ -8,8 +16,12 @@ export const isMarkActive = (editor: Editor, format: TextFormat) => {
   return marks ? !!marks[format] : false
 }
 
-export const isBlockActive = (editor: Editor, format: SlateElement['type']) => {
-  return !!getSelectedBlockActive(editor, format)
+export const isBlockActive = (
+  editor: Editor,
+  format?: SlateElement['type'],
+  options?: EditorNodesOptions<Node>
+) => {
+  return !!getSelectedBlockActive(editor, format, options)
 }
 
 /**
@@ -18,7 +30,11 @@ export const isBlockActive = (editor: Editor, format: SlateElement['type']) => {
  * @param format
  * @returns
  */
-export const getSelectedBlockActive = (editor: Editor, format: SlateElement['type']) => {
+export const getSelectedBlockActive = (
+  editor: Editor,
+  format?: SlateElement['type'],
+  options?: EditorNodesOptions<Node>
+) => {
   const { selection } = editor
   if (!selection) {
     return null
@@ -28,13 +44,15 @@ export const getSelectedBlockActive = (editor: Editor, format: SlateElement['typ
     Editor.nodes(editor, {
       at: Editor.unhangRange(editor, selection),
       match: (n) => {
-        return !Editor.isEditor(n) && SlateElement.isElement(n)
+        return !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === format
       },
+      ...options,
     })
   )
 
-  const match = nodes.find(([node]) => (node as SlateElement).type === format)
-  return match
+  // const match = nodes.find(([node]) => (node as SlateElement).type === format)
+  // return match
+  return nodes[0]
 }
 
 /**
@@ -117,4 +135,5 @@ export const getElementText = (element: SlateElement) => {
   return Array.from(Node.texts(element))
     .map(([node, path]) => (path[path.length - 1] > 0 ? '' : '\n') + node.text)
     .join('')
+    .trim()
 }
