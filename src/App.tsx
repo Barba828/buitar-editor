@@ -73,7 +73,7 @@ const App = () => {
       <SelectToolbar />
       <SlashToolbar />
 
-      {/* <HoverToolbar /> */}
+      <HoverToolbar />
       <InlineChordPopover />
     </Slate>
   )

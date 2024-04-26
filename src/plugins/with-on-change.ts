@@ -52,16 +52,13 @@ export const withOnChange = (editor: Editor) => {
     // 空格结尾，判断是否是markdown标记
     if (text.endsWith(' ') && selection && Range.isCollapsed(selection)) {
       const { anchor } = selection
-      const block = Editor.above(editor, {
+      const match = Editor.above(editor, {
         match: (n) => SlateElement.isElement(n) && Editor.isBlock(editor, n),
       })
-      const path = block ? block[1] : []
+      const path = match ? match[1] : []
       const start = Editor.start(editor, path)
-      const end = Editor.end(editor, path)
       const range = { anchor, focus: start }
-
       const beforeText = Editor.string(editor, range) + text.slice(0, -1) // 截取start开始的文本，并去掉最后一位空格
-      const afterText = Editor.string(editor, { anchor, focus: end }) // select到结尾的文本，作为 children 插入内容
       const { type, start: orderedListStart } = getTypeForMD(beforeText)
 
       // abc-tablature 内不支持markdown快捷键
@@ -78,7 +75,7 @@ export const withOnChange = (editor: Editor) => {
           start: orderedListStart ? Number(orderedListStart) : undefined,
         }
 
-        editor.toggleBlock?.({ ...newProperties, children: [{ text: afterText }] })
+        editor.toggleBlock?.({ ...newProperties }, { ignoreActive: true })
         return
       }
     }

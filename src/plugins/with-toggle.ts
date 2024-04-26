@@ -17,8 +17,23 @@ export const toggleMark = (editor: Editor, format: TextFormat) => {
   }
 }
 
-export const toggleBlock = (editor: Editor, { type: format }: SlateElement) => {
-  const isActive = isBlockActive(editor, format)
+/**
+ *
+ * @param editor
+ * @param element
+ * @param options
+ */
+export const toggleBlock = (
+  editor: Editor,
+  element: SlateElement,
+  options?: {
+    /**固定将block设置为active */
+    ignoreActive?: boolean
+  }
+) => {
+  const { type: format } = element
+  const { ignoreActive = false } = options || {}
+  const isActive = ignoreActive ? false : isBlockActive(editor, format)
   const isNeedWrap = NEED_WRAP_TYPES.includes(format)
 
   /**
@@ -26,8 +41,7 @@ export const toggleBlock = (editor: Editor, { type: format }: SlateElement) => {
    * 避免在 ol/ul 标签内进行格式转换
    */
   Transforms.unwrapNodes(editor, {
-    match: (n) =>
-      !Editor.isEditor(n) && SlateElement.isElement(n) && NEED_WRAP_TYPES.includes(n.type),
+    match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && !!editor.isList?.(n.type),
     split: true,
   })
 
@@ -45,10 +59,6 @@ export const toggleBlock = (editor: Editor, { type: format }: SlateElement) => {
         break
       case 'block-quote':
       case 'abc-tablature':
-        // newProperties = {
-        //   type: format,
-        //   children: [{ type: 'paragraph', text: '77' }],
-        // }
         newProperties = {
           type: 'paragraph',
         }
@@ -77,10 +87,10 @@ export const insertBlock = (editor: Editor, element: SlateElement) => {
   const [, currentPath] = Editor.node(editor, selection)
 
   /**
-   * 位于行首则在当前行转化block
+   * 位于行首先退行
    */
   if (Editor.string(editor, currentPath).length === 0) {
-    editor.toggleBlock?.(element)
+    editor.toggleBlock?.(element, { ignoreActive: true })
     return
   }
 
@@ -125,7 +135,7 @@ export const insertBlock = (editor: Editor, element: SlateElement) => {
 export const withToggle = (editor: Editor) => {
   editor.isList = isListFunc
   editor.toggleMark = (format) => toggleMark(editor, format)
-  editor.toggleBlock = (element) => toggleBlock(editor, element as SlateElement)
+  editor.toggleBlock = (element, options) => toggleBlock(editor, element as SlateElement, options)
   editor.insertBlock = (element) => insertBlock(editor, element as SlateElement)
   return editor
 }
