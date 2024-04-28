@@ -2,17 +2,22 @@
   position: absolute;
   display: flex;
   align-items: center;
+  transform: translateX(-100%);
+}
+
+.hover-toolbar-wrapper {
+  border-radius: 4px;
   gap: 4px;
-  transform: translateX(-50px);
-  //   background-color: blue;
+  display: flex;
+  transition: all 0.1s ease-in-out;
 }
 
 .hover-toolbar-item {
   padding: 0 4px;
   border-radius: 4px;
   cursor: pointer;
+  opacity: 0.8;
   transition: background 0.3s ease;
-
   &:hover {
     background: $gray-0--hover;
   }

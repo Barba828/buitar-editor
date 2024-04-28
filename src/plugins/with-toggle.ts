@@ -2,8 +2,8 @@ import { Editor, Element as SlateElement, Transforms } from 'slate'
 import { isBlockActive, isMarkActive } from '~common'
 
 const LIST_TYPES: BlockFormat[] = ['numbered-list', 'bulleted-list']
-// const NEED_WRAP_TYPES: BlockFormat[] = [...LIST_TYPES]
-const NEED_WRAP_TYPES: BlockFormat[] = [...LIST_TYPES, 'block-quote', 'abc-tablature']
+const OTHER_WRAP_TYPES: BlockFormat[] = ['block-quote', 'abc-tablature']
+const NEED_WRAP_TYPES: BlockFormat[] = [...LIST_TYPES, ...OTHER_WRAP_TYPES]
 
 export const isListFunc = (format: BlockFormat) => LIST_TYPES.includes(format)
 
@@ -37,11 +37,16 @@ export const toggleBlock = (
   const isNeedWrap = NEED_WRAP_TYPES.includes(format)
 
   /**
-   * 先解除 isList 的包裹
-   * 避免在 ol/ul 标签内进行格式转换
+   * 解除包裹
+   * 1.父级有List包裹先解除 List 的包裹，避免在 ol/ul 标签内进行格式转换
+   * 2.父级有OTHER_WRAP包裹，并且format也属于OTHER_WRAP & isActive，需要解除包裹
    */
   Transforms.unwrapNodes(editor, {
-    match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && !!editor.isList?.(n.type),
+    match: (n) =>
+      !Editor.isEditor(n) &&
+      SlateElement.isElement(n) &&
+      (LIST_TYPES.includes(n.type) ||
+        (OTHER_WRAP_TYPES.includes(n.type) && n.type === format && isActive)),
     split: true,
   })
 
@@ -71,7 +76,7 @@ export const toggleBlock = (
   Transforms.setNodes<SlateElement>(editor, newProperties)
 
   /**
-   * 比如
+   * 增加包裹
    * 1. List类型需根据 format 在外部还原包裹 ol/ul（内部是list-item li）
    * 2. block-quote 外部包裹 block （内部是 paragraph p）
    */

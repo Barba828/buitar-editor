@@ -49,10 +49,7 @@ const App = () => {
     // ...(yellowJson as Descendant[]),
     // ...(ABCJson as Descendant[]),
   ])
-  const {
-    attrs: { handleMouseOver },
-    HoverToolbar,
-  } = useHoverToolbar(editor)
+  const { attrs: hoverToolbarAttrs, HoverToolbar } = useHoverToolbar(editor)
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleChange = useCallback((_value: Descendant[]) => {
@@ -64,9 +61,9 @@ const App = () => {
     <Slate editor={editor} initialValue={value} onChange={handleChange}>
       <Editable
         className="slate-editable"
+        {...hoverToolbarAttrs}
         renderElement={Element}
         renderLeaf={Leaf}
-        onMouseOver={handleMouseOver}
         spellCheck={false}
         autoFocus
       />
