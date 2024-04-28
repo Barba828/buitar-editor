@@ -1,5 +1,11 @@
 .toolbar-chord-item {
   width: 200px;
+  display: flex;
+}
+
+.toolbar-chord-middle {
+  flex: 1;
+  width: 0;
 }
 
 .toolbar-chord-item--title {

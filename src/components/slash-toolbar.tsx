@@ -10,6 +10,9 @@ import {
   type ToolType,
 } from './tools.config'
 import { isBlockActive } from '~common'
+import { Icon } from './icon'
+
+import './slash-toolbar.scss'
 
 export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
   const editor = useSlate()
@@ -106,7 +109,9 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
   }, [editor, onChange])
 
   const renderItem = useCallback((item: ToolType) => {
-    return <ListItem item={item} />
+    return <ListItem item={item} left={item.icon && <div className='slash-item-icon flex-center'>
+      <Icon name={item.icon} />
+    </div>} />
   }, [])
 
   const cleanSearch = useCallback(() => {
