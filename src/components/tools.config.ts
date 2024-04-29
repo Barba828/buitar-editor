@@ -48,42 +48,42 @@ export const textTypeMenu: ToolType[] = [
     key: 'heading-1',
     title: 'Heading-1',
     desc: 'Largest heading size',
-    icon: 'icon-heading-2',
+    icon: 'icon-heading-1',
   },
   {
     tag: 'text',
     key: 'heading-2',
     title: 'Heading-2',
     desc: 'Large heading size',
-    icon: 'icon-list-toggle',
+    icon: 'icon-heading-2',
   },
   {
     tag: 'text',
     key: 'heading-3',
     title: 'Heading-3',
     desc: 'Medium heading size',
-    icon: 'icon-list-toggle',
+    icon: 'icon-heading-3',
   },
   {
     tag: 'text',
     key: 'heading-4',
     title: 'Heading-4',
     desc: 'Small heading size',
-    icon: 'icon-list-toggle',
+    // icon: 'icon-list-toggle',
   },
   {
     tag: 'text',
     key: 'heading-5',
     title: 'Heading-5',
     desc: 'Smaller heading size',
-    icon: 'icon-list-toggle',
+    // icon: 'icon-list-toggle',
   },
   {
     tag: 'text',
     key: 'heading-6',
     title: 'Heading-6',
     desc: 'Smallest heading size',
-    icon: 'icon-list-toggle',
+    // icon: 'icon-list-toggle',
   },
 ]
 
@@ -93,12 +93,14 @@ export const tablatureTypeMenu: ToolType[] = [
     key: 'abc-tablature',
     title: 'ABC Editor',
     desc: 'Simple music & tablature editor',
+    icon: 'icon-list-music',
   },
   {
     tag: 'tablature',
     key: 'block-quote',
     title: 'GTP Previewer',
     desc: 'Add Guitar Pro tablature link',
+    icon: 'icon-guitar',
   },
 ]
 
@@ -108,24 +110,28 @@ export const chordTypeMenu: ToolType[] = [
     key: '-CA',
     title: 'Inline Chord',
     desc: 'Insert Inline Chord',
+    icon: 'icon-hexian',
   },
   {
     tag: 'chord',
     key: '-X0',
     title: 'Inline Custom Chord',
     desc: 'Insert Inline Custom Chord',
+    icon: 'icon-hexian',
   },
   {
     tag: 'chord',
     key: '-TA',
     title: 'Fixed Chord',
     desc: 'Insert Fixed Chord',
+    icon: 'icon-hexian',
   },
   {
     tag: 'chord',
     key: '-Rx0',
     title: 'Fixed Custom Chord',
     desc: 'Insert Fixed Custom Chord',
+    icon: 'icon-hexian',
   },
 ]
 

@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect, useCallback, FC, HTMLProps } from 'react'
 import { Range, Editor, BaseOperation, Transforms } from 'slate'
 import { ReactEditor, useSlate } from 'slate-react'
-import { List, ListItem, Popover } from '~chord'
+import { isBlockActive, Icon, List, ListItem, Popover } from '~common'
 import {
   textTypeMenu,
   tablatureTypeMenu,
@@ -9,8 +9,6 @@ import {
   flatTypeArr,
   type ToolType,
 } from './tools.config'
-import { isBlockActive } from '~common'
-import { Icon } from './icon'
 
 import './slash-toolbar.scss'
 
@@ -109,9 +107,19 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
   }, [editor, onChange])
 
   const renderItem = useCallback((item: ToolType) => {
-    return <ListItem item={item} left={item.icon && <div className='slash-item-icon flex-center'>
-      <Icon name={item.icon} />
-    </div>} />
+    return (
+      <ListItem
+        item={item}
+        className='slash-item'
+        left={
+          item.icon && (
+            <div className="slash-item-icon flex-center">
+              <Icon name={item.icon} />
+            </div>
+          )
+        }
+      />
+    )
   }, [])
 
   const cleanSearch = useCallback(() => {

@@ -10,9 +10,9 @@ import {
 } from 'react'
 import { Transforms } from 'slate'
 import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react'
-import { type ABCTablatureElement, Selector } from '~chord'
+import { type ABCTablatureElement } from '~chord'
 import ABCJS, { type TablatureInstrument } from 'abcjs'
-import { getElementText } from '~common'
+import { getElementText, Icon, Selector } from '~common'
 import cx from 'classnames'
 
 import './abc-element.scss'
@@ -38,12 +38,13 @@ export const ABCElement: FC<RenderElementProps> = memo(({ attributes, element, c
 
   useEffect(() => {
     if (musicSheetRef.current) {
+      const tablature = instrument ? [{ instrument }] : []
       ABCJS.renderAbc(musicSheetRef.current, abcNotation, {
         add_classes: true,
         oneSvgPerLine: true,
         responsive: 'resize',
         selectTypes: false,
-        tablature: [instrument ? { instrument } : null].filter((item) => !!item),
+        tablature: tablature,
       })
     }
   }, [abcNotation, instrument])
@@ -139,7 +140,9 @@ export const ABCElement: FC<RenderElementProps> = memo(({ attributes, element, c
           {!editable ? 'Edit' : 'Preview'}
         </div>
         <div className="abc-editor__trigger" onClick={() => setFullscreen(!fullscreen)}>
-          {fullscreen ? 'X' : '⬌'}
+          {fullscreen ? 
+            <Icon name='icon-shrink'></Icon> : <Icon name='icon-expand'></Icon>  
+          }
         </div>
       </div>
 

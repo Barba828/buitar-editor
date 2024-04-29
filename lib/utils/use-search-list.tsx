@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback, useEffect } from 'react'
 import { getChordListByStr, getTapsByChordName, strsToTaps } from './index'
 import { BoardChord, pitchToChordType } from '@buitar/to-guitar'
-import { List } from '../components/list'
+import { List } from '~common'
 import { TapsListItem } from '../components/taps-item'
 import { ChordNameItem } from '../components/chord-name-item'
 

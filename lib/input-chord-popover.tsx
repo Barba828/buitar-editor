@@ -1,8 +1,8 @@
 import { memo, useEffect, FC, useCallback, useState, ChangeEventHandler } from 'react'
 import { useSlate } from 'slate-react'
 import { BoardChord } from '@buitar/to-guitar'
-import { getSelectedLeavesFormat, getSelectedRect } from '~common'
-import { CommonPopoverProps, Popover, SearchList } from '~chord'
+import { getSelectedLeavesFormat, getSelectedRect, type CommonPopoverProps, Popover,  } from '~common'
+import { SearchList } from '~chord'
 import { getChordName } from '~chord/utils'
 
 import './input-chord-popover.scss'

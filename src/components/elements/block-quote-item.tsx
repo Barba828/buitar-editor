@@ -1,11 +1,11 @@
 import { FC, useCallback, useEffect, useState } from 'react'
 import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react'
-import { BlockQuoteElement } from '../../custom-types'
+import { BlockQuoteElement, CustomElement } from '../../custom-types'
 import { Transforms, Element as SlateElement } from 'slate'
 
 import './block-quote-item.scss'
 
-const deepFirstChildren = (node: SlateElement) => {
+const deepFirstChildren = (node: SlateElement): CustomElement => {
   if (node.children?.length && SlateElement.isElement(node.children[0])) {
     return deepFirstChildren(node.children[0])
   }

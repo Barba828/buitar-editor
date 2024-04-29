@@ -1,7 +1,6 @@
 import { memo, useEffect, FC, useState, useCallback, useMemo } from 'react'
 import { useSlate } from 'slate-react'
-import { Popover, List, ListItem, type CommonPopoverProps } from '~chord'
-import { getSelectedRect } from '~common'
+import { getSelectedRect, Popover, List, ListItem, type CommonPopoverProps  } from '~common'
 
 import { textTypeMenu, tablatureTypeMenu, type ToolType } from './tools.config'
 
