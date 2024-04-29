@@ -1,0 +1,29 @@
+.toggle-list-item {
+  position: relative;
+  padding-inline-start: 2em;
+  padding-inline-end: 1em;
+  padding-block-start: 0.5em;
+  padding-block-end: 0.5em;
+}
+
+.toggle-list-item__content {
+  overflow-y: hidden;
+  min-height: 1em;
+}
+
+.toggle-list-item__trigger {
+  position: absolute;
+  left: 0.2em;
+  top: 0.5em;
+  width: 20px;
+  user-select: none;
+  color: $gray-6;
+
+  .icon {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    &:hover {
+      background-color: $gray-0--hover;
+    }
+  }
+}

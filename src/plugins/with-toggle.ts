@@ -1,9 +1,6 @@
 import { Editor, Element as SlateElement, Transforms } from 'slate'
 import { isBlockActive, isMarkActive } from '~common'
-
-const LIST_TYPES: BlockFormat[] = ['numbered-list', 'bulleted-list']
-const OTHER_WRAP_TYPES: BlockFormat[] = ['block-quote', 'abc-tablature']
-const NEED_WRAP_TYPES: BlockFormat[] = [...LIST_TYPES, ...OTHER_WRAP_TYPES]
+import { LIST_TYPES, NEED_WRAP_TYPES, OTHER_WRAP_TYPES } from './config'
 
 export const isListFunc = (format: BlockFormat) => LIST_TYPES.includes(format)
 
@@ -33,8 +30,8 @@ export const toggleBlock = (
 ) => {
   const { type: format } = element
   const { ignoreActive = false } = options || {}
-  const isActive = ignoreActive ? false : isBlockActive(editor, format)
   const isNeedWrap = NEED_WRAP_TYPES.includes(format)
+  const isActive = ignoreActive ? false : isBlockActive(editor, format)
 
   /**
    * 解除包裹
@@ -63,6 +60,7 @@ export const toggleBlock = (
         }
         break
       case 'block-quote':
+      case 'toogle-list':
       case 'abc-tablature':
         newProperties = {
           type: 'paragraph',
@@ -92,7 +90,7 @@ export const insertBlock = (editor: Editor, element: SlateElement) => {
   const [, currentPath] = Editor.node(editor, selection)
 
   /**
-   * 位于行首先退行
+   * 位于行首直接toggle当前block
    */
   if (Editor.string(editor, currentPath).length === 0) {
     editor.toggleBlock?.(element, { ignoreActive: true })
@@ -120,6 +118,7 @@ export const insertBlock = (editor: Editor, element: SlateElement) => {
       }
       break
     case 'block-quote':
+    case 'toogle-list':
     case 'abc-tablature':
       newProperties = {
         ...element,

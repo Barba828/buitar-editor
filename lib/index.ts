@@ -1,4 +1,4 @@
-import './styles/index.scss'
+import '~common/styles/index.scss'
 
 export * from './chord-types.d'
 

@@ -1,6 +1,7 @@
 import { Transforms, Element as SlateElement, Editor, Range, Point, NodeEntry } from 'slate'
 import { getSelectedBlockActive, isBlockActive } from '~common'
-import { BlockQuoteElement } from '../custom-types'
+import { ToggleListElement } from '../custom-types'
+import { ONLY_ONE_WRAP_TYPES } from './config'
 
 const SHORTCUTS: Record<string, BlockFormat> = {
   '*': 'bulleted-list',
@@ -15,7 +16,19 @@ const SHORTCUTS: Record<string, BlockFormat> = {
   '#####': 'heading-5',
   '######': 'heading-6',
 }
+
 const orderedListRegex = /^(\d+)\.$/
+
+/**换行需要清理格式的类型 */
+const clearInBlockType: BlockFormat[] = [
+  'heading-1',
+  'heading-2',
+  'heading-3',
+  'heading-4',
+  'heading-5',
+  'heading-6',
+]
+
 /**
  * 从 type 中获取 BlockFormat
  * @param type
@@ -34,15 +47,36 @@ const getTypeForMD = (type: string): { type: BlockFormat | null; start?: string 
   return { type: null }
 }
 
-/**换行需要清理格式的类型 */
-const clearInBlockType: BlockFormat[] = [
-  'heading-1',
-  'heading-2',
-  'heading-3',
-  'heading-4',
-  'heading-5',
-  'heading-6',
-]
+/**
+ * 通过文本获取 BlockProperties
+ * @param editor 
+ * @param text 
+ * @returns 
+ */
+const insertPropertiesByText = (editor: Editor, text: string) => {
+  const { type, start: orderedListStart } = getTypeForMD(text)
+
+  if (!type) {
+    return
+  }
+
+  // 仅允许一层包裹且已被包裹里，不允许新增
+  if (ONLY_ONE_WRAP_TYPES.includes(type) && isBlockActive(editor, type)) {
+    return
+  }
+
+  // abc-tablature 内不支持markdown快捷键插入
+  if (isBlockActive(editor, 'abc-tablature')) {
+    return
+  }
+
+  const newProperties = {
+    type,
+    start: orderedListStart ? Number(orderedListStart) : undefined,
+  }
+
+  return newProperties
+}
 
 export const withOnChange = (editor: Editor) => {
   const { insertText, insertBreak, deleteBackward } = editor
@@ -59,24 +93,16 @@ export const withOnChange = (editor: Editor) => {
       const start = Editor.start(editor, path)
       const range = { anchor, focus: start }
       const beforeText = Editor.string(editor, range) + text.slice(0, -1) // 截取start开始的文本，并去掉最后一位空格
-      const { type, start: orderedListStart } = getTypeForMD(beforeText)
 
-      // abc-tablature 内不支持markdown快捷键
-      if (type && !isBlockActive(editor, 'abc-tablature')) {
-        Transforms.select(editor, range)
-
+      // 获取当前上下文能否插入Block
+      const newProperties = insertPropertiesByText(editor, beforeText)
+      if (newProperties) {
         // 删除原有markdown标记文本（*/-/+/#/....）
+        Transforms.select(editor, range)
         if (!Range.isCollapsed(range)) {
           Transforms.delete(editor)
         }
-
-        const newProperties = {
-          type,
-          start: orderedListStart ? Number(orderedListStart) : undefined,
-        }
-
         editor.toggleBlock?.({ ...newProperties }, { ignoreActive: true })
-        return
       }
     }
 
@@ -120,15 +146,15 @@ export const withOnChange = (editor: Editor) => {
         Transforms.setNodes(editor, newProperties)
       }
 
-      // 换行展开 block-quote
-      const matchBlockQuote = getSelectedBlockActive(editor, 'block-quote')
+      // 换行展开 toogle-list -> extend
+      const matchBlockQuote = getSelectedBlockActive(editor, 'toogle-list')
       if (matchBlockQuote) {
         const [block, path] = matchBlockQuote
-        if (!(block as BlockQuoteElement).extend) {
+        if (!(block as ToggleListElement).extend) {
           Transforms.setNodes(
             editor,
             {
-              type: 'block-quote',
+              type: 'toogle-list',
               extend: true,
             },
             { at: path }
@@ -184,24 +210,3 @@ const cleanTypeOnStart = (editor: Editor) => {
   }
   return true
 }
-
-// /**
-//  * 判断当前列表项是否还有外部的有序列表或无序列表包裹
-//  * @param editor
-//  * @param listItemPath
-//  * @returns
-//  */
-// const hasListWrapper = (editor: Editor, listItemPath: Path) => {
-//   const [parent] = Editor.node(editor, listItemPath.slice(0, -1)) // 获取列表项的父节点
-
-//   if (!parent || !SlateElement.isElement(parent)) {
-//     return false // 如果父节点不存在或不是元素节点，直接返回 false
-//   }
-
-//   if (editor.isList?.(parent.type)) {
-//     return parent // 如果父节点是列表类型，则说明当前列表项有外部列表包裹，返回 true
-//   }
-
-//   // 递归向上遍历父节点的祖先节点，继续判断是否有外部列表包裹
-//   return hasListWrapper(editor, listItemPath.slice(0, -1))
-// }

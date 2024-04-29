@@ -17,7 +17,7 @@ import { SlashToolbar } from './components/slash-toolbar'
 import './App.scss'
 import './style/theme.scss'
 
-import { BlockQuoteItem } from './components/elements/block-quote-item'
+import { ToggleListItem } from './components/elements/toggle-list-item'
 import { useHoverToolbar } from './hooks/use-hover-toolbar'
 import { withPlugins } from './plugins'
 
@@ -42,7 +42,7 @@ const App = () => {
     //   ],
     // },
     // {
-    //   type: 'block-quote',
+    //   type: 'toogle-list',
     //   extend: true,
     //   children: [{ type: 'paragraph', children: [{ text: '77779999' }] }],
     // },
@@ -86,7 +86,9 @@ const Element = (props: RenderElementProps) => {
     case 'check-list-item':
       return <CheckListItemElement {...props} />
     case 'block-quote':
-      return <BlockQuoteItem {...props} />
+      return <blockquote {...attributes}>{children}</blockquote>
+    case 'toogle-list':
+      return <ToggleListItem {...props} />
     case 'list-item':
       return <li {...attributes}>{children}</li>
     case 'numbered-list':

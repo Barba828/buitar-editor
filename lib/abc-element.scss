@@ -22,6 +22,7 @@
   transition: background 0.2s ease;
   max-height: 50vh;
   overflow-y: scroll;
+  font-size: 0.8em;
 
   &:hover,
   &:active,
@@ -29,10 +30,6 @@
     outline: none;
     background: $gray-1--hover;
   }
-}
-
-.abc-editor__previewer {
-  // overflow: scroll !important;
 }
 
 .abc-editor__btns {
@@ -56,7 +53,7 @@
   }
 }
 .abc-editor__trigger {
-  font-size: 0.8em;
+  font-size: 18px;
   background-color: $gray-2;
   padding: 4px 8px;
   cursor: pointer;
@@ -72,6 +69,10 @@
   &.abc-editor__trigger--no-instrument {
     width: 4em;
     opacity: 0.8;
+  }
+
+  .icon-trigger {
+    transition: all 0.3s ease-in-out;
   }
 }
 

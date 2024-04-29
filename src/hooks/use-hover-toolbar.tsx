@@ -4,6 +4,7 @@ import { ReactEditor } from 'slate-react'
 
 import './hover-toolbar.scss'
 import { CustomElement } from '../custom-types'
+import { Icon } from '~common'
 
 const getClosetElement = (editor: Editor, target: EventTarget) => {
   const targetNode = ReactEditor.toSlateNode(editor, target as HTMLElement)
@@ -69,12 +70,10 @@ export const useHoverToolbar = (editor: Editor) => {
   const HoverToolbar: FC = () => {
     if (!rect) return null
     return (
-      <div className="hover-toolbar" style={{ top: rect.top, left: rect.left }}>
+      <div className="hover-toolbar" style={{ top: rect.top + rect.height / 2, left: rect.left }}>
         <div className="hover-toolbar-wrapper">
-          <div className="hover-toolbar-item" onClick={handleInsert}>
-            +
-          </div>
-          <div className="hover-toolbar-item">T</div>
+          <Icon name="icon-add-plus" className="hover-toolbar-item" onClick={handleInsert}></Icon>
+          <Icon name="icon-drag" className="hover-toolbar-item"></Icon>
         </div>
         <div className="hover-toolbar-side"></div>
       </div>

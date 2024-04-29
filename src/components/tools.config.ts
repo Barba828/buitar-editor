@@ -45,6 +45,13 @@ export const textTypeMenu: ToolType[] = [
   },
   {
     tag: 'text',
+    key: 'toogle-list',
+    title: 'Toogle list',
+    desc: 'Toogle can show and hide inside',
+    icon: 'icon-list-toggle',
+  },
+  {
+    tag: 'text',
     key: 'heading-1',
     title: 'Heading-1',
     desc: 'Largest heading size',
@@ -97,7 +104,7 @@ export const tablatureTypeMenu: ToolType[] = [
   },
   {
     tag: 'tablature',
-    key: 'block-quote',
+    key: 'toogle-list',
     title: 'GTP Previewer',
     desc: 'Add Guitar Pro tablature link',
     icon: 'icon-guitar',

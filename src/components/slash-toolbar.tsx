@@ -89,6 +89,7 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
     const afterText = Editor.string(editor, afterRange)
     const afterMatch = afterText.match(/^(\s|$)/)
 
+    console.log('lnz', beforeText, afterMatch);
     if (beforeText && afterMatch) {
       setTarget(beforeRange)
       setSearch(beforeText)

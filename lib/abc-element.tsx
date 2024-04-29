@@ -12,7 +12,7 @@ import { Transforms } from 'slate'
 import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react'
 import { type ABCTablatureElement } from '~chord'
 import ABCJS, { type TablatureInstrument } from 'abcjs'
-import { getElementText, Icon, Selector } from '~common'
+import { getElementText, Icon, Selector, toast } from '~common'
 import cx from 'classnames'
 
 import './abc-element.scss'
@@ -50,9 +50,7 @@ export const ABCElement: FC<RenderElementProps> = memo(({ attributes, element, c
   }, [abcNotation, instrument])
 
   useEffect(() => {
-    if (editable) {
-      setShort(false)
-    }
+    setShort(!editable)
   }, [editable])
   useEffect(() => {
     if (fullscreen) {
@@ -102,18 +100,17 @@ export const ABCElement: FC<RenderElementProps> = memo(({ attributes, element, c
 
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(abcNotation).then(() => {
-      /**
-       * @TODO toast
-       */
+      toast('复制成功')
     })
   }, [abcNotation])
 
   const showSetShortBtn = useMemo(
     () =>
+      !editable &&
       !fullscreen &&
       musicSheetRef.current?.scrollHeight &&
       musicSheetRef.current.scrollHeight > 200,
-    [fullscreen]
+    [fullscreen, editable]
   )
 
   return (
@@ -130,19 +127,17 @@ export const ABCElement: FC<RenderElementProps> = memo(({ attributes, element, c
       suppressContentEditableWarning
     >
       <div className="abc-editor__btns" contentEditable={false}>
-        <div className="abc-editor__trigger" onClick={handleCopy}>
-          Copy
+        <div className="abc-editor__trigger flex-center" onClick={handleCopy}>
+          <Icon name="icon-copy"></Icon>
         </div>
-        <div className="abc-editor__trigger" onClick={handlePrint}>
-          Print
+        <div className="abc-editor__trigger flex-center" onClick={handlePrint}>
+          <Icon name="icon-print"></Icon>
         </div>
-        <div className="abc-editor__trigger" onClick={() => setEditable(!editable)}>
-          {!editable ? 'Edit' : 'Preview'}
+        <div className="abc-editor__trigger flex-center" onClick={() => setEditable(!editable)}>
+          <Icon name={!editable ? 'icon-edit-pencil' : 'icon-done'}></Icon>
         </div>
-        <div className="abc-editor__trigger" onClick={() => setFullscreen(!fullscreen)}>
-          {fullscreen ? 
-            <Icon name='icon-shrink'></Icon> : <Icon name='icon-expand'></Icon>  
-          }
+        <div className="abc-editor__trigger flex-center" onClick={() => setFullscreen(!fullscreen)}>
+          <Icon name={fullscreen ? 'icon-shrink' : 'icon-expand'}></Icon>
         </div>
       </div>
 
@@ -157,11 +152,10 @@ export const ABCElement: FC<RenderElementProps> = memo(({ attributes, element, c
       <div className="abc-editor__btns abc-editor__footer-btns" contentEditable={false}>
         {showSetShortBtn && (
           <div
-            className="abc-editor__trigger"
+            className="abc-editor__trigger flex-center"
             onClick={() => setShort(!short)}
-            style={{ transform: `rotate(90deg)` }}
           >
-            {short ? '⬌' : 'X'}
+            <Icon name='icon-trigger' style={{transform: `rotate(${short ? 0 : 180}deg)`}}></Icon>
           </div>
         )}
       </div>

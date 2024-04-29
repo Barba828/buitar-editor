@@ -1,9 +1,10 @@
 import { FC, useCallback, useEffect, useState } from 'react'
 import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react'
-import { BlockQuoteElement, CustomElement } from '../../custom-types'
+import { ToggleListElement, CustomElement } from '../../custom-types'
 import { Transforms, Element as SlateElement } from 'slate'
+import { Icon } from '~common'
 
-import './block-quote-item.scss'
+import './toggle-list-item.scss'
 
 const deepFirstChildren = (node: SlateElement): CustomElement => {
   if (node.children?.length && SlateElement.isElement(node.children[0])) {
@@ -12,14 +13,14 @@ const deepFirstChildren = (node: SlateElement): CustomElement => {
   return node
 }
 
-export const BlockQuoteItem: FC<RenderElementProps> = ({ attributes, children, element }) => {
-  const { extend = true } = element as BlockQuoteElement
+export const ToggleListItem: FC<RenderElementProps> = ({ attributes, children, element }) => {
+  const { extend = true } = element as ToggleListElement
   const editor = useSlateStatic()
   const [firstChildHeight, setFirstChildHeight] = useState(0)
 
   useEffect(() => {
     try {
-      // 获取 BlockQuote 第一个子Element元素
+      // 获取 ToggleList 第一个子Element元素
       const firstChild = deepFirstChildren(element)
       const firstDomNode = ReactEditor.toDOMNode(editor, firstChild)
       // 设置未展开高度
@@ -37,22 +38,26 @@ export const BlockQuoteItem: FC<RenderElementProps> = ({ attributes, children, e
   }, [editor, element, extend])
 
   return (
-    <blockquote className="block-quote-item" {...attributes}>
+    <div className="toggle-list-item" {...attributes}>
       <div
-        className="block-quote-item__content"
+        className="toggle-list-item__content"
         style={{ height: firstChildHeight && !extend ? `${firstChildHeight}px` : 'auto' }}
       >
         {children}
       </div>
-      <span
-        className="block-quote-item__trigger"
+      <div
+        className="toggle-list-item__trigger flex-center"
         contentEditable={false}
         onClick={handleTriggerClick}
         style={{
-          transform: `rotate(${extend ? 90 : 0}deg)`,
           height: firstChildHeight ? `${firstChildHeight}px` : '1em',
         }}
-      ></span>
-    </blockquote>
+      >
+        <Icon name="icon-trigger"   
+          style={{
+            transform: `rotate(${extend ? 0 : -90}deg)`,
+          }}/>
+      </div>
+    </div>
   )
 }

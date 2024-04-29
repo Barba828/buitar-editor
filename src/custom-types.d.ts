@@ -15,9 +15,15 @@ export type ParagraphElement = {
   children: Descendant[]
 }
 
+export type ToggleListElement = {
+  type: 'toogle-list'
+  extend?: boolean
+  toggle?: CustomText[]
+  children: Descendant[]
+}
+
 export type BlockQuoteElement = {
   type: 'block-quote'
-  extend?: boolean
   toggle?: CustomText[]
   children: Descendant[]
 }
@@ -68,6 +74,7 @@ export type ListItemElement = { type: 'list-item'; children: Descendant[] }
 export type CustomElement =
   | ParagraphElement
   | BlockQuoteElement
+  | ToggleListElement
   | BulletedListElement
   | CodeBlockElement
   | CodeLineElement

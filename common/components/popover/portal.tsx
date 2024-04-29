@@ -13,7 +13,6 @@ export const Portal = ({ children, rootId }: { children?: ReactNode; rootId?: st
       root = rootElement
     } else {
       const potalDiv = document.createElement('div')
-      potalDiv.id = 'modal'
       document.body.appendChild(potalDiv)
       root = potalDiv
     }

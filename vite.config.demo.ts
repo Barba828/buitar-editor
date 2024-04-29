@@ -10,7 +10,7 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: '@import "/lib/styles/definitions.scss";', // 预处理
+        additionalData: '@import "/common/styles/definitions.scss";', // 预处理
       },
     },
   },
