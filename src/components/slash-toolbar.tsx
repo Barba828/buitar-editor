@@ -73,6 +73,7 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
     const lineBefore = Editor.before(editor, start, { unit: 'line' })
     const beforeLine = Editor.string(editor, Editor.range(editor, start, lineBefore))
 
+    console.log('lnz beforeLine', beforeLine)
     if (beforeLine.lastIndexOf('/') === -1) {
       setTarget(null)
       return
@@ -89,7 +90,7 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
     const afterText = Editor.string(editor, afterRange)
     const afterMatch = afterText.match(/^(\s|$)/)
 
-    console.log('lnz', beforeText, afterMatch);
+    console.log('lnz beforeText', beforeText, afterMatch)
     if (beforeText && afterMatch) {
       setTarget(beforeRange)
       setSearch(beforeText)
@@ -108,19 +109,7 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
   }, [editor, onChange])
 
   const renderItem = useCallback((item: ToolType) => {
-    return (
-      <ListItem
-        item={item}
-        className='slash-item'
-        left={
-          item.icon && (
-            <div className="slash-item-icon flex-center">
-              <Icon name={item.icon} />
-            </div>
-          )
-        }
-      />
-    )
+    return <ListItem item={item} className="slash-item" />
   }, [])
 
   const cleanSearch = useCallback(() => {

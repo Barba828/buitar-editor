@@ -76,21 +76,21 @@ export const textTypeMenu: ToolType[] = [
     key: 'heading-4',
     title: 'Heading-4',
     desc: 'Small heading size',
-    // icon: 'icon-list-toggle',
+    icon: 'icon-heading-4',
   },
   {
     tag: 'text',
     key: 'heading-5',
     title: 'Heading-5',
     desc: 'Smaller heading size',
-    // icon: 'icon-list-toggle',
+    icon: 'icon-heading-5',
   },
   {
     tag: 'text',
     key: 'heading-6',
     title: 'Heading-6',
     desc: 'Smallest heading size',
-    // icon: 'icon-list-toggle',
+    icon: 'icon-heading-6',
   },
 ]
 
@@ -117,28 +117,28 @@ export const chordTypeMenu: ToolType[] = [
     key: '-CA',
     title: 'Inline Chord',
     desc: 'Insert Inline Chord',
-    icon: 'icon-hexian',
+    icon: 'icon-chord',
   },
   {
     tag: 'chord',
     key: '-X0',
     title: 'Inline Custom Chord',
     desc: 'Insert Inline Custom Chord',
-    icon: 'icon-hexian',
+    icon: 'icon-chord',
   },
   {
     tag: 'chord',
     key: '-TA',
     title: 'Fixed Chord',
     desc: 'Insert Fixed Chord',
-    icon: 'icon-hexian',
+    icon: 'icon-chord',
   },
   {
     tag: 'chord',
     key: '-Rx0',
     title: 'Fixed Custom Chord',
     desc: 'Insert Fixed Custom Chord',
-    icon: 'icon-hexian',
+    icon: 'icon-chord',
   },
 ]
 

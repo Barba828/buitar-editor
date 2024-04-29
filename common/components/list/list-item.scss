@@ -1,6 +1,11 @@
 .toolbar-chord-item {
-  width: 200px;
+  width: 220px;
   display: flex;
+}
+
+.toolbar-chord-item--left {
+  margin: 0 6px;
+  font-size: 24px;
 }
 
 .toolbar-chord-middle {
