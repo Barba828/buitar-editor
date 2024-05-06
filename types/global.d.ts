@@ -6,5 +6,6 @@ declare global {
 
   interface Window {
     editor?: Editor
+    slate?: EditorInterface
   }
 }

@@ -6,8 +6,11 @@ import {
   Text,
   Node,
   EditorNodesOptions,
+  Ancestor,
+  EditorAboveOptions,
 } from 'slate'
 import { ReactEditor } from 'slate-react'
+import { ONLY_ONE_WRAP_TYPES } from '../src/plugins/config'
 
 type TextFormat = keyof Omit<CustomTypes['Text'], 'text'>
 
@@ -55,17 +58,19 @@ export const getSelectedBlockActive = (
     })
   )
 
-  // const match = nodes.find(([node]) => (node as SlateElement).type === format)
-  // return match
   return nodes[0]
 }
 
 /**
- * 自顶而下获取当前 selection 最后一层的block
+ * 自底而上获取当前 selection 最后一层的block
  * @param editor
  * @returns
  */
-export const getSelectedBlock = (editor: Editor) => {
+export const getSelectedBlock = (
+  editor: Editor,
+  format: SlateElement['type'] | SlateElement['type'][] = [],
+  options: EditorAboveOptions<Ancestor> = {}
+) => {
   // 获取当前选区的位置
   const { selection } = editor
 
@@ -74,32 +79,47 @@ export const getSelectedBlock = (editor: Editor) => {
   }
 
   const match = Editor.above(editor, {
-    match: (n) =>
-      !Editor.isEditor(n) &&
-      SlateElement.isElement(n) &&
-      Editor.isBlock(editor, n) &&
-      n.type !== 'paragraph' &&
-      n.type !== 'list-item',
+    match: (n) => {
+      if (Editor.isEditor(n) || !SlateElement.isElement(n) || !Editor.isBlock(editor, n)) {
+        return false
+      }
+      if (n.type === 'list-item' || n.type === 'paragraph') {
+        return false
+      }
+      if (format.length) {
+        const matchFormat = typeof format === 'string' ? n.type === format : format.includes(n.type)
+        return matchFormat
+      }
+      return true
+    },
+    at: selection,
+    ...options,
   })
 
   if (match) {
-    return match[0] as SlateElement
+    return match
   }
 
   return null
 }
 
 /**
- * 获取最近的Element
- * @param editor 
- * @param target 
- * @returns 
+ * 根据 Dom 获取最近的 Element
+ * 若父级包含 wrapElement 则直接返回 wrapElement
+ * @param editor
+ * @param target
+ * @returns
  */
-export const getClosetElement = (editor: Editor, target: EventTarget) => {
+export const getClosetElement = (editor: Editor, target: HTMLElement | EventTarget) => {
   const targetNode = ReactEditor.toSlateNode(editor, target as HTMLElement)
-
+  const targetAt = ReactEditor.findPath(editor, targetNode)
   if (Editor.isEditor(targetNode)) {
     return
+  }
+
+  const wrapElement = getSelectedBlock(editor, ONLY_ONE_WRAP_TYPES, { at: targetAt })
+  if (wrapElement) {
+    return wrapElement[0] as SlateElement
   }
 
   if (SlateElement.isElement(targetNode) && editor.isBlock(targetNode)) {
@@ -107,7 +127,7 @@ export const getClosetElement = (editor: Editor, target: EventTarget) => {
   }
 
   const closestElement = Editor.above(editor, {
-    at: ReactEditor.findPath(editor, targetNode),
+    at: targetAt,
     match: (n) => SlateElement.isElement(n) && Editor.isBlock(editor, n),
   })
 

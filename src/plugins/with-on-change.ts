@@ -65,11 +65,6 @@ const insertPropertiesByText = (editor: Editor, text: string) => {
     return
   }
 
-  // abc-tablature 内不支持markdown快捷键插入
-  if (isBlockActive(editor, 'abc-tablature')) {
-    return
-  }
-
   const newProperties = {
     type,
     start: orderedListStart ? Number(orderedListStart) : undefined,
@@ -103,9 +98,9 @@ export const withOnChange = (editor: Editor) => {
           Transforms.delete(editor)
         }
         editor.toggleBlock?.({ ...newProperties }, { ignoreActive: true })
+        return
       }
     }
-
     insertText(text)
   }
 

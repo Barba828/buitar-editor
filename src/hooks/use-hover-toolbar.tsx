@@ -1,5 +1,5 @@
 import { FC, useCallback, useEffect, useState } from 'react'
-import { Editor, Transforms } from 'slate'
+import { Editor, Path, Transforms, Element as SlateElement } from 'slate'
 import { ReactEditor } from 'slate-react'
 import { getClosetElement, Icon } from '~common'
 
@@ -18,7 +18,12 @@ const getClosetRect = (editor: Editor, targetNode: CustomElement) => {
   const rect = ReactEditor.toDOMNode(editor, targetNode).getBoundingClientRect()
   if(NEED_WRAP_TYPES.includes(targetNode.type) && targetNode?.children?.length) {
     const childrenRect = ReactEditor.toDOMNode(editor, targetNode.children[0]).getBoundingClientRect()
-    return childrenRect
+    return {
+      ...rect,
+      top: childrenRect.top || rect.top,
+      height: childrenRect.height || 40,
+      left: rect.left
+    }
   }
   return rect
 }
@@ -30,7 +35,7 @@ export const useHoverToolbar = (editor: Editor) => {
   const onMouseOver: React.MouseEventHandler<HTMLDivElement> = useCallback(
     (event) => {
       if (event.target) {
-        const targetNode = getClosetElement(editor, event.target)
+        const targetNode = getClosetElement(editor, event.target)        
         if (!targetNode) {
           return
         }
@@ -59,12 +64,15 @@ export const useHoverToolbar = (editor: Editor) => {
     }
     // 定位在当前 element 的末尾插入 新的Element
     const path = ReactEditor.findPath(editor, closestElement)
-    const end = Editor.end(editor, path)
+    const newPath = Path.next(path);
 
-    Transforms.select(editor, end)
-    editor.insertBlock?.({ type: 'paragraph', children: [{ text: '/' }] })
-    // editor.insertBreak()
-    // editor.insertText('/')
+    const newParagraph = { type: 'paragraph', children: [{ text: '/' }] }  as SlateElement;
+    Transforms.insertNodes(editor, newParagraph, { at: newPath });
+
+    // 设置焦点到新段落的末端
+    const newSelection = Editor.end(editor, newPath);
+    Transforms.select(editor, newSelection);
+    ReactEditor.focus(editor);
   }
 
   const hideToolbar = useCallback(() => {

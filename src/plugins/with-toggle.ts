@@ -1,6 +1,7 @@
-import { Editor, Element as SlateElement, Transforms } from 'slate'
+import { Editor, Element as SlateElement, Transforms, Node } from 'slate'
 import { isBlockActive, isMarkActive } from '~common'
 import { LIST_TYPES, NEED_WRAP_TYPES, OTHER_WRAP_TYPES } from './config'
+import { NodeInsertNodesOptions } from 'slate/dist/interfaces/transforms/node'
 
 export const isListFunc = (format: BlockFormat) => LIST_TYPES.includes(format)
 
@@ -32,6 +33,11 @@ export const toggleBlock = (
   const { ignoreActive = false } = options || {}
   const isNeedWrap = NEED_WRAP_TYPES.includes(format)
   const isActive = ignoreActive ? false : isBlockActive(editor, format)
+
+  /**
+   * @todo
+   * ONLY_ONE_WRAP_TYPES toggle行为：选取整个wrap block 进行 toggle
+   */
 
   /**
    * 解除包裹
@@ -84,14 +90,21 @@ export const toggleBlock = (
   }
 }
 
-export const insertBlock = (editor: Editor, element: SlateElement) => {
+export const insertBlock = (
+  editor: Editor,
+  element: SlateElement,
+  options?: NodeInsertNodesOptions<Node>
+) => {
   const { selection } = editor
   if (!selection) return
   const [, currentPath] = Editor.node(editor, selection)
 
   /**
-   * 位于行首直接toggle当前block
+   * @todo
+   * ONLY_ONE_WRAP_TYPES 插入行为：1.return 2.插入父级新行 3.能在当前插入
    */
+  
+  /** 位于行首直接toggle当前block */
   if (Editor.string(editor, currentPath).length === 0) {
     editor.toggleBlock?.(element, { ignoreActive: true })
     return
@@ -133,7 +146,7 @@ export const insertBlock = (editor: Editor, element: SlateElement) => {
     default:
       break
   }
-  Transforms.insertNodes(editor, newProperties)
+  Transforms.insertNodes(editor, newProperties, options)
 }
 
 export const withToggle = (editor: Editor) => {

@@ -53,7 +53,8 @@ const App = () => {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleChange = useCallback((_value: Descendant[]) => {
-    console.log(_value)
+    hoverToolbarAttrs?.onInput()
+    console.log('debug _value', _value)
     // console.log(editor)
   }, [])
 

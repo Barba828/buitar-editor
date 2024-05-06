@@ -5,8 +5,9 @@ import { InputChordPopover } from '~chord'
 import { getSelectedRect, isBlockActive, isMarkActive, Popover } from '~common'
 import { TextTypePopover } from './text-type-popover'
 import { useBlockType } from './utils/use-block-type'
-
+import { ONLY_ONE_WRAP_TYPES } from '../plugins/config'
 import cx from 'classnames'
+
 import './select-toolbar.scss'
 
 export const SelectToolbar = () => {
@@ -45,7 +46,7 @@ export const SelectToolbar = () => {
 
   /**当前展示是否是基本文本Tool */
   const isBasicToolbar = useMemo(() => {
-    return isBlockActive(editor, 'abc-tablature')
+    return isBlockActive(editor, ONLY_ONE_WRAP_TYPES)
   }, [editor, selection])
 
   const cleanInputChord = useCallback(() => {

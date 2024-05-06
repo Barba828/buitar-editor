@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect, useCallback, FC, HTMLProps } from 'react'
 import { Range, Editor, BaseOperation, Transforms } from 'slate'
 import { ReactEditor, useSlate } from 'slate-react'
-import { isBlockActive, List, ListItem, Popover } from '~common'
+import { List, ListItem, Popover } from '~common'
 import {
   textTypeMenu,
   tablatureTypeMenu,
@@ -64,7 +64,7 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
 
   const onChange = useCallback(() => {
     const { selection } = editor
-    if (!selection || !Range.isCollapsed(selection) || isBlockActive(editor, 'abc-tablature')) {
+    if (!selection || !Range.isCollapsed(selection)) {
       setTarget(null)
       return
     }
@@ -138,7 +138,7 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
         default:
           break
       }
-
+      ReactEditor.focus(editor);
       cleanSearch()
     },
     [cleanSearch, editor, target]
