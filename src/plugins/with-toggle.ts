@@ -1,6 +1,7 @@
-import { Editor, Element as SlateElement, Transforms, Node } from 'slate'
-import { isBlockActive, isMarkActive } from '~common'
-import { LIST_TYPES, NEED_WRAP_TYPES, OTHER_WRAP_TYPES } from './config'
+import { Editor, Element as SlateElement, Transforms, Node, Path } from 'slate'
+import { getSelectedBlock, isBlockActive, isMarkActive } from '~common'
+import { LIST_TYPES, NEED_WRAP_TYPES, ONLY_ONE_WRAP_TYPES, OTHER_WRAP_TYPES } from './config'
+import { ReactEditor } from 'slate-react'
 import { NodeInsertNodesOptions } from 'slate/dist/interfaces/transforms/node'
 
 export const isListFunc = (format: BlockFormat) => LIST_TYPES.includes(format)
@@ -36,7 +37,9 @@ export const toggleBlock = (
 
   /**
    * @todo
-   * ONLY_ONE_WRAP_TYPES toggle行为：选取整个wrap block 进行 toggle
+   * 1. ONLY_ONE_WRAP_TYPES toggle行为：选取整个wrap block 进行 toggle
+   * 2. 修改函数options，用于传递at或者设置at
+   * 3. at用于在 ONLY_ONE_WRAP_TYPES 时，选取整个wrap block 
    */
 
   /**
@@ -93,19 +96,26 @@ export const toggleBlock = (
 export const insertBlock = (
   editor: Editor,
   element: SlateElement,
-  options?: NodeInsertNodesOptions<Node>
+  options: NodeInsertNodesOptions<Node> = {}
 ) => {
   const { selection } = editor
   if (!selection) return
   const [, currentPath] = Editor.node(editor, selection)
+  const isEmptyLine = Editor.string(editor, currentPath).length === 0
 
-  /**
-   * @todo
-   * ONLY_ONE_WRAP_TYPES 插入行为：1.return 2.插入父级新行 3.能在当前插入
-   */
-  
-  /** 位于行首直接toggle当前block */
-  if (Editor.string(editor, currentPath).length === 0) {
+  /** ONLY_ONE_WRAP_TYPES 插入行为：插入父级新行 */
+  if (ONLY_ONE_WRAP_TYPES.includes(element.type)) {
+    const aboveElementMatch = getSelectedBlock(editor, element.type)
+    if (aboveElementMatch) {
+      const [, abovePath] = aboveElementMatch
+      options.at = Path.next(abovePath)
+      /** 位于行首删除当前wrap内行（因为需要插入到父级新行） */
+      if (isEmptyLine) {
+        Transforms.removeNodes(editor, { at: currentPath.slice(0, -1) })
+      }
+    }
+  } else if (isEmptyLine) {
+    /** 位于行首直接toggle当前block */
     editor.toggleBlock?.(element, { ignoreActive: true })
     return
   }
@@ -146,7 +156,15 @@ export const insertBlock = (
     default:
       break
   }
+
   Transforms.insertNodes(editor, newProperties, options)
+
+  /** 存在at，则焦点更新到at末尾 */
+  if (options.at) {
+    const newSelection = Editor.end(editor, options.at)
+    Transforms.select(editor, newSelection)
+  }
+  ReactEditor.focus(editor)
 }
 
 export const withToggle = (editor: Editor) => {
