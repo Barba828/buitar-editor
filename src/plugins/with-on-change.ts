@@ -49,9 +49,9 @@ const getTypeForMD = (type: string): { type: BlockFormat | null; start?: string 
 
 /**
  * 通过文本获取 BlockProperties
- * @param editor 
- * @param text 
- * @returns 
+ * @param editor
+ * @param text
+ * @returns
  */
 const insertPropertiesByText = (editor: Editor, text: string) => {
   const { type, start: orderedListStart } = getTypeForMD(text)
@@ -79,7 +79,7 @@ const insertPropertiesByText = (editor: Editor, text: string) => {
 }
 
 export const withOnChange = (editor: Editor) => {
-  const { insertText, insertBreak, deleteBackward } = editor
+  const { insertText, insertBreak, deleteBackward, insertFragmentData, insertTextData } = editor
 
   editor.insertText = (text) => {
     const { selection } = editor
@@ -162,6 +162,18 @@ export const withOnChange = (editor: Editor) => {
         }
       }
     }
+  }
+
+  editor.insertFragmentData = (data) => {
+    // const fragment = data.getData('application/x-slate-fragment');
+    // const text = data.getData('text/plain');
+    // const html = data.getData('text/html')
+
+    /**如果在仅支持包裹一层的element进行粘贴插入，则只能插入文本 */
+    if (isBlockActive(editor, ONLY_ONE_WRAP_TYPES)) {
+      return insertTextData(data)
+    }
+    return insertFragmentData(data)
   }
 
   return editor

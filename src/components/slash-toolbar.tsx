@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect, useCallback, FC, HTMLProps } from 'react'
 import { Range, Editor, BaseOperation, Transforms } from 'slate'
 import { ReactEditor, useSlate } from 'slate-react'
-import { isBlockActive, Icon, List, ListItem, Popover } from '~common'
+import { isBlockActive, List, ListItem, Popover } from '~common'
 import {
   textTypeMenu,
   tablatureTypeMenu,
@@ -73,7 +73,7 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
     const lineBefore = Editor.before(editor, start, { unit: 'line' })
     const beforeLine = Editor.string(editor, Editor.range(editor, start, lineBefore))
 
-    console.log('lnz beforeLine', beforeLine)
+    console.log('debug beforeLine', start, lineBefore, beforeLine)
     if (beforeLine.lastIndexOf('/') === -1) {
       setTarget(null)
       return
@@ -90,7 +90,6 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
     const afterText = Editor.string(editor, afterRange)
     const afterMatch = afterText.match(/^(\s|$)/)
 
-    console.log('lnz beforeText', beforeText, afterMatch)
     if (beforeText && afterMatch) {
       setTarget(beforeRange)
       setSearch(beforeText)

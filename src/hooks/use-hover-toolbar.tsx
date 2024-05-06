@@ -1,31 +1,26 @@
-import { FC, useCallback, useState } from 'react'
-import { Editor, Element as SlateElement, Transforms } from 'slate'
+import { FC, useCallback, useEffect, useState } from 'react'
+import { Editor, Transforms } from 'slate'
 import { ReactEditor } from 'slate-react'
+import { getClosetElement, Icon } from '~common'
 
 import './hover-toolbar.scss'
 import { CustomElement } from '../custom-types'
-import { Icon } from '~common'
+import { NEED_WRAP_TYPES } from '../plugins/config'
 
-const getClosetElement = (editor: Editor, target: EventTarget) => {
-  const targetNode = ReactEditor.toSlateNode(editor, target as HTMLElement)
-
-  if (Editor.isEditor(targetNode)) {
-    return
+/**
+ * 获取当前element的rect
+ * 若该element属于包裹wrap类型，则获取其第一个子元素的rect
+ * @param editor 
+ * @param targetNode 
+ * @returns 
+ */
+const getClosetRect = (editor: Editor, targetNode: CustomElement) => {
+  const rect = ReactEditor.toDOMNode(editor, targetNode).getBoundingClientRect()
+  if(NEED_WRAP_TYPES.includes(targetNode.type) && targetNode?.children?.length) {
+    const childrenRect = ReactEditor.toDOMNode(editor, targetNode.children[0]).getBoundingClientRect()
+    return childrenRect
   }
-
-  if (SlateElement.isElement(targetNode) && editor.isBlock(targetNode)) {
-    return targetNode
-  }
-
-  const closestElement = Editor.above(editor, {
-    at: ReactEditor.findPath(editor, targetNode),
-    match: (n) => SlateElement.isElement(n) && Editor.isBlock(editor, n),
-  })
-
-  // Above向上找到最近的Element显示hovertoolbar
-  if (closestElement && !Editor.isEditor(closestElement[0])) {
-    return closestElement[0]
-  }
+  return rect
 }
 
 export const useHoverToolbar = (editor: Editor) => {
@@ -35,10 +30,15 @@ export const useHoverToolbar = (editor: Editor) => {
   const onMouseOver: React.MouseEventHandler<HTMLDivElement> = useCallback(
     (event) => {
       if (event.target) {
-        const targetNode = getClosetElement(editor, event.target) as SlateElement
-        if (targetNode) {
+        const targetNode = getClosetElement(editor, event.target)
+        if (!targetNode) {
+          return
+        }
+
+        const targetRect = getClosetRect(editor, targetNode)
+        if (targetRect) {
           setClosestElement(targetNode)
-          setRect(ReactEditor.toDOMNode(editor, targetNode).getBoundingClientRect())
+          setRect(targetRect)
         } else {
           setClosestElement(null)
           setRect(null)
@@ -66,6 +66,17 @@ export const useHoverToolbar = (editor: Editor) => {
     // editor.insertBreak()
     // editor.insertText('/')
   }
+
+  const hideToolbar = useCallback(() => {
+    setRect(null)
+  }, [])
+
+  useEffect(() => {
+    window.addEventListener('scroll', hideToolbar)
+    return () => {
+      window.removeEventListener('scroll', hideToolbar)
+    }
+  }, [hideToolbar])
 
   const HoverToolbar: FC = () => {
     if (!rect) return null

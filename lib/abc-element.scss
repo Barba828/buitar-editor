@@ -22,7 +22,7 @@
   transition: background 0.2s ease;
   max-height: 50vh;
   overflow-y: scroll;
-  font-size: 0.8em;
+  font-size: 0.9em;
 
   &:hover,
   &:active,
@@ -36,24 +36,24 @@
   display: flex;
   z-index: 1;
   position: absolute;
-  top: 0.8em;
-  right: 0.8em;
+  top: 6px;
+  right: 6px;
   user-select: none;
   opacity: 1;
   transition: opacity 0.3s ease-in-out;
-  border-radius: 6px;
+  border-radius: 10px;
   overflow: hidden;
   &.abc-editor__footer-btns {
     top: unset;
-    bottom: 0.8em;
+    bottom: 6px;
   }
   &.abc-editor__left-btns {
     right: unset;
-    left: 0.8em;
+    left: 6px;
   }
 }
 .abc-editor__trigger {
-  font-size: 18px;
+  font-size: 14px;
   background-color: $gray-2;
   padding: 4px 8px;
   cursor: pointer;
@@ -82,7 +82,8 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 99;
+  z-index: $zIndex-dialog;
+  padding: 0;
   margin: 0;
   border-radius: 0;
   display: flex;
@@ -93,14 +94,15 @@
     background-color: unset;
     border-radius: 0;
     box-sizing: border-box;
-
+    
+    padding: 40px 20px 0;
     margin-right: 4px;
-    padding-right: 4px;
     border-right: 1px solid $gray-1;
   }
   .abc-editor__previewer {
     flex: 1;
     max-width: 720px;
+    padding: 30px 10px 0px;
     margin: 0 auto;
     overflow-y: scroll;
     box-sizing: border-box;

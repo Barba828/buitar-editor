@@ -18,7 +18,7 @@ export const isMarkActive = (editor: Editor, format: TextFormat) => {
 
 export const isBlockActive = (
   editor: Editor,
-  format?: SlateElement['type'],
+  format: SlateElement['type'] | SlateElement['type'][],
   options?: EditorNodesOptions<Node>
 ) => {
   return !!getSelectedBlockActive(editor, format, options)
@@ -26,13 +26,14 @@ export const isBlockActive = (
 
 /**
  * 获取当前 selection 中符合format的block
+ * 不使用 above 是因为 selection 可能包含多个且多层 element
  * @param editor
  * @param format
  * @returns
  */
 export const getSelectedBlockActive = (
   editor: Editor,
-  format?: SlateElement['type'],
+  format: SlateElement['type'] | SlateElement['type'][],
   options?: EditorNodesOptions<Node>
 ) => {
   const { selection } = editor
@@ -44,7 +45,11 @@ export const getSelectedBlockActive = (
     Editor.nodes(editor, {
       at: Editor.unhangRange(editor, selection),
       match: (n) => {
-        return !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === format
+        if (Editor.isEditor(n) || !SlateElement.isElement(n)) {
+          return false
+        }
+        const matchFormat = typeof format === 'string' ? n.type === format : format.includes(n.type)
+        return matchFormat
       },
       ...options,
     })
@@ -82,6 +87,34 @@ export const getSelectedBlock = (editor: Editor) => {
   }
 
   return null
+}
+
+/**
+ * 获取最近的Element
+ * @param editor 
+ * @param target 
+ * @returns 
+ */
+export const getClosetElement = (editor: Editor, target: EventTarget) => {
+  const targetNode = ReactEditor.toSlateNode(editor, target as HTMLElement)
+
+  if (Editor.isEditor(targetNode)) {
+    return
+  }
+
+  if (SlateElement.isElement(targetNode) && editor.isBlock(targetNode)) {
+    return targetNode
+  }
+
+  const closestElement = Editor.above(editor, {
+    at: ReactEditor.findPath(editor, targetNode),
+    match: (n) => SlateElement.isElement(n) && Editor.isBlock(editor, n),
+  })
+
+  // Above向上找到最近的Element显示hovertoolbar
+  if (closestElement && !Editor.isEditor(closestElement[0])) {
+    return closestElement[0]
+  }
 }
 
 /**
