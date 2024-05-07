@@ -1,7 +1,7 @@
 import { Transforms, Element as SlateElement, Editor, Range, Point, NodeEntry } from 'slate'
 import { getSelectedBlockActive, isBlockActive } from '~common'
 import { ToggleListElement } from '../custom-types'
-import { ONLY_ONE_WRAP_TYPES } from './config'
+import { NONE_RICH_WRAP_TYPES, ONLY_ONE_WRAP_TYPES } from './config'
 
 const SHORTCUTS: Record<string, BlockFormat> = {
   '*': 'bulleted-list',
@@ -78,8 +78,11 @@ export const withOnChange = (editor: Editor) => {
 
   editor.insertText = (text) => {
     const { selection } = editor
-    // 空格结尾，判断是否是markdown标记
-    if (text.endsWith(' ') && selection && Range.isCollapsed(selection)) {
+    /**
+     * 1. 空格结尾，判断是否是markdown标记
+     * 2. 非 ONLY_ONE_WRAP_TYPES 内部
+     */
+    if (text.endsWith(' ') && selection && Range.isCollapsed(selection) && !isBlockActive(editor, NONE_RICH_WRAP_TYPES)) {
       const { anchor } = selection
       const match = Editor.above(editor, {
         match: (n) => SlateElement.isElement(n) && Editor.isBlock(editor, n),
@@ -164,8 +167,12 @@ export const withOnChange = (editor: Editor) => {
     // const text = data.getData('text/plain');
     // const html = data.getData('text/html')
 
-    /**如果在仅支持包裹一层的element进行粘贴插入，则只能插入文本 */
-    if (isBlockActive(editor, ONLY_ONE_WRAP_TYPES)) {
+    /**如果在 NONE_RICH_WRAP_TYPES 进行粘贴插入，则只能插入文本 */
+    /**
+     * TODO
+     * ONLY_ONE_WRAP_TYPES (block-quote)粘贴时，需要判断data内是否含有block-quote，否则需要清理格式
+     */
+    if (isBlockActive(editor, NONE_RICH_WRAP_TYPES)) {
       return insertTextData(data)
     }
     return insertFragmentData(data)

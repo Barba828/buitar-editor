@@ -1,5 +1,5 @@
 import { Editor, Element as SlateElement, Transforms, Path } from 'slate'
-import { getSelectedBlock, isBlockActive, isMarkActive } from '~common'
+import { getSelectedNode, isBlockActive, isMarkActive } from '~common'
 import { LIST_TYPES, NEED_WRAP_TYPES, ONLY_ONE_WRAP_TYPES, OTHER_WRAP_TYPES } from './config'
 import { ReactEditor } from 'slate-react'
 import { InsertNodesOptions, SetNodesOptions } from '../custom-types'
@@ -37,11 +37,11 @@ export const toggleBlock = (
   const isActive = toActive !== undefined ? !toActive : isBlockActive(editor, format)
 
   /** ONLY_ONE_WRAP_TYPES toggle行为：选取整个wrap block 进行 toggle */
-  if(isOnlyOneWrap){
-    const aboveElementMatch = getSelectedBlock(editor, element.type)
+  if (isOnlyOneWrap) {
+    const aboveElementMatch = getSelectedNode(editor, element.type)
     if (aboveElementMatch) {
       const [, abovePath] = aboveElementMatch
-      setOptions.at = Path.next(abovePath)
+      setOptions.at = abovePath
     }
   }
 
@@ -108,7 +108,7 @@ export const insertBlock = (
 
   /** ONLY_ONE_WRAP_TYPES 插入行为：父级插入新行 */
   if (ONLY_ONE_WRAP_TYPES.includes(element.type)) {
-    const aboveElementMatch = getSelectedBlock(editor, element.type)
+    const aboveElementMatch = getSelectedNode(editor, element.type)
     if (aboveElementMatch) {
       const [, abovePath] = aboveElementMatch
       options.at = Path.next(abovePath)

@@ -10,19 +10,31 @@ import { NEED_WRAP_TYPES } from '../plugins/config'
 /**
  * 获取当前element的rect
  * 若该element属于包裹wrap类型，则获取其第一个子元素的rect
- * @param editor 
- * @param targetNode 
- * @returns 
+ * @param editor
+ * @param targetNode
+ * @returns
  */
 const getClosetRect = (editor: Editor, targetNode: CustomElement) => {
   const rect = ReactEditor.toDOMNode(editor, targetNode).getBoundingClientRect()
-  if(NEED_WRAP_TYPES.includes(targetNode.type) && targetNode?.children?.length) {
-    const childrenRect = ReactEditor.toDOMNode(editor, targetNode.children[0]).getBoundingClientRect()
+  if (targetNode.type === 'list-item') {
+    return  {
+      ...rect,
+      top: rect.top,
+      height: rect.height || 40,
+      left: rect.left - 10,
+    }
+    
+  }
+  if (NEED_WRAP_TYPES.includes(targetNode.type) && targetNode?.children?.length) {
+    const childrenRect = ReactEditor.toDOMNode(
+      editor,
+      targetNode.children[0]
+    ).getBoundingClientRect()
     return {
       ...rect,
       top: childrenRect.top || rect.top,
       height: childrenRect.height || 40,
-      left: rect.left
+      left: rect.left,
     }
   }
   return rect
@@ -35,7 +47,7 @@ export const useHoverToolbar = (editor: Editor) => {
   const onMouseOver: React.MouseEventHandler<HTMLDivElement> = useCallback(
     (event) => {
       if (event.target) {
-        const targetNode = getClosetElement(editor, event.target)        
+        const targetNode = getClosetElement(editor, event.target)?.[0] as SlateElement
         if (!targetNode) {
           return
         }
@@ -64,15 +76,15 @@ export const useHoverToolbar = (editor: Editor) => {
     }
     // 定位在当前 element 的末尾插入 新的Element
     const path = ReactEditor.findPath(editor, closestElement)
-    const newPath = Path.next(path);
+    const newPath = Path.next(path)
 
-    const newParagraph = { type: 'paragraph', children: [{ text: '/' }] }  as SlateElement;
-    Transforms.insertNodes(editor, newParagraph, { at: newPath });
+    const newParagraph = { type: 'paragraph', children: [{ text: '/' }] } as SlateElement
+    Transforms.insertNodes(editor, newParagraph, { at: newPath })
 
     // 设置焦点到新段落的末端
-    const newSelection = Editor.end(editor, newPath);
-    Transforms.select(editor, newSelection);
-    ReactEditor.focus(editor);
+    const newSelection = Editor.end(editor, newPath)
+    Transforms.select(editor, newSelection)
+    ReactEditor.focus(editor)
   }
 
   const hideToolbar = useCallback(() => {

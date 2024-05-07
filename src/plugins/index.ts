@@ -2,10 +2,11 @@ import { withChords } from '~chord'
 import { withHistory } from 'slate-history'
 import { withOnChange } from './with-on-change'
 import { withToggle } from './with-toggle'
+import { withValidation } from './with-validation'
 
 import { CustomEditor } from '../custom-types'
 
-const plugins = [withHistory, withToggle, withOnChange, withChords]
+const plugins = [withHistory, withToggle, withOnChange, withValidation, withChords]
 
 /**
  * @refer https://github.com/objectlegal/slate-snippets?tab=readme-ov-file#create-a-withplugins-hook--composer

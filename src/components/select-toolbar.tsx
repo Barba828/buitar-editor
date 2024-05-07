@@ -2,7 +2,7 @@ import { useEffect, useCallback, useState, FC, HTMLProps, MouseEventHandler, use
 import { Editor, Range } from 'slate'
 import { useSlate } from 'slate-react'
 import { InputChordPopover } from '~chord'
-import { getSelectedRect, isBlockActive, isMarkActive, Popover } from '~common'
+import { getSelectedRect, Icon, isBlockActive, isMarkActive, Popover } from '~common'
 import { TextTypePopover } from './text-type-popover'
 import { useBlockType } from './utils/use-block-type'
 import { ONLY_ONE_WRAP_TYPES } from '../plugins/config'
@@ -18,7 +18,7 @@ export const SelectToolbar = () => {
   const editor = useSlate()
   const { selection } = editor
 
-  const blockType = useBlockType()
+  const { selectType } = useBlockType()
 
   /**判断是否显示toolbar */
   useEffect(() => {
@@ -58,8 +58,9 @@ export const SelectToolbar = () => {
   }, [editor])
 
   const cleanFormat = useCallback(() => {
-    editor.toggleBlock?.({ type: 'paragraph' })
-  }, [editor])
+    editor.toggleBlock?.({ type: selectType.key as BlockFormat }, { toActive: false })
+
+  }, [editor, selectType])
 
   if (!visible || !rect) {
     return null
@@ -78,11 +79,11 @@ export const SelectToolbar = () => {
             className="toolbar-menu-item"
             onMouseDown={() => setTextPopoverVisible(!textPopoverVisible)}
           >
-            {blockType.title}
+            {selectType.title}
           </div>
-          {blockType.key !== 'paragraph' && (
-            <div className="toolbar-menu-item" onMouseDown={cleanFormat}>
-              🖌️
+          {selectType.key !== 'paragraph' && (
+            <div className="toolbar-menu-item">
+              <Icon name="icon-clean-up" onClick={cleanFormat} />
             </div>
           )}
         </div>

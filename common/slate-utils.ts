@@ -8,6 +8,7 @@ import {
   EditorNodesOptions,
   Ancestor,
   EditorAboveOptions,
+  Path,
 } from 'slate'
 import { ReactEditor } from 'slate-react'
 import { ONLY_ONE_WRAP_TYPES } from '../src/plugins/config'
@@ -63,10 +64,11 @@ export const getSelectedBlockActive = (
 
 /**
  * 自底而上获取当前 selection 最后一层的block
+ * 非paragraph 且非list-item
  * @param editor
  * @returns
  */
-export const getSelectedBlock = (
+export const getSelectedNode = (
   editor: Editor,
   format: SlateElement['type'] | SlateElement['type'][] = [],
   options: EditorAboveOptions<Ancestor> = {}
@@ -105,7 +107,7 @@ export const getSelectedBlock = (
 
 /**
  * 根据 Dom 获取最近的 Element
- * 若父级包含 wrapElement 则直接返回 wrapElement
+ * 若父级包含 ONLY_ONE_WRAP_TYPES 则直接返回 wrapElement
  * @param editor
  * @param target
  * @returns
@@ -117,13 +119,13 @@ export const getClosetElement = (editor: Editor, target: HTMLElement | EventTarg
     return
   }
 
-  const wrapElement = getSelectedBlock(editor, ONLY_ONE_WRAP_TYPES, { at: targetAt })
+  const wrapElement = getSelectedNode(editor, ONLY_ONE_WRAP_TYPES, { at: targetAt })
   if (wrapElement) {
-    return wrapElement[0] as SlateElement
+    return wrapElement
   }
 
   if (SlateElement.isElement(targetNode) && editor.isBlock(targetNode)) {
-    return targetNode
+    return Editor.node(editor, targetAt)
   }
 
   const closestElement = Editor.above(editor, {
@@ -133,8 +135,20 @@ export const getClosetElement = (editor: Editor, target: HTMLElement | EventTarg
 
   // Above向上找到最近的Element显示hovertoolbar
   if (closestElement && !Editor.isEditor(closestElement[0])) {
-    return closestElement[0]
+    return closestElement
   }
+}
+
+/**
+ * 获取父级 Node
+ * @param editor 
+ * @param target 
+ * @returns 
+ */
+export const getParentNode = (editor: Editor, target: SlateElement) => {
+  const parentPath = Path.parent(ReactEditor.findPath(editor, target))
+  const parentNode = Editor.node(editor, parentPath)
+  return parentNode
 }
 
 /**

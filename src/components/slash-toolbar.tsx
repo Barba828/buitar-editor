@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect, useCallback, FC, HTMLProps } from 'react'
 import { Range, Editor, BaseOperation, Transforms } from 'slate'
 import { ReactEditor, useSlate } from 'slate-react'
-import { List, ListItem, Popover } from '~common'
+import { isBlockActive, List, ListItem, Popover } from '~common'
 import {
   textTypeMenu,
   tablatureTypeMenu,
@@ -11,6 +11,7 @@ import {
 } from './tools.config'
 
 import './slash-toolbar.scss'
+import { NONE_RICH_WRAP_TYPES } from '../plugins/config'
 
 export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
   const editor = useSlate()
@@ -69,11 +70,16 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
       return
     }
 
+    if (isBlockActive(editor, NONE_RICH_WRAP_TYPES)){
+      setTarget(null)
+      return
+    }
+
     const [start] = Range.edges(selection)
     const lineBefore = Editor.before(editor, start, { unit: 'line' })
     const beforeLine = Editor.string(editor, Editor.range(editor, start, lineBefore))
 
-    console.log('debug beforeLine', start, lineBefore, beforeLine)
+    // console.log('debug beforeLine', start, lineBefore, beforeLine)
     if (beforeLine.lastIndexOf('/') === -1) {
       setTarget(null)
       return
