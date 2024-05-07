@@ -97,7 +97,7 @@ export const withOnChange = (editor: Editor) => {
         if (!Range.isCollapsed(range)) {
           Transforms.delete(editor)
         }
-        editor.toggleBlock?.({ ...newProperties }, { ignoreActive: true })
+        editor.toggleBlock?.({ ...newProperties }, { toActive: true })
         return
       }
     }

@@ -1,8 +1,8 @@
-import { Editor, Element as SlateElement, Transforms, Node, Path } from 'slate'
+import { Editor, Element as SlateElement, Transforms, Path } from 'slate'
 import { getSelectedBlock, isBlockActive, isMarkActive } from '~common'
 import { LIST_TYPES, NEED_WRAP_TYPES, ONLY_ONE_WRAP_TYPES, OTHER_WRAP_TYPES } from './config'
 import { ReactEditor } from 'slate-react'
-import { NodeInsertNodesOptions } from 'slate/dist/interfaces/transforms/node'
+import { InsertNodesOptions, SetNodesOptions } from '../custom-types'
 
 export const isListFunc = (format: BlockFormat) => LIST_TYPES.includes(format)
 
@@ -25,25 +25,28 @@ export const toggleMark = (editor: Editor, format: TextFormat) => {
 export const toggleBlock = (
   editor: Editor,
   element: SlateElement,
-  options?: {
-    /**固定将block设置为active */
-    ignoreActive?: boolean
-  }
+  options: {
+    /**手动设置block的目的active状态 */
+    toActive?: boolean
+  } & SetNodesOptions = {}
 ) => {
   const { type: format } = element
-  const { ignoreActive = false } = options || {}
+  const { toActive, ...setOptions } = options || {}
   const isNeedWrap = NEED_WRAP_TYPES.includes(format)
-  const isActive = ignoreActive ? false : isBlockActive(editor, format)
+  const isOnlyOneWrap = ONLY_ONE_WRAP_TYPES.includes(format)
+  const isActive = toActive !== undefined ? !toActive : isBlockActive(editor, format)
+
+  /** ONLY_ONE_WRAP_TYPES toggle行为：选取整个wrap block 进行 toggle */
+  if(isOnlyOneWrap){
+    const aboveElementMatch = getSelectedBlock(editor, element.type)
+    if (aboveElementMatch) {
+      const [, abovePath] = aboveElementMatch
+      setOptions.at = Path.next(abovePath)
+    }
+  }
 
   /**
-   * @todo
-   * 1. ONLY_ONE_WRAP_TYPES toggle行为：选取整个wrap block 进行 toggle
-   * 2. 修改函数options，用于传递at或者设置at
-   * 3. at用于在 ONLY_ONE_WRAP_TYPES 时，选取整个wrap block 
-   */
-
-  /**
-   * 解除包裹
+   * 解除包裹，不管是否 isNeedWrap 都需要先解除包裹再转换
    * 1.父级有List包裹先解除 List 的包裹，避免在 ol/ul 标签内进行格式转换
    * 2.父级有OTHER_WRAP包裹，并且format也属于OTHER_WRAP & isActive，需要解除包裹
    */
@@ -80,7 +83,7 @@ export const toggleBlock = (
     }
   }
 
-  Transforms.setNodes<SlateElement>(editor, newProperties)
+  Transforms.setNodes<SlateElement>(editor, newProperties, setOptions)
 
   /**
    * 增加包裹
@@ -96,27 +99,27 @@ export const toggleBlock = (
 export const insertBlock = (
   editor: Editor,
   element: SlateElement,
-  options: NodeInsertNodesOptions<Node> = {}
+  options: InsertNodesOptions = {}
 ) => {
   const { selection } = editor
   if (!selection) return
   const [, currentPath] = Editor.node(editor, selection)
   const isEmptyLine = Editor.string(editor, currentPath).length === 0
 
-  /** ONLY_ONE_WRAP_TYPES 插入行为：插入父级新行 */
+  /** ONLY_ONE_WRAP_TYPES 插入行为：父级插入新行 */
   if (ONLY_ONE_WRAP_TYPES.includes(element.type)) {
     const aboveElementMatch = getSelectedBlock(editor, element.type)
     if (aboveElementMatch) {
       const [, abovePath] = aboveElementMatch
       options.at = Path.next(abovePath)
-      /** 位于行首删除当前wrap内行（因为需要插入到父级新行） */
-      if (isEmptyLine) {
-        Transforms.removeNodes(editor, { at: currentPath.slice(0, -1) })
-      }
+    }
+    /** 位于行首删除当前wrap内行（因为需要插入到父级新行，不能直接 toggle，toggle 会将父级wrap一起操作） */
+    if (isEmptyLine) {
+      Transforms.removeNodes(editor, { at: currentPath.slice(0, -1) })
     }
   } else if (isEmptyLine) {
     /** 位于行首直接toggle当前block */
-    editor.toggleBlock?.(element, { ignoreActive: true })
+    editor.toggleBlock?.(element, { toActive: true, ...options })
     return
   }
 
@@ -171,6 +174,6 @@ export const withToggle = (editor: Editor) => {
   editor.isList = isListFunc
   editor.toggleMark = (format) => toggleMark(editor, format)
   editor.toggleBlock = (element, options) => toggleBlock(editor, element as SlateElement, options)
-  editor.insertBlock = (element) => insertBlock(editor, element as SlateElement)
+  editor.insertBlock = (element, options) => insertBlock(editor, element as SlateElement, options)
   return editor
 }

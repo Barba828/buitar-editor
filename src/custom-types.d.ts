@@ -88,11 +88,16 @@ export type CustomElement =
   | CustomInlineChordElement
   | GTPPreviewerElement
 
+export type SetNodesParameters = Parameters<typeof Transforms.setNodes>;
+export type SetNodesOptions = SetNodesParameters[2];
+export type InsertNodesParameters = Parameters<typeof Transforms.insertNodes>;
+export type InsertNodesOptions = InsertNodesParameters[2];
+
 export type BuitarEditor = {
   isList?: (format: BlockFormat) => boolean
   toggleMark?: (format: TextFormat) => void
-  toggleBlock?: (element: Partial<CustomElement>, option?: { ignoreActive?: boolean }) => void
-  insertBlock?: (element: Partial<CustomElement>) => void
+  toggleBlock?: (element: Partial<CustomElement>, option?: SetNodesOptions & { toActive?: boolean }) => void
+  insertBlock?: (element: Partial<CustomElement>, option?: InsertNodesOptions) => void
 }
 
 export type CustomEditor = BuitarEditor & ChordEditor & BaseEditor & ReactEditor & HistoryEditor
