@@ -1,13 +1,18 @@
 import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 import { alphaTab } from '@coderline/alphatab/vite'
-import react from "@vitejs/plugin-react";
+import dts from 'vite-plugin-dts'
 import path from 'path'
 
-const baseUrl = process.env.BASE_URL || '/'
-
+// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), alphaTab()],
-  base: baseUrl,
+  plugins: [
+    react(),
+    alphaTab(),
+    dts({
+      entryRoot: './lib',
+    }),
+  ],
   css: {
     preprocessorOptions: {
       scss: {
@@ -16,7 +21,19 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: 'dist-demo',
+    lib: {
+      entry: '/lib/index.ts',
+      name: 'buitar-editor',
+    },
+    rollupOptions: {
+      external: ['react', 'react-dom'],
+      output: {
+        globals: {
+          react: 'React',
+          'react-dom': 'ReactDOM',
+        },
+      },
+    },
   },
   resolve: {
     alias: {
@@ -24,7 +41,4 @@ export default defineConfig({
       '~common': path.resolve(__dirname, './common'),
     },
   },
-  server: {
-    port: 8383,
-  }
 })

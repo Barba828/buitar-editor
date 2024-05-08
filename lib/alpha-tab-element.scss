@@ -1,0 +1,48 @@
+.alpha-tab-element {
+  max-height: 80vh;
+  max-width: 95vw;
+  width: 100%;
+
+  background: $gray-0;
+  border-radius: 1em;
+  padding: 1em;
+  margin: 1em 0;
+  color: $gray-8;
+  font-size: 0.9em;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.alpha-tab-element--fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  max-height: unset;
+  max-width: unset;
+  z-index: $zIndex-dialog;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  .alpha-tab-element__content {
+    flex: 1;
+    height: 0;
+    overflow-y: scroll;
+    width: 100%;
+  }
+  .alpha-tab-element__tools {
+    height: 4em;
+    width: 100%;
+    display: flex;
+    align-items: center;
+
+    button {
+      background-color: transparent;
+    }
+  }
+}

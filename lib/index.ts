@@ -6,6 +6,7 @@ export { withChords } from './with-chords'
 export { InlineChordPopover } from './inline-chord-popover'
 export { InputChordPopover } from './input-chord-popover'
 export { ABCElement } from './abc-element'
+export { AlphaTabElement } from './alpha-tab-element'
 
 export * from './search-list'
 export {

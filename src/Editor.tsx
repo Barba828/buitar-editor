@@ -9,7 +9,7 @@ import {
   RenderLeafProps,
   DefaultLeaf,
 } from 'slate-react'
-import { InlineChordElement, FixedChordLeaf, InlineChordPopover, ABCElement } from '~chord'
+import { InlineChordElement, FixedChordLeaf, InlineChordPopover, ABCElement, AlphaTabElement } from '~chord'
 import { CheckListItemElement } from './components/elements/check-list-item'
 import { SelectToolbar } from './components/select-toolbar'
 import { SlashToolbar } from './components/slash-toolbar'
@@ -25,6 +25,11 @@ const Editor = () => {
   const [value] = useState<Descendant[]>([
     {
       type: 'paragraph',
+      children: [{ text: '' }],
+    },
+    {
+      type: 'gtp-previewer',
+      link: '/canon.gp',
       children: [{ text: '' }],
     },
     // {
@@ -82,6 +87,8 @@ const Element = (props: RenderElementProps) => {
       return <InlineChordElement {...props} />
     case 'abc-tablature':
       return <ABCElement {...props} />
+    case  'gtp-previewer':
+      return <AlphaTabElement {...props} />
     case 'check-list-item':
       return <CheckListItemElement {...props} />
     case 'block-quote':

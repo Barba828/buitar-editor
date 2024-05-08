@@ -1,6 +1,5 @@
 import type { BoardChord } from '@buitar/to-guitar'
 import type { TablatureInstrument } from 'abcjs'
-import type { Text } from 'slate'
 
 type CustomChordType = {
   taps: BoardChord
@@ -21,6 +20,7 @@ export type ABCTablatureElement = {
 
 export type GTPPreviewerElement = {
   type: 'gtp-previewer'
+  link: string
   children?: Descendant[]
 }
 

@@ -1,5 +1,4 @@
 import Editor from './Editor'
-
 import './style/theme.scss'
 
 const App = () => {
@@ -7,7 +6,14 @@ const App = () => {
     <>
       <Editor></Editor>
       <a
-        style={{ position: 'fixed', bottom: 50, right: 50, fontSize: '1.5em', fontWeight:'bold˝', opacity: '0.6' }}
+        style={{
+          position: 'fixed',
+          bottom: 50,
+          right: 50,
+          fontSize: '1.5em',
+          fontWeight: 'bold˝',
+          opacity: '0.6',
+        }}
         href="https://github.com/Barba828/buitar-editor"
       >
         Git

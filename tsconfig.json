@@ -27,6 +27,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "lib", "common", "types"],
+  "include": ["src", "lib", "common", "types", "src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
