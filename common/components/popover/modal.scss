@@ -1,0 +1,49 @@
+.modal-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .popover-container {
+    max-height: 80vh;
+    width: 80vw;
+    max-width: 600px;
+    padding: 12px;
+  }
+}
+
+.modal-overlay--visible {
+  .popover-container {
+    opacity: 1;
+    display: block;
+  }
+}
+
+.modal-header {
+  height: 40px;
+  justify-content: flex-start;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.modal-footer {
+  height: 40px;
+  justify-content: flex-end;
+  margin-top: 6px;
+  > * {
+    margin-left: 6px;
+  }
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 6px;
+  border-radius: 4px;
+  transition: all 0.15s ease-in-out;
+  font-size: 18px;
+  &:hover {
+    background-color: $gray-0--hover;
+  }
+}

@@ -1,6 +1,5 @@
 import {
   FC,
-  FormEventHandler,
   memo,
   useCallback,
   useEffect,
@@ -12,7 +11,7 @@ import { Transforms } from 'slate'
 import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react'
 import { type ABCTablatureElement } from '~chord'
 import ABCJS, { type TablatureInstrument } from 'abcjs'
-import { getElementText, Icon, Selector, toast } from '~common'
+import { getElementText, Icon, Selector, type SelectorItem, toast } from '~common'
 import cx from 'classnames'
 
 import './abc-element.scss'
@@ -21,10 +20,10 @@ import './abc-element.scss'
 //   return element.type === 'abc-tablature'
 // }
 
-const instruments: Array<{ key: TablatureInstrument; value?: string }> = [
-  { key: '', value: '--' },
-  { key: 'guitar' },
-  { key: 'violin' },
+const instruments: Array<SelectorItem<TablatureInstrument>> = [
+  { value: '', label: '--' },
+  { value: 'guitar', label: 'guitar' },
+  { value: 'violin', label: 'violin' },
 ]
 
 export const ABCElement: FC<RenderElementProps> = memo(({ attributes, element, children }) => {
@@ -71,9 +70,9 @@ export const ABCElement: FC<RenderElementProps> = memo(({ attributes, element, c
     }
   }, [])
 
-  const handleABCIntrumentChange: FormEventHandler<HTMLSelectElement> = useCallback(
-    (event) => {
-      const nextInstrument = (event.target as HTMLSelectElement).value as TablatureInstrument
+  const handleABCIntrumentChange = useCallback(
+    (item: SelectorItem<TablatureInstrument>) => {
+      const nextInstrument = item.value
       Transforms.setNodes(
         editor,
         { instrument: nextInstrument },
@@ -151,11 +150,8 @@ export const ABCElement: FC<RenderElementProps> = memo(({ attributes, element, c
 
       <div className="abc-editor__btns abc-editor__footer-btns" contentEditable={false}>
         {showSetShortBtn && (
-          <div
-            className="abc-editor__trigger flex-center"
-            onClick={() => setShort(!short)}
-          >
-            <Icon name='icon-trigger' style={{transform: `rotate(${short ? 0 : 180}deg)`}}></Icon>
+          <div className="abc-editor__trigger flex-center" onClick={() => setShort(!short)}>
+            <Icon name="icon-trigger" style={{ transform: `rotate(${short ? 0 : 180}deg)` }}></Icon>
           </div>
         )}
       </div>

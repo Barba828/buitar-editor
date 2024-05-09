@@ -113,11 +113,14 @@ export const getSelectedNode = (
  * @returns
  */
 export const getClosetElement = (editor: Editor, target: HTMLElement | EventTarget) => {
+  if (!ReactEditor.hasDOMNode(editor, target as HTMLElement)) {
+    return
+  }
   const targetNode = ReactEditor.toSlateNode(editor, target as HTMLElement)
-  const targetAt = ReactEditor.findPath(editor, targetNode)
   if (Editor.isEditor(targetNode)) {
     return
   }
+  const targetAt = ReactEditor.findPath(editor, targetNode)
 
   const wrapElement = getSelectedNode(editor, ONLY_ONE_WRAP_TYPES, { at: targetAt })
   if (wrapElement) {
@@ -141,9 +144,9 @@ export const getClosetElement = (editor: Editor, target: HTMLElement | EventTarg
 
 /**
  * 获取父级 Node
- * @param editor 
- * @param target 
- * @returns 
+ * @param editor
+ * @param target
+ * @returns
  */
 export const getParentNode = (editor: Editor, target: SlateElement) => {
   const parentPath = Path.parent(ReactEditor.findPath(editor, target))

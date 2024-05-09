@@ -19,6 +19,7 @@ import './popover.scss'
 // }
 
 export interface CommonPopoverProps {
+  overlay?: boolean
   visible?: boolean
   onVisibleChange?: (visible: boolean) => void
 }
@@ -37,10 +38,24 @@ export type PopoverProps = Omit<HTMLProps<HTMLDivElement>, 'ref'> &
     option?: Parameters<typeof popoverRefShow>[2]
     onClose?: () => void
     onShow?: () => void
+    overlayClassName?: string
   }
 
 export const Popover = forwardRef<PopoverRefs, PopoverProps>(
-  ({ children, rect, option, onShow, onClose, onVisibleChange, ...props }, ref) => {
+  (
+    {
+      children,
+      rect,
+      option,
+      onShow,
+      onClose,
+      onVisibleChange,
+      overlay,
+      overlayClassName,
+      ...props
+    },
+    ref
+  ) => {
     const containerRef = useRef<HTMLDivElement>()
 
     const hide = useCallback(() => {
@@ -91,6 +106,7 @@ export const Popover = forwardRef<PopoverRefs, PopoverProps>(
 
     useEffect(() => {
       document.addEventListener('keydown', handleKeyDown)
+      // document.addEventListener('mousedown', handleClickOutside)
       return () => {
         document.removeEventListener('keydown', handleKeyDown)
         // document.removeEventListener('mousedown', handleClickOutside)
@@ -103,20 +119,36 @@ export const Popover = forwardRef<PopoverRefs, PopoverProps>(
       }
       show(rect, option)
     }, [rect, option, show])
+
+    const content = (
+      <div
+        {...props}
+        onMouseDown={(e) => {
+          // e.preventDefault()
+          e.stopPropagation()
+          props?.onMouseDown?.(e)
+        }}
+        onClick={(e) => {
+          e.stopPropagation()
+          props?.onClick?.(e)
+        }}
+        ref={containerRef as LegacyRef<HTMLDivElement>}
+        className={cx('popover-container', props.className)}
+        tabIndex={0}
+      >
+        {children}
+      </div>
+    )
+
     return (
       <Portal>
-        <div
-          {...props}
-          onMouseDown={(e) => {
-            e.preventDefault()
-            props?.onMouseDown?.(e)
-          }}
-          ref={containerRef as LegacyRef<HTMLDivElement>}
-          className={cx('popover-container', props.className)}
-          tabIndex={0}
-        >
-          {children}
-        </div>
+        {overlay ? (
+          <div className={cx('popover-overlay', overlayClassName)} onClick={hide}>
+            {content}
+          </div>
+        ) : (
+          content
+        )}
       </Portal>
     )
   }
@@ -134,6 +166,7 @@ const popoverRefShow = (
   const { placement = 'bottom' } = option
 
   popEl.style.opacity = '1'
+  popEl.style.removeProperty('display');
   // 默认和target左对齐
   if (left + width < window.innerWidth) {
     popEl.style.left = `${left + window.scrollX}px`
@@ -159,10 +192,9 @@ const popoverRefShow = (
 
 const popoverRefHide = (popEl: HTMLElement) => {
   popEl.style.opacity = '0'
+  popEl.style.display = 'none'
   popEl.style.right = 'unset'
   popEl.style.left = 'unset'
   popEl.style.bottom = 'unset'
   popEl.style.top = 'unset'
-
-  console.log('lnz end hide')
 }
