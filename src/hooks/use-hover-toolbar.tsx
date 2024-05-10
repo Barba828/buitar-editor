@@ -1,7 +1,7 @@
 import { FC, useCallback, useEffect, useState } from 'react'
 import { Editor, Path, Transforms, Element as SlateElement } from 'slate'
 import { ReactEditor } from 'slate-react'
-import { getClosetElement, Icon } from '~common'
+import { getClosetElement, getParentNode, Icon } from '~common'
 
 import './hover-toolbar.scss'
 import { CustomElement } from '../custom-types'
@@ -17,26 +17,35 @@ import { NEED_WRAP_TYPES } from '../plugins/config'
 const getClosetRect = (editor: Editor, targetNode: CustomElement) => {
   const rect = ReactEditor.toDOMNode(editor, targetNode).getBoundingClientRect()
   if (targetNode.type === 'list-item') {
-    return  {
+    return {
       ...rect,
       top: rect.top,
       height: rect.height || 40,
       left: rect.left - 10,
     }
-    
   }
-  if (NEED_WRAP_TYPES.includes(targetNode.type) && targetNode?.children?.length) {
-    const childrenRect = ReactEditor.toDOMNode(
-      editor,
-      targetNode.children[0]
-    ).getBoundingClientRect()
+  if (targetNode.type === 'gtp-previewer' || NEED_WRAP_TYPES.includes(targetNode.type)) {
     return {
       ...rect,
-      top: childrenRect.top || rect.top,
-      height: childrenRect.height || 40,
+      top: rect.top,
+      height: 40,
       left: rect.left,
     }
   }
+
+  const parent = getParentNode(editor, targetNode)
+  if (parent) {
+    const parentNode = parent[0] as SlateElement
+    if (parentNode.type === 'toogle-list' && targetNode === parentNode.children?.[0]) {
+      return {
+        ...rect,
+        top: rect.top,
+        height: rect.height,
+        left: rect.left - 20,
+      }
+    }
+  }
+
   return rect
 }
 

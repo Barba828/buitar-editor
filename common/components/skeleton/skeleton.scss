@@ -1,0 +1,25 @@
+.skeleton-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+
+  .skeleton-line {
+    border-radius: 6px;
+    height: 1.5em;
+    width: 100%;
+    background-color: $gray-1;
+    overflow: hidden;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%; /* 动画起始位置 */
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(to right, transparent, $gray-2, transparent);
+      animation: skeletonLoading 2s infinite;
+    }
+  }
+}

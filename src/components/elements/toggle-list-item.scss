@@ -22,8 +22,17 @@
   .icon {
     cursor: pointer;
     transition: all 0.3s ease;
-    &:hover {
-      background-color: $gray-0--hover;
-    }
+  }
+}
+
+.toggle-list-item__trigger-icon {
+  border-radius: 4px;
+  height: 20px;
+  width: 20px;
+  &:hover {
+    background-color: $gray-0--hover;
+  }
+  &:active {
+    background-color: $gray-1;
   }
 }

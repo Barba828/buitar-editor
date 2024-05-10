@@ -53,10 +53,14 @@ export const ToggleListItem: FC<RenderElementProps> = ({ attributes, children, e
           height: firstChildHeight ? `${firstChildHeight}px` : '1em',
         }}
       >
-        <Icon name="icon-trigger"   
-          style={{
-            transform: `rotate(${extend ? 0 : -90}deg)`,
-          }}/>
+        <div className="toggle-list-item__trigger-icon flex-center">
+          <Icon
+            name="icon-trigger"
+            style={{
+              transform: `rotate(${extend ? 0 : -90}deg)`,
+            }}
+          />
+        </div>
       </div>
     </div>
   )

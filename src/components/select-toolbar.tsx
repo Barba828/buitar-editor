@@ -59,7 +59,6 @@ export const SelectToolbar = () => {
 
   const cleanFormat = useCallback(() => {
     editor.toggleBlock?.({ type: selectType.key as BlockFormat }, { toActive: false })
-
   }, [editor, selectType])
 
   if (!visible || !rect) {
@@ -115,12 +114,16 @@ export const SelectToolbar = () => {
               )}
               onMouseDown={() => setChordPopoverVisible(!chordPopoverVisible)}
             >
-              C
+              <Icon name="icon-chord" />
             </div>
-            <FormatChordButton option={'concise'}>D</FormatChordButton>
-            <FormatChordButton option={'popover'}>P</FormatChordButton>
+            <FormatChordButton option={'concise'}>
+              <Icon name="icon-title" />
+            </FormatChordButton>
+            <FormatChordButton option={'popover'}>
+              <Icon name="icon-popover" />
+            </FormatChordButton>
             <FormatChordButton option={''} style={{ color: '#c21500' }} onClick={cleanInputChord}>
-              X
+              <Icon name="icon-remove" />
             </FormatChordButton>
           </div>
         )}

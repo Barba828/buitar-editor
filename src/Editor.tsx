@@ -27,11 +27,12 @@ const Editor = () => {
       type: 'paragraph',
       children: [{ text: '' }],
     },
-    {
-      type: 'gtp-previewer',
-      link: '/canon.gp',
-      children: [{ text: '' }],
-    },
+    // {
+    //   type: 'gtp-previewer',
+    //   link: '',
+    //   // link: '/canon.gp',
+    //   children: [{ text: '' }],
+    // },
     // {
     //   type: 'paragraph',
     //   children: [

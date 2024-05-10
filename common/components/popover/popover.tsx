@@ -159,11 +159,12 @@ const popoverRefShow = (
   triggerRect: Pick<DOMRect, 'left' | 'right' | 'top' | 'bottom'>,
   option: {
     placement?: 'top' | 'bottom'
+    offset?: number
   } = {}
 ) => {
   const { left, right, top, bottom } = triggerRect
   const { width, height } = popEl.getBoundingClientRect()
-  const { placement = 'bottom' } = option
+  const { placement = 'bottom', offset = 10 } = option
 
   popEl.style.opacity = '1'
   popEl.style.removeProperty('display');
@@ -182,10 +183,10 @@ const popoverRefShow = (
     (placement === 'bottom' && bottom + height < window.innerHeight) ||
     (placement === 'top' && top - height < 0)
   ) {
-    popEl.style.top = `${bottom + window.scrollY + 10}px`
+    popEl.style.top = `${bottom + window.scrollY + offset}px`
     popEl.style.bottom = 'unset'
   } else {
-    popEl.style.bottom = `${window.innerHeight - top - window.scrollY + 10}px`
+    popEl.style.bottom = `${window.innerHeight - top - window.scrollY + offset}px`
     popEl.style.top = 'unset'
   }
 }

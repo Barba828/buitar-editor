@@ -3,9 +3,8 @@ import { AlphaTabApi, LayoutMode, synth } from '@coderline/alphatab'
 import type { Settings, RenderingResources } from '@coderline/alphatab'
 import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react'
 import type { GTPPreviewerElement } from '~chord'
-import { Icon, Modal, Popover, Selector, SelectorItem } from '~common'
+import { Icon, Modal, Popover, Selector, SelectorItem, Skeleton, useIsLightMode } from '~common'
 import { Transforms } from 'slate'
-
 import cx from 'classnames'
 
 import './alpha-tab-element.scss'
@@ -28,16 +27,17 @@ const layoutModeList: Array<SelectorItem<LayoutMode>> = [
   { value: LayoutMode.Page, label: 'Page', selected: true },
 ]
 
-export const AlphaTabElement: FC<RenderElementProps> = memo(({ element }) => {
-  const { link: elementLink = '/canon.gp' } = element as GTPPreviewerElement
+export const AlphaTabElement: FC<RenderElementProps> = memo(({ attributes, element, children }) => {
+  const { link: elementLink = '' } = element as GTPPreviewerElement
   const editor = useSlateStatic()
   const containerRef = useRef<HTMLDivElement>(null)
   const elementRef = useRef<HTMLDivElement>(null)
   const toolRef = useRef<HTMLDivElement>(null)
-  const [fullscreen, setFullscreen] = useState(true)
+  const [fullscreen, setFullscreen] = useState(false)
   const [showTracks, setShowTracks] = useState(false)
   const [showLink, setShowLink] = useState(false)
   const [link, setLink] = useState(elementLink)
+  const isLightMode = useIsLightMode()
 
   const [api, setApi] = useState<AlphaTabApi>()
   const [score, setScore] = useState<AlphaTabApi['score']>()
@@ -49,6 +49,23 @@ export const AlphaTabElement: FC<RenderElementProps> = memo(({ element }) => {
   const [playing, setPlaying] = useState(false)
 
   useEffect(() => {
+    const themeResources = (isLightMode
+      ? {
+        staffLineColor: '#222', // 六线谱线的颜色
+        barSeparatorColor: '#222', // 小节分隔符颜色
+        barNumberColor: '#646cff', // 小节号的颜色
+        mainGlyphColor: '#111', // 主要音符的颜色
+        secondaryGlyphColor: '#181818', // 次要音符的颜色
+        scoreInfoColor: '#080808', // 歌曲信息的颜色
+      }
+      : {
+        staffLineColor: '#ddd', // 六线谱线的颜色
+        barSeparatorColor: '#ddd', // 小节分隔符颜色
+        barNumberColor: '#646cff', // 小节号的颜色
+        mainGlyphColor: '#eee', // 主要音符的颜色
+        secondaryGlyphColor: '#e8e8e8', // 次要音符的颜色
+        scoreInfoColor: '#f8f8f8', // 歌曲信息的颜色
+      }) as unknown as RenderingResources
     const api = new AlphaTabApi(elementRef.current!, {
       core: {
         file: elementLink,
@@ -62,21 +79,15 @@ export const AlphaTabElement: FC<RenderElementProps> = memo(({ element }) => {
         scrollElement: containerRef.current! as HTMLElement,
       },
       display: {
-        resources: {
-          // staffLineColor: '#ddd', // 六线谱线的颜色
-          // barSeparatorColor: '#ddd', // 小节分隔符颜色
-          // barNumberColor: '#ddd', // 小节号的颜色
-          // mainGlyphColor: '#ddd', // 主要音符的颜色
-          // secondaryGlyphColor: '#ddd', // 次要音符的颜色
-          // scoreInfoColor: '#ddd', // 歌曲信息的颜色
-        } as unknown as RenderingResources,
+        resources: themeResources,
+        scale: 0.5,
       },
     } as Settings)
 
     setApi(api)
 
     api.scoreLoaded.on((score) => {
-      console.log('lnz scoreLoaded', score, api)
+      // console.log('lnz scoreLoaded', score, api)
       setScore(score)
       setTracks(score.tracks)
     })
@@ -90,17 +101,17 @@ export const AlphaTabElement: FC<RenderElementProps> = memo(({ element }) => {
     })
 
     // api.activeBeatsChanged.on(() => {
-    //   console.log('lnz activeBeatsChanged', api);
     // })
-    api.settingsUpdated.on(() => {
-      console.log('lnz settingsUpdated', api)
-    })
+    // api.settingsUpdated.on(() => {
+    // })
 
+    let prevCurrentSecond = 0
     api.playerPositionChanged.on((e) => {
       const tempSecond = (e.currentTime / 1000) | 0
-      if (currentSecond === tempSecond) {
+      if (prevCurrentSecond === tempSecond) {
         return
       }
+      prevCurrentSecond = tempSecond
       setCurrentSecond(tempSecond)
       setEndSecond((e.endTime / 1000) | 0)
     })
@@ -112,7 +123,7 @@ export const AlphaTabElement: FC<RenderElementProps> = memo(({ element }) => {
     return () => {
       api.destroy()
     }
-  }, [elementLink])
+  }, [elementLink, isLightMode])
 
   const playPause = () => {
     api?.playPause()
@@ -129,10 +140,6 @@ export const AlphaTabElement: FC<RenderElementProps> = memo(({ element }) => {
     if (!api) {
       return
     }
-    /**
-     * @todo
-     * 这里缩放需要和padding一起处理，视觉体验更合适
-     */
     const zoomLevel = parseInt(item.value) / 100
     api.settings.display.scale = zoomLevel
     api.updateSettings()
@@ -149,12 +156,18 @@ export const AlphaTabElement: FC<RenderElementProps> = memo(({ element }) => {
     api.render()
   }
 
-  const changePlayingTracks = () => {
-    // api?.changeTrackVolume()
-  }
-
   const changeElementLink = () => {
     Transforms.setNodes(editor, { link }, { at: ReactEditor.findPath(editor, element) })
+  }
+
+  const changeFullsceen = () => {
+    if (!api) {
+      return
+    }
+    api.settings.display.scale = fullscreen ? 0.5 : 1
+    api.updateSettings()
+    api.render()
+    setFullscreen(!fullscreen)
   }
 
   const tracksView = (
@@ -163,6 +176,7 @@ export const AlphaTabElement: FC<RenderElementProps> = memo(({ element }) => {
       className={cx('alpha-tab-element__tools__tracks')}
       onClose={() => setShowTracks(false)}
       overlay={true}
+      option={{ offset: 0 }}
     >
       {tracks.map((track) => (
         <div
@@ -171,6 +185,7 @@ export const AlphaTabElement: FC<RenderElementProps> = memo(({ element }) => {
             'alpha-tab-element__tools__track',
             renderTracks.includes(track) && 'alpha-tab-element__tools__track--active'
           )}
+          style={{ borderColor: track.color.rgba }}
           onClick={() => api?.renderTracks([track])}
         >
           <div className="alpha-tab-element__tools__track-info">
@@ -237,13 +252,14 @@ export const AlphaTabElement: FC<RenderElementProps> = memo(({ element }) => {
         onChange={(e) => setLink(e.target.value)}
         value={link}
         autoFocus
+        spellCheck={false}
       ></input>
     </Modal>
   )
 
   const toolsView = (
     <div className="alpha-tab-element__tools" ref={toolRef}>
-      <div>
+      <div className="flex-center">
         <button onClick={() => setShowTracks(!showTracks)}>
           <Icon name="icon-guitar"></Icon>
         </button>
@@ -297,27 +313,36 @@ export const AlphaTabElement: FC<RenderElementProps> = memo(({ element }) => {
         className="alpha-tab-element__trigger flex-center"
         onClick={() => setShowLink(!showLink)}
       >
-        <Icon name="icon-edit-pencil"></Icon>
+        <Icon name="icon-paperclip-attechment"></Icon>
       </div>
-      <div
-        className="alpha-tab-element__trigger flex-center"
-        onClick={() => setFullscreen(!fullscreen)}
-      >
+      <div className="alpha-tab-element__trigger flex-center" onClick={changeFullsceen}>
         <Icon name={fullscreen ? 'icon-shrink' : 'icon-expand'}></Icon>
       </div>
       {linkInputView}
     </div>
   )
 
+  const emptyView = !elementLink ? (
+    <div className="alpha-tab-element__empty flex-center" onClick={() => setShowLink(!showLink)}>
+      <Icon name="icon-paperclip-attechment"></Icon>
+      Click to load GTP file
+    </div>
+  ) : (
+    !ready && <Skeleton line={4} />
+  )
+
   return (
     <div
       className={cx('alpha-tab-element', { 'alpha-tab-element--fullscreen': fullscreen })}
+      {...attributes}
       contentEditable={false}
       suppressContentEditableWarning
     >
+      <div style={{ display: 'none' }}>{children}</div>
       <div ref={containerRef} className="alpha-tab-element__container">
         <div ref={elementRef}></div>
       </div>
+      {emptyView}
       {fullscreen && toolsView}
       {btnsView}
     </div>

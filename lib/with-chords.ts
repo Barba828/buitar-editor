@@ -11,6 +11,8 @@ export const withChords = (editor: CustomTypes['Editor']) => {
       ? true
       : element.type === 'abc-tablature'
       ? false
+      : element.type === 'gtp-previewer'
+      ? false
       : isInline(element)
   }
   editor.isVoid = (element: CustomTypes['Element']) => {
@@ -18,6 +20,8 @@ export const withChords = (editor: CustomTypes['Editor']) => {
       ? true
       : element.type === 'abc-tablature'
       ? false
+      : element.type === 'gtp-previewer'
+      ? true
       : isVoid(element)
   }
   // editor.isElementReadOnly = (element: CustomTypes['Element']) => {

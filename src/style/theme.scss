@@ -51,11 +51,11 @@ input[type='checkbox'] {
   }
 
   &:checked {
-    background-color: $blue-1;
-    border-color: $blue-1;
+    background-color: $purple-1;
+    border-color: $purple-1;
     &:hover {
-      background-color: $blue-1--hover;
-      border-color: $blue-1--hover;
+      background-color: $purple-1--hover;
+      border-color: $purple-1--hover;
     }
     &::after {
       content: '✓';

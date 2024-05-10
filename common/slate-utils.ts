@@ -122,21 +122,22 @@ export const getClosetElement = (editor: Editor, target: HTMLElement | EventTarg
   }
   const targetAt = ReactEditor.findPath(editor, targetNode)
 
+  /**若父级包含 ONLY_ONE_WRAP_TYPES 则直接返回 wrapElement */
   const wrapElement = getSelectedNode(editor, ONLY_ONE_WRAP_TYPES, { at: targetAt })
   if (wrapElement) {
     return wrapElement
   }
 
+  /**若当前targetNode就是 Block 则直接返回targetNode */
   if (SlateElement.isElement(targetNode) && editor.isBlock(targetNode)) {
     return Editor.node(editor, targetAt)
   }
 
+  /**Above向上找到最近的Element显示hovertoolbar */
   const closestElement = Editor.above(editor, {
     at: targetAt,
     match: (n) => SlateElement.isElement(n) && Editor.isBlock(editor, n),
   })
-
-  // Above向上找到最近的Element显示hovertoolbar
   if (closestElement && !Editor.isEditor(closestElement[0])) {
     return closestElement
   }

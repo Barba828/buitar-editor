@@ -8,6 +8,7 @@ const SHORTCUTS: Record<string, BlockFormat> = {
   '-': 'bulleted-list',
   '+': 'bulleted-list',
   '>': 'block-quote',
+  '>>': 'toogle-list',
   '```': 'code-block',
   '#': 'heading-1',
   '##': 'heading-2',

@@ -70,7 +70,7 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
       return
     }
 
-    if (isBlockActive(editor, NONE_RICH_WRAP_TYPES)){
+    if (isBlockActive(editor, NONE_RICH_WRAP_TYPES)) {
       setTarget(null)
       return
     }
@@ -133,7 +133,8 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
       switch (item.tag) {
         case 'text':
         case 'tablature':
-          editor.insertBlock?.({ type: item.key as BlockFormat })
+          const newProperties = { type: item.key as BlockFormat }
+          editor.insertBlock?.(newProperties)
           break
 
         case 'chord':
@@ -144,7 +145,7 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
         default:
           break
       }
-      ReactEditor.focus(editor);
+      ReactEditor.focus(editor)
       cleanSearch()
     },
     [cleanSearch, editor, target]

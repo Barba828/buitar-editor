@@ -106,22 +106,40 @@ export const insertBlock = (
   const [, currentPath] = Editor.node(editor, selection)
   const isEmptyLine = Editor.string(editor, currentPath).length === 0
 
-  /** ONLY_ONE_WRAP_TYPES 插入行为：父级插入新行 */
+  if (isBlockActive(editor, LIST_TYPES)) {
+    const aboveElementMatch = getSelectedNode(editor, LIST_TYPES)
+    if (aboveElementMatch) {
+      const [, abovePath] = aboveElementMatch
+      options.at = Path.next(abovePath)
+    }
+  }
+
   if (ONLY_ONE_WRAP_TYPES.includes(element.type)) {
     const aboveElementMatch = getSelectedNode(editor, element.type)
     if (aboveElementMatch) {
       const [, abovePath] = aboveElementMatch
       options.at = Path.next(abovePath)
     }
-    /** 位于行首删除当前wrap内行（因为需要插入到父级新行，不能直接 toggle，toggle 会将父级wrap一起操作） */
-    if (isEmptyLine) {
-      Transforms.removeNodes(editor, { at: currentPath.slice(0, -1) })
-    }
-  } else if (isEmptyLine) {
-    /** 位于行首直接toggle当前block */
-    editor.toggleBlock?.(element, { toActive: true, ...options })
-    return
   }
+
+  /** ONLY_ONE_WRAP_TYPES 插入行为：找到同type的父级（可能就是自己）插入新行 */
+  // if (ONLY_ONE_WRAP_TYPES.includes(element.type)) {
+  //   const aboveElementMatch = getSelectedNode(editor, element.type)
+  //   if (aboveElementMatch) {
+  //     const [, abovePath] = aboveElementMatch
+  //     options.at = Path.next(abovePath)
+  //   }
+  //   /** 位于行首删除当前wrap内行（因为需要插入到父级新行，不能直接 toggle，toggle 会将父级wrap一起操作） */
+  //   if (isEmptyLine) {
+  //     Transforms.removeNodes(editor, { at: currentPath.slice(0, -1) })
+  //   }
+  // } else if (isEmptyLine) {
+  //   /** 位于行首直接toggle当前block */
+  //   editor.toggleBlock?.(element, { toActive: true, ...options })
+  //   return
+  // }
+
+  console.log('lnz options', options)
 
   let newProperties = {
     children: [{ text: '' }],
@@ -159,8 +177,12 @@ export const insertBlock = (
     default:
       break
   }
-
   Transforms.insertNodes(editor, newProperties, options)
+  
+  /** 位于行首删除当前wrap内行 */
+  if (isEmptyLine) {
+    Transforms.removeNodes(editor, { at: currentPath.slice(0, -1) })
+  }
 
   /** 存在at，则焦点更新到at末尾 */
   if (options.at) {

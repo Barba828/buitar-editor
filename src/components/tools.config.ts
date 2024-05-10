@@ -52,6 +52,13 @@ export const textTypeMenu: ToolType[] = [
   },
   {
     tag: 'text',
+    key: 'code-block',
+    title: 'Code Block',
+    desc: 'Code Blocks with syntax highlighting',
+    icon: 'icon-code-block',
+  },
+  {
+    tag: 'text',
     key: 'heading-1',
     title: 'Heading-1',
     desc: 'Largest heading size',
@@ -97,17 +104,17 @@ export const textTypeMenu: ToolType[] = [
 export const tablatureTypeMenu: ToolType[] = [
   {
     tag: 'tablature',
+    key: 'gtp-previewer',
+    title: 'GTP Previewer',
+    desc: 'Add Guitar Pro tablature link',
+    icon: 'icon-guitar',
+  },
+  {
+    tag: 'tablature',
     key: 'abc-tablature',
     title: 'ABC Editor',
     desc: 'Simple music & tablature editor',
     icon: 'icon-list-music',
-  },
-  {
-    tag: 'tablature',
-    key: 'toogle-list',
-    title: 'GTP Previewer',
-    desc: 'Add Guitar Pro tablature link',
-    icon: 'icon-guitar',
   },
 ]
 
