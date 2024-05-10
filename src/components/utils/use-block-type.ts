@@ -21,7 +21,6 @@ export const useBlockType = () => {
     if (blockType) {
       setNode(selectedNode)
       setBlockType(blockType)
-      // console.log('lnz T', blockType, selectedNode);
     }
   }, [editor, selection])
 

@@ -139,8 +139,6 @@ export const insertBlock = (
   //   return
   // }
 
-  console.log('lnz options', options)
-
   let newProperties = {
     children: [{ text: '' }],
     ...element,

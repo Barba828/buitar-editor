@@ -87,7 +87,7 @@ export const AlphaTabElement: FC<RenderElementProps> = memo(({ attributes, eleme
     setApi(api)
 
     api.scoreLoaded.on((score) => {
-      // console.log('lnz scoreLoaded', score, api)
+      console.log('scoreLoaded', score, api)
       setScore(score)
       setTracks(score.tracks)
     })

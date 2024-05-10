@@ -1,5 +1,4 @@
-import { Editor, Element, NodeEntry, Text, Transforms } from 'slate'
-import { NONE_RICH_WRAP_TYPES } from './config'
+import { Editor } from 'slate'
 
 export const withValidation = (editor: Editor) => {
 //   const { normalizeNode } = editor
