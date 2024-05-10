@@ -5,7 +5,7 @@ Based on slate.js
 ## [Demo](https://barba828.github.io/buitar-editor/)
 
 ## buglist
-- [ ] 在list-item后面inserBlock需要先unwrap
+- [ ] block-quoto删除后会有两层paragraph
 
 ## todolist
 - [ ] focused/selected高亮
