@@ -42,7 +42,7 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
     return [
       {
         title: 'Basic blocks',
-        list: textTypeMenu.slice(0, 8),
+        list: textTypeMenu.slice(0, 10),
       },
       {
         title: 'Tablature blocks',

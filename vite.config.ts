@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite'
 import { alphaTab } from '@coderline/alphatab/vite'
-import react from "@vitejs/plugin-react";
+import react from '@vitejs/plugin-react'
 import path from 'path'
 
 const baseUrl = process.env.BASE_URL || '/'
@@ -17,6 +17,11 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist-demo',
+    rollupOptions: {
+      output: {
+        chunkFileNames: 'chunks/[name]-[hash].js'
+      }
+    },
   },
   resolve: {
     alias: {
@@ -26,5 +31,5 @@ export default defineConfig({
   },
   server: {
     port: 8383,
-  }
+  },
 })

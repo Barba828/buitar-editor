@@ -5,6 +5,7 @@ import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react'
 import type { GTPPreviewerElement } from '~chord'
 import { Icon, Modal, Popover, Selector, SelectorItem, Skeleton, useIsLightMode } from '~common'
 import { Transforms } from 'slate'
+import { baseUrl } from '../src/meta'
 import cx from 'classnames'
 
 import './alpha-tab-element.scss'
@@ -66,16 +67,17 @@ export const AlphaTabElement: FC<RenderElementProps> = memo(({ attributes, eleme
         secondaryGlyphColor: '#e8e8e8', // 次要音符的颜色
         scoreInfoColor: '#f8f8f8', // 歌曲信息的颜色
       }) as unknown as RenderingResources
+      
     const api = new AlphaTabApi(elementRef.current!, {
       core: {
         file: elementLink,
-        fontDirectory: '/font/',
+        fontDirectory: `${baseUrl}font/`,
       },
       player: {
         enablePlayer: true,
         enableCursor: true,
         enableUserInteraction: true,
-        soundFont: '/soundfont/sonivox.sf2',
+        soundFont: `${baseUrl}soundfont/sonivox.sf2`,
         scrollElement: containerRef.current! as HTMLElement,
       },
       display: {
@@ -83,6 +85,26 @@ export const AlphaTabElement: FC<RenderElementProps> = memo(({ attributes, eleme
         scale: 0.5,
       },
     } as Settings)
+
+    // console.log({
+    //   core: {
+    //     file: elementLink,
+    //     fontDirectory: `${baseUrl}font/`,
+    //   },
+    //   player: {
+    //     enablePlayer: true,
+    //     enableCursor: true,
+    //     enableUserInteraction: true,
+    //     soundFont: `${baseUrl}soundfont/sonivox.sf2`,
+    //     scrollElement: containerRef.current! as HTMLElement,
+    //   },
+    //   display: {
+    //     resources: themeResources,
+    //     scale: 0.5,
+    //   },
+    // } as Settings);
+
+    // const api = {} as AlphaTabApi
 
     setApi(api)
 
@@ -348,6 +370,8 @@ export const AlphaTabElement: FC<RenderElementProps> = memo(({ attributes, eleme
     </div>
   )
 })
+
+export default AlphaTabElement
 
 function formatDuration(seconds: number) {
   const minutes = (seconds / 60) | 0

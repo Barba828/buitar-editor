@@ -26,11 +26,13 @@ export default defineConfig({
       name: 'buitar-editor',
     },
     rollupOptions: {
-      external: ['react', 'react-dom'],
+      external: ['react', 'react-dom', '@coderline/alphatab', 'abcjs'],
       output: {
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
+          '@coderline/alphatab': 'alphaTab',
+          'abcjs': 'abcjs',
         },
       },
     },

@@ -9,7 +9,14 @@ import {
   RenderLeafProps,
   DefaultLeaf,
 } from 'slate-react'
-import { InlineChordElement, FixedChordLeaf, InlineChordPopover, ABCElement, AlphaTabElement } from '~chord'
+import {
+  InlineChordElement,
+  FixedChordLeaf,
+  InlineChordPopover,
+  ABCElement,
+  AlphaTabElement,
+} from '~chord'
+// import { SuspenseElement } from './components/elements/suspense-element'
 import { CheckListItemElement } from './components/elements/check-list-item'
 import { SelectToolbar } from './components/select-toolbar'
 import { SlashToolbar } from './components/slash-toolbar'
@@ -88,7 +95,7 @@ const Element = (props: RenderElementProps) => {
       return <InlineChordElement {...props} />
     case 'abc-tablature':
       return <ABCElement {...props} />
-    case  'gtp-previewer':
+    case 'gtp-previewer':
       return <AlphaTabElement {...props} />
     case 'check-list-item':
       return <CheckListItemElement {...props} />

@@ -1,16 +1,8 @@
-import {
-  FC,
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Transforms } from 'slate'
 import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react'
 import { type ABCTablatureElement } from '~chord'
-import ABCJS, { type TablatureInstrument } from 'abcjs'
+import abcjs, { type TablatureInstrument } from 'abcjs'
 import { getElementText, Icon, Selector, type SelectorItem, toast } from '~common'
 import cx from 'classnames'
 
@@ -36,16 +28,18 @@ export const ABCElement: FC<RenderElementProps> = memo(({ attributes, element, c
   const [short, setShort] = useState(true)
 
   useEffect(() => {
-    if (musicSheetRef.current) {
-      const tablature = instrument ? [{ instrument }] : []
-      ABCJS.renderAbc(musicSheetRef.current, abcNotation, {
-        add_classes: true,
-        oneSvgPerLine: true,
-        responsive: 'resize',
-        selectTypes: false,
-        tablature: tablature,
-      })
+    if (!musicSheetRef.current || !abcjs) {
+      return
     }
+    const tablature = instrument ? [{ instrument }] : []
+    abcjs.renderAbc(musicSheetRef.current, abcNotation, {
+      add_classes: true,
+      oneSvgPerLine: true,
+      responsive: 'resize',
+      selectTypes: false,
+      tablature: tablature,
+    })
+    // })
   }, [abcNotation, instrument])
 
   useEffect(() => {
@@ -166,3 +160,5 @@ export const ABCElement: FC<RenderElementProps> = memo(({ attributes, element, c
     </div>
   )
 })
+
+export default ABCElement
