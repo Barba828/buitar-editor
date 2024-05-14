@@ -40,6 +40,7 @@ export const withChords = (editor: CustomTypes['Editor']) => {
       type: 'inline-chord',
       taps,
       concise: !!concise,
+      size: 1,
       children: [{ text: '' }],
     }
     Transforms.insertNodes(editor, chord)

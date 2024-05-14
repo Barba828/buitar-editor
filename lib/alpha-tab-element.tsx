@@ -1,9 +1,18 @@
-import { FC, memo, useEffect, useRef, useState } from 'react'
+import { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AlphaTabApi, LayoutMode, synth } from '@coderline/alphatab'
 import type { Settings, RenderingResources } from '@coderline/alphatab'
 import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react'
 import type { GTPPreviewerElement } from '~chord'
-import { Icon, Modal, Popover, Selector, SelectorItem, Skeleton, useIsLightMode } from '~common'
+import {
+  ButtonGroup,
+  Icon,
+  Modal,
+  Popover,
+  Selector,
+  SelectorItem,
+  Skeleton,
+  useIsLightMode,
+} from '~common'
 import { Transforms } from 'slate'
 import { baseUrl } from '../src/meta'
 import cx from 'classnames'
@@ -67,7 +76,7 @@ export const AlphaTabElement: FC<RenderElementProps> = memo(({ attributes, eleme
         secondaryGlyphColor: '#e8e8e8', // 次要音符的颜色
         scoreInfoColor: '#f8f8f8', // 歌曲信息的颜色
       }) as unknown as RenderingResources
-      
+
     const api = new AlphaTabApi(elementRef.current!, {
       core: {
         file: elementLink,
@@ -85,26 +94,6 @@ export const AlphaTabElement: FC<RenderElementProps> = memo(({ attributes, eleme
         scale: 0.5,
       },
     } as Settings)
-
-    // console.log({
-    //   core: {
-    //     file: elementLink,
-    //     fontDirectory: `${baseUrl}font/`,
-    //   },
-    //   player: {
-    //     enablePlayer: true,
-    //     enableCursor: true,
-    //     enableUserInteraction: true,
-    //     soundFont: `${baseUrl}soundfont/sonivox.sf2`,
-    //     scrollElement: containerRef.current! as HTMLElement,
-    //   },
-    //   display: {
-    //     resources: themeResources,
-    //     scale: 0.5,
-    //   },
-    // } as Settings);
-
-    // const api = {} as AlphaTabApi
 
     setApi(api)
 
@@ -182,7 +171,7 @@ export const AlphaTabElement: FC<RenderElementProps> = memo(({ attributes, eleme
     Transforms.setNodes(editor, { link }, { at: ReactEditor.findPath(editor, element) })
   }
 
-  const changeFullsceen = () => {
+  const changeFullsceen = useCallback(() => {
     if (!api) {
       return
     }
@@ -190,7 +179,16 @@ export const AlphaTabElement: FC<RenderElementProps> = memo(({ attributes, eleme
     api.updateSettings()
     api.render()
     setFullscreen(!fullscreen)
-  }
+  }, [api, fullscreen])
+
+  const btns = useMemo(
+    () => [
+      { icon: 'icon-print', onClick: print },
+      { icon: 'icon-paperclip-attechment', onClick: () => setShowLink(!showLink) },
+      { icon: fullscreen ? 'icon-shrink' : 'icon-expand', onClick: changeFullsceen },
+    ],
+    [changeFullsceen, fullscreen, print, showLink]
+  )
 
   const tracksView = (
     <Popover
@@ -327,21 +325,9 @@ export const AlphaTabElement: FC<RenderElementProps> = memo(({ attributes, eleme
   )
 
   const btnsView = (
-    <div className="alpha-tab-element__btns" contentEditable={false}>
-      <div className="alpha-tab-element__trigger flex-center" onClick={print}>
-        <Icon name="icon-print"></Icon>
-      </div>
-      <div
-        className="alpha-tab-element__trigger flex-center"
-        onClick={() => setShowLink(!showLink)}
-      >
-        <Icon name="icon-paperclip-attechment"></Icon>
-      </div>
-      <div className="alpha-tab-element__trigger flex-center" onClick={changeFullsceen}>
-        <Icon name={fullscreen ? 'icon-shrink' : 'icon-expand'}></Icon>
-      </div>
+    <ButtonGroup className="alpha-tab-element__btns" btns={btns}>
       {linkInputView}
-    </div>
+    </ButtonGroup>
   )
 
   const emptyView = !elementLink ? (

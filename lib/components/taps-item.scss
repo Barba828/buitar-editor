@@ -15,6 +15,41 @@
   opacity: 0.6;
 }
 
+.inline-taps-item__wrapper {
+  position: relative;
+  display: inline-block;
+  &:hover,
+  &:active {
+    .inline-taps-item__tools {
+      z-index: 1;
+      opacity: 1;
+      transform: translate(-50%);
+      transition: all 0.3s ease-in-out;
+      top: -30px;
+      pointer-events: all;
+    }
+  }
+}
+
+.inline-taps-item__tools {
+  position: absolute;
+  opacity: 0;
+  transform: translate(-50%);
+  top: -10px;
+  height: 30px;
+  left: 50%;
+  pointer-events: none;
+  .icon-remove {
+    color: $red-1;
+  }
+}
+
+.inline-taps-item__tools-title {
+  white-space: nowrap;
+  text-transform: capitalize;
+  padding: 0 4px;
+}
+
 .inline-taps-item {
   vertical-align: middle;
   border-radius: 8px;
@@ -25,7 +60,7 @@
   &:hover,
   &:active,
   &--active {
-    background: $gray-1;
+    background: $gray-0--hover;
   }
 }
 

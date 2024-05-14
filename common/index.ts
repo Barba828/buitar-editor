@@ -2,6 +2,7 @@ export * from './slate-utils'
 export * from './media-query'
 
 export * from './components/icon'
+export * from './components/button/btn-groups'
 export * from './components/list/list'
 export * from './components/list/list-item'
 export * from  './components/popover/popover'

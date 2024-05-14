@@ -33,16 +33,12 @@
 }
 
 .abc-editor__btns {
-  display: flex;
   z-index: 1;
   position: absolute;
   top: 6px;
   right: 6px;
-  user-select: none;
   opacity: 1;
   transition: opacity 0.3s ease-in-out;
-  border-radius: 10px;
-  overflow: hidden;
   &.abc-editor__footer-btns {
     top: unset;
     bottom: 6px;
@@ -54,23 +50,12 @@
 }
 .abc-editor__trigger {
   font-size: 14px;
-  background-color: $gray-2;
+  background-color: transparent;
   padding: 4px 8px;
-  cursor: pointer;
-  transition: background 0.3s ease-in-out;
-  &:hover {
-    background: $gray-3;
-  }
-
-  &:not(:last-child) {
-    border-right: 1px solid $gray-3;
-  }
-
   &.abc-editor__trigger--no-instrument {
     width: 4em;
     opacity: 0.8;
   }
-
   .icon-trigger {
     transition: all 0.3s ease-in-out;
   }
@@ -86,6 +71,7 @@
   padding: 0;
   margin: 0;
   border-radius: 0;
+  background: $white-1;
   display: flex;
 
   .abc-editor__content {

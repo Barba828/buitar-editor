@@ -1,0 +1,23 @@
+.btn-groups {
+  display: flex;
+  height: 24px;
+  border-radius: 12px;
+  transition: all 0.3s ease-in-out;
+  background-color: $white-1;
+  overflow: hidden;
+  box-shadow: $shadow-btn;
+  user-select: none;
+  overflow: hidden;
+}
+.btn-groups__btn {
+  padding: 4px 6px;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+  &:hover,
+  &:active {
+    background-color: $gray-0;
+  }
+  &:not(:last-child) {
+      border-right: 1px solid $gray-0;
+  }
+}

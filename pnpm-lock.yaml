@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@buitar/svg-chord':
-    specifier: ^0.0.3
-    version: 0.0.3
+    specifier: ^0.0.5
+    version: 0.0.5
   '@buitar/to-guitar':
     specifier: ^0.0.14
     version: 0.0.14
@@ -308,8 +308,8 @@ packages:
       to-fast-properties: 2.0.0
     dev: true
 
-  /@buitar/svg-chord@0.0.3:
-    resolution: {integrity: sha512-3OuOVH1hv7OsLbxeXHzz2MtF8qNlZ0FwJJlC9MHzQJYGTcI1f2N0s9b+Hjj92PiXX5awRLtiOxhChroadzwSWA==}
+  /@buitar/svg-chord@0.0.5:
+    resolution: {integrity: sha512-/yqNKCF+x+ibRB8p9aAFJyDbYx8v2zDFxpZ6GSlJL7+0EOe0s6dKfSkQsNJlZEt4QgBODV5BXFUXYkC4OwXhJQ==}
     dev: false
 
   /@buitar/to-guitar@0.0.14:

@@ -3,7 +3,7 @@ import { Transforms } from 'slate'
 import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react'
 import { type ABCTablatureElement } from '~chord'
 import abcjs, { type TablatureInstrument } from 'abcjs'
-import { getElementText, Icon, Selector, type SelectorItem, toast } from '~common'
+import { ButtonGroup, getElementText, Icon, Selector, type SelectorItem, toast } from '~common'
 import cx from 'classnames'
 
 import './abc-element.scss'
@@ -106,6 +106,50 @@ export const ABCElement: FC<RenderElementProps> = memo(({ attributes, element, c
     [fullscreen, editable]
   )
 
+  const mainBtns = useMemo(
+    () => [
+      { icon: 'icon-copy', onClick: handleCopy },
+      { icon: 'icon-print', onClick: handlePrint },
+      { icon: !editable ? 'icon-edit-pencil' : 'icon-done', onClick: () => setEditable(!editable) },
+      {
+        icon: fullscreen ? 'icon-shrink' : 'icon-expand',
+        onClick: () => setFullscreen(!fullscreen),
+      },
+    ],
+    [editable, fullscreen, handleCopy, handlePrint]
+  )
+
+  const footerBtns = useMemo(
+    () =>
+      [
+        showSetShortBtn && {
+          icon: (
+            <Icon name="icon-trigger" style={{ transform: `rotate(${short ? 0 : 180}deg)` }}></Icon>
+          ),
+          onClick: () => setShort(!short),
+        },
+      ].filter((it) => !!it),
+    [short, showSetShortBtn]
+  )
+
+  const leftBtns = useMemo(
+    () => [
+      {
+        icon: (
+          <Selector
+            className={cx(
+              'abc-editor__trigger',
+              !instrument && 'abc-editor__trigger--no-instrument'
+            )}
+            lists={instruments}
+            onChange={handleABCIntrumentChange}
+          ></Selector>
+        ),
+      },
+    ],
+    [handleABCIntrumentChange, instrument]
+  )
+
   return (
     <div
       className={cx(
@@ -119,36 +163,14 @@ export const ABCElement: FC<RenderElementProps> = memo(({ attributes, element, c
       contentEditable={editable}
       suppressContentEditableWarning
     >
-      <div className="abc-editor__btns" contentEditable={false}>
-        <div className="abc-editor__trigger flex-center" onClick={handleCopy}>
-          <Icon name="icon-copy"></Icon>
-        </div>
-        <div className="abc-editor__trigger flex-center" onClick={handlePrint}>
-          <Icon name="icon-print"></Icon>
-        </div>
-        <div className="abc-editor__trigger flex-center" onClick={() => setEditable(!editable)}>
-          <Icon name={!editable ? 'icon-edit-pencil' : 'icon-done'}></Icon>
-        </div>
-        <div className="abc-editor__trigger flex-center" onClick={() => setFullscreen(!fullscreen)}>
-          <Icon name={fullscreen ? 'icon-shrink' : 'icon-expand'}></Icon>
-        </div>
-      </div>
+      <ButtonGroup className="abc-editor__btns" btns={mainBtns}></ButtonGroup>
 
-      <div className="abc-editor__btns abc-editor__left-btns" contentEditable={false}>
-        <Selector
-          className={cx('abc-editor__trigger', !instrument && 'abc-editor__trigger--no-instrument')}
-          lists={instruments}
-          onChange={handleABCIntrumentChange}
-        ></Selector>
-      </div>
+      <ButtonGroup className="abc-editor__btns abc-editor__left-btns" btns={leftBtns}></ButtonGroup>
 
-      <div className="abc-editor__btns abc-editor__footer-btns" contentEditable={false}>
-        {showSetShortBtn && (
-          <div className="abc-editor__trigger flex-center" onClick={() => setShort(!short)}>
-            <Icon name="icon-trigger" style={{ transform: `rotate(${short ? 0 : 180}deg)` }}></Icon>
-          </div>
-        )}
-      </div>
+      <ButtonGroup
+        className="abc-editor__btns abc-editor__footer-btns"
+        btns={footerBtns}
+      ></ButtonGroup>
 
       <div className="abc-editor__content" style={{ display: editable ? 'block' : 'none' }}>
         {children}

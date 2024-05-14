@@ -49,14 +49,10 @@
 
 .alpha-tab-element__btns {
   opacity: 0;
-  display: flex;
   z-index: 1;
   position: absolute;
   top: 6px;
   right: 6px;
-  user-select: none;
-  border-radius: 10px;
-  overflow: hidden;
   transition: opacity 0.3s ease-in-out;
 }
 

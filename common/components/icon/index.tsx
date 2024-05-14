@@ -5,7 +5,7 @@ import './iconfont.js'
 
 import './icon.scss'
 
-interface IconProps extends React.SVGProps<SVGSVGElement> {
+export interface IconProps extends React.SVGProps<SVGSVGElement> {
 	name: string
 	size?: number | string
 	color?: string

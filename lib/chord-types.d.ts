@@ -5,6 +5,7 @@ type CustomChordType = {
   taps: BoardChord
   concise?: boolean
   popover?: boolean
+  size?: number
 }
 
 export type CustomInlineChordElement = {

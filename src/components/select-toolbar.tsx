@@ -122,7 +122,7 @@ export const SelectToolbar = () => {
             <FormatChordButton option={'popover'}>
               <Icon name="icon-popover" />
             </FormatChordButton>
-            <FormatChordButton option={''} style={{ color: '#c21500' }} onClick={cleanInputChord}>
+            <FormatChordButton option={''} onClick={cleanInputChord}>
               <Icon name="icon-remove" />
             </FormatChordButton>
           </div>
