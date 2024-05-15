@@ -83,7 +83,12 @@ export const withOnChange = (editor: Editor) => {
      * 1. 空格结尾，判断是否是markdown标记
      * 2. 非 ONLY_ONE_WRAP_TYPES 内部
      */
-    if (text.endsWith(' ') && selection && Range.isCollapsed(selection) && !isBlockActive(editor, NONE_RICH_WRAP_TYPES)) {
+    if (
+      text.endsWith(' ') &&
+      selection &&
+      Range.isCollapsed(selection) &&
+      !isBlockActive(editor, NONE_RICH_WRAP_TYPES)
+    ) {
       const { anchor } = selection
       const match = Editor.above(editor, {
         match: (n) => SlateElement.isElement(n) && Editor.isBlock(editor, n),
@@ -199,6 +204,7 @@ const cleanTypeOnStart = (editor: Editor) => {
       !Editor.isEditor(n) &&
       SlateElement.isElement(n) &&
       Editor.isBlock(editor, n) &&
+      !NONE_RICH_WRAP_TYPES.includes(n.type) &&
       n.type !== 'paragraph',
   })
 

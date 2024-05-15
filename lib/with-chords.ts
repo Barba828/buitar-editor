@@ -11,6 +11,8 @@ export const withChords = (editor: CustomTypes['Editor']) => {
       ? true
       : element.type === 'abc-tablature'
       ? false
+      : element.type === 'block-tablature'
+      ? false
       : element.type === 'gtp-previewer'
       ? false
       : isInline(element)
@@ -19,6 +21,8 @@ export const withChords = (editor: CustomTypes['Editor']) => {
     return element.type === 'inline-chord'
       ? true
       : element.type === 'abc-tablature'
+      ? false
+      : element.type === 'block-tablature'
       ? false
       : element.type === 'gtp-previewer'
       ? true

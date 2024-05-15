@@ -116,6 +116,13 @@ export const tablatureTypeMenu: ToolType[] = [
     desc: 'Simple music & tablature editor',
     icon: 'icon-list-music',
   },
+  {
+    tag: 'tablature',
+    key: 'block-tablature',
+    title: 'Custom Tablature',
+    desc: 'Tablature UI with custom and simple text',
+    icon: 'icon-chord',
+  },
 ]
 
 export const chordTypeMenu: ToolType[] = [

@@ -1,0 +1,98 @@
+.tablature-element {
+  padding: 4px;
+  flex-direction: column;
+  position: relative;
+  box-sizing: border-box;
+
+  &:hover,
+  &:active,
+  &:focus {
+    .tablature-element__btns {
+      opacity: 1;
+    }
+  }
+}
+
+.tablature-element--horizontal {
+  .tablature-element__svg-wrapper {
+    flex-direction: row;
+  }
+  .tablature-element__svg-trigger {
+    flex-direction: column;
+  }
+}
+
+.tablature-element--editable {
+  .tablature-element__content {
+    display: block;
+  }
+  .tablature-element__svg-trigger {
+    display: flex;
+    gap: 2px;
+  }
+}
+
+.tablature-element__svg-wrapper {
+  display: flex;
+  flex-direction: column;
+  &:hover,
+  &:active,
+  &:focus {
+    .tablature-element__svg-trigger {
+      opacity: 1;
+    }
+  }
+}
+
+.tablature-element__svg-trigger {
+  background-color: $gray-0;
+  border-radius: 6px;
+  padding: 2px;
+  margin: 4px;
+  opacity: 0;
+  display: none;
+
+  > div {
+    flex: 1;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.2s ease-in-out;
+    &:hover {
+      background-color: $gray-1;
+    }
+  }
+}
+
+.tablature-element__svg {
+  flex: 1;
+  transition: background 0.2s ease-in-out;
+  border-radius: 0.8em;
+  &:hover {
+    background: $gray-0;
+  }
+}
+
+.tablature-element__content {
+  display: none;
+  background: $gray-0;
+  width: 90%;
+  border-radius: 1em;
+  padding: 4px 1em;
+  margin: 0.6em;
+  font-size: 0.9em;
+  transition: background 0.2s ease-in-out;
+  &:hover,
+  &:active,
+  &:focus {
+    background: $gray-0--hover;
+  }
+}
+
+.tablature-element__btns {
+  z-index: 1;
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}

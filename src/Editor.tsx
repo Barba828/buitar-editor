@@ -15,6 +15,7 @@ import {
   InlineChordPopover,
   ABCElement,
   AlphaTabElement,
+  TablatureElement,
 } from '~chord'
 // import { SuspenseElement } from './components/elements/suspense-element'
 import { CheckListItemElement } from './components/elements/check-list-item'
@@ -36,77 +37,37 @@ const Editor = () => {
         {
           text: '撒打算打算',
         },
+      ],
+    },
+    {
+      type: 'block-tablature',
+      horizontal: false,
+      // size: 5,
+      children: [
         {
-          text: 'asd',
-          chord: {
-            taps: {
-              chordType: {
-                key: 334,
-                tone: 9,
-                over: 9,
-                tag: 'm7(b5)',
-                name: 'half-diminished seventh chord',
-                constitute: ['1', '3b', '5b', '7b'],
-                name_zh: '半减七和弦',
-              },
-              chordTaps: [
-                {
-                  tone: 9,
-                  pitch: 9,
-                  note: 'A',
-                  interval: 6,
-                  level: 2,
-                  string: 2,
-                  grade: 0,
-                  index: 17,
-                },
-                {
-                  tone: 3,
-                  pitch: 15,
-                  note: 'Eb',
-                  interval: '3b',
-                  level: 3,
-                  string: 3,
-                  grade: 1,
-                  index: 35,
-                },
-                {
-                  tone: 9,
-                  pitch: 21,
-                  note: 'A',
-                  interval: 6,
-                  level: 3,
-                  string: 4,
-                  grade: 2,
-                  index: 53,
-                },
-                {
-                  tone: 0,
-                  pitch: 24,
-                  note: 'C',
-                  interval: 1,
-                  level: 4,
-                  string: 5,
-                  grade: 1,
-                  index: 69,
-                },
-                {
-                  tone: 7,
-                  pitch: 31,
-                  note: 'G',
-                  interval: 5,
-                  level: 4,
-                  string: 6,
-                  grade: 3,
-                  index: 88,
-                },
-              ],
+          type: 'paragraph',
+          children: [
+            {
+              text: '',
             },
-          },
+          ],
         },
-        {
-          text: ' ',
-        },
+        // {
+        //   type: 'paragraph',
+        //   children: [
+        //     {
+        //       text: '3-5 5-6',
+        //     },
+        //   ],
+        // },
+        // {
+        //   type: 'paragraph',
+        //   children: [
+        //     {
+        //       text: '3-2 5-3',
+        //     },
+        //   ],
+        // },
       ],
     },
     // {
@@ -246,6 +207,8 @@ const Element = (props: RenderElementProps) => {
   switch (element.type) {
     case 'inline-chord':
       return <InlineChordElement {...props} />
+    case 'block-tablature':
+      return <TablatureElement {...props} />
     case 'abc-tablature':
       return <ABCElement {...props} />
     case 'gtp-previewer':

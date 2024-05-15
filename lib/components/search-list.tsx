@@ -1,9 +1,9 @@
 import { useState, useMemo, useCallback, useEffect, FC, memo } from 'react'
-import { getChordListByStr, getTapsByChordName, strsToTaps } from './utils'
+import { getChordListByStr, getTapsByChordName, strsToTaps } from '~chord/utils'
 import { BoardChord, pitchToChordType } from '@buitar/to-guitar'
 import { List } from '~common'
-import { TapsListItem } from './components/taps-item'
-import { ChordNameItem } from './components/chord-name-item'
+import { TapsListItem } from '~chord/components/taps-item'
+import { ChordNameItem } from '~chord/components/chord-name-item'
 
 interface SearchListProps {
   search: string

@@ -93,7 +93,7 @@ export const ABCElement: FC<RenderElementProps> = memo(({ attributes, element, c
 
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(abcNotation).then(() => {
-      toast('复制成功')
+      toast('Cupied Text')
     })
   }, [abcNotation])
 

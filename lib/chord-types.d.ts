@@ -1,3 +1,4 @@
+import type { Descendant } from 'slate'
 import type { BoardChord } from '@buitar/to-guitar'
 import type { TablatureInstrument } from 'abcjs'
 
@@ -12,6 +13,16 @@ export type CustomInlineChordElement = {
   type: 'inline-chord'
   children?: Descendant[]
 } & CustomChordType
+
+export type CustomBlockTablatureElement = {
+  type: 'block-tablature'
+  children?: Descendant[]
+  title?: string
+  stringNums?: number
+  size?: number
+  horizontal?: boolean
+  range?: [number, number]
+}
 
 export type ABCTablatureElement = {
   type: 'abc-tablature'

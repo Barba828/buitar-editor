@@ -3,8 +3,8 @@ import { Range, Editor, Transforms, BaseOperation } from 'slate'
 import { ReactEditor, useSlate } from 'slate-react'
 import { type BoardChord } from '@buitar/to-guitar'
 import { Popover, type CommonPopoverProps } from '~common'
-import { getChordName } from './utils'
-import { inputTags, ChordInputTag } from './config'
+import { getChordName } from '~chord/utils'
+import { inputTags, ChordInputTag } from '~chord//config'
 import { SearchList } from './search-list'
 
 export const InlineChordPopover: FC<CommonPopoverProps> = memo((props) => {

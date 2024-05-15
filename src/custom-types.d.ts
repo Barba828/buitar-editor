@@ -6,6 +6,7 @@ import type {
   CustomInlineChordElement,
   ABCTablatureElement,
   GTPPreviewerElement,
+  CustomBlockTablatureElement,
   CustomChordText,
   ChordEditor,
 } from '~chord'
@@ -84,19 +85,23 @@ export type CustomElement =
   | LinkElement
   | ListItemElement
   | OrderedListElement
-  | ABCTablatureElement
   | CustomInlineChordElement
+  | CustomBlockTablatureElement
+  | ABCTablatureElement
   | GTPPreviewerElement
 
-export type SetNodesParameters = Parameters<typeof Transforms.setNodes>;
-export type SetNodesOptions = SetNodesParameters[2];
-export type InsertNodesParameters = Parameters<typeof Transforms.insertNodes>;
-export type InsertNodesOptions = InsertNodesParameters[2];
+export type SetNodesParameters = Parameters<typeof Transforms.setNodes>
+export type SetNodesOptions = SetNodesParameters[2]
+export type InsertNodesParameters = Parameters<typeof Transforms.insertNodes>
+export type InsertNodesOptions = InsertNodesParameters[2]
 
 export type BuitarEditor = {
   isList?: (format: BlockFormat) => boolean
   toggleMark?: (format: TextFormat) => void
-  toggleBlock?: (element: Partial<CustomElement>, option?: SetNodesOptions & { toActive?: boolean }) => void
+  toggleBlock?: (
+    element: Partial<CustomElement>,
+    option?: SetNodesOptions & { toActive?: boolean }
+  ) => void
   insertBlock?: (element: Partial<CustomElement>, option?: InsertNodesOptions) => void
 }
 
