@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@buitar/svg-chord':
-    specifier: ^0.0.7
-    version: link:../Buitar/packages/svg-chord
+    specifier: ^0.0.8
+    version: 0.0.8
   '@buitar/to-guitar':
     specifier: ^0.0.14
     version: 0.0.14
@@ -307,6 +307,10 @@ packages:
       '@babel/helper-validator-identifier': 7.22.20
       to-fast-properties: 2.0.0
     dev: true
+
+  /@buitar/svg-chord@0.0.8:
+    resolution: {integrity: sha512-fBuBYltPUwfdFAEodyV7Mzwj4A9vC56umcG6ZMge1tayIo4nM2h2L/WjkM0DWMQGxWVkLgslWmyvfgC85Jgq5Q==}
+    dev: false
 
   /@buitar/to-guitar@0.0.14:
     resolution: {integrity: sha512-IDFVBaqjyqakXn0aZYyqMl5wDftFdaTF7FUiIT3HSByJ3D1aq8jLpl2KhXgWEp1YSN6Lh0UlhYpZVmB/YNjqJw==}

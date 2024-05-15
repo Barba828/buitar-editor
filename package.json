@@ -22,7 +22,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@buitar/svg-chord": "^0.0.7",
+    "@buitar/svg-chord": "^0.0.8",
     "@buitar/to-guitar": "^0.0.14",
     "@coderline/alphatab": "^1.3.0-alpha.1015",
     "abcjs": "^6.3.0",
