@@ -1,6 +1,9 @@
+.check-list-item {
+  position: relative;
+}
+
 .check-list-item--checked {
   .check-list-item__text {
-    margin-left: 0.75em;
     text-decoration: line-through;
     opacity: 0.6;
   }
@@ -15,4 +18,8 @@
   &:focus {
     outline: none;
   }
+}
+
+.check-list-item__placeholder {
+  left: 1.8em;
 }

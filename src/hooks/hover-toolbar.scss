@@ -3,27 +3,31 @@
   display: flex;
   align-items: center;
   transform: translate(-100%, -50%);
-}
-
-.hover-toolbar-wrapper {
-  border-radius: 4px;
-  gap: 4px;
-  display: flex;
   transition: all 0.1s ease-in-out;
 }
 
+.hover-toolbar-wrapper {
+  border-radius: 6px;
+  display: flex;
+  transition: all 0.1s ease-in-out;
+  // border: 1px solid $gray-0;
+  padding: 2px;
+  background: $gray-0;
+}
+
 .hover-toolbar-item {
-  padding: 2px 4px;
+  padding: 0 2px;
   border-radius: 4px;
   cursor: pointer;
   opacity: 0.8;
   transition: background 0.3s ease;
+  font-size: 20px;
   &:hover {
-    background: $gray-0--hover;
+    background: $gray-1;
   }
 }
 
 .hover-toolbar-side {
-  width: 10px;
+  width: 4px;
   height: inherit;
 }

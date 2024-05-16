@@ -7,11 +7,14 @@
   padding: 4vw;
   box-sizing: border-box;
   outline: unset;
-  background-color: #1a1a1a;
+  background-color: $white-1;
 }
 
-@media (prefers-color-scheme: light) {
-  .slate-editable {
-    background-color: #f9f9f9;
+.slate-element-selected {
+  background-color: $blue-active-bg;
+  border-radius: 6px;
+  .slate-element-selected {
+    background-color: unset;
+    border-radius: unset;
   }
 }

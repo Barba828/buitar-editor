@@ -1,11 +1,12 @@
-import { FC, useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Editor, Path, Transforms, Element as SlateElement } from 'slate'
-import { ReactEditor } from 'slate-react'
-import { getClosetElement, getParentNode, Icon } from '~common'
-
-import './hover-toolbar.scss'
+import { ReactEditor, useFocused } from 'slate-react'
+import { getParentNode, Icon } from '~common'
 import { CustomElement } from '../custom-types'
 import { NEED_WRAP_TYPES } from '../plugins/config'
+import { getClosetElement } from '../utils/get-closet-element'
+
+import './hover-toolbar.scss'
 
 /**
  * 获取当前element的rect
@@ -52,6 +53,18 @@ const getClosetRect = (editor: Editor, targetNode: CustomElement) => {
 export const useHoverToolbar = (editor: Editor) => {
   const [rect, setRect] = useState<DOMRect | null>(null)
   const [closestElement, setClosestElement] = useState<CustomElement | null>(null)
+  const focused = useFocused()
+
+  const cleanHoverToolbar = useCallback(() => {
+    setRect(null)
+    setClosestElement(null)
+  }, [])
+
+  useEffect(() => {
+    if (!focused && rect) {
+      cleanHoverToolbar()
+    }
+  }, [focused])
 
   const onMouseOver: React.MouseEventHandler<HTMLDivElement> = useCallback(
     (event) => {
@@ -66,20 +79,14 @@ export const useHoverToolbar = (editor: Editor) => {
           setClosestElement(targetNode)
           setRect(targetRect)
         } else {
-          setClosestElement(null)
-          setRect(null)
+          cleanHoverToolbar()
         }
       }
     },
     [editor]
   )
 
-  const onInput = useCallback(() => {
-    setRect(null)
-    setClosestElement(null)
-  }, [])
-
-  const handleInsert = () => {
+  const handleInsert = useCallback(() => {
     if (!closestElement) {
       return
     }
@@ -94,37 +101,42 @@ export const useHoverToolbar = (editor: Editor) => {
     const newSelection = Editor.end(editor, newPath)
     Transforms.select(editor, newSelection)
     ReactEditor.focus(editor)
-  }
+  }, [editor, closestElement])
 
-  const hideToolbar = useCallback(() => {
-    setRect(null)
-  }, [])
+  const handleSelect = useCallback(() => {
+    if (!closestElement) {
+      return
+    }
+    const path = ReactEditor.findPath(editor, closestElement)
+    Transforms.select(editor, path)
+  }, [editor, closestElement])
 
   useEffect(() => {
-    window.addEventListener('scroll', hideToolbar)
+    window.addEventListener('scroll', cleanHoverToolbar)
     return () => {
-      window.removeEventListener('scroll', hideToolbar)
+      window.removeEventListener('scroll', cleanHoverToolbar)
     }
-  }, [hideToolbar])
+  }, [cleanHoverToolbar])
 
-  const HoverToolbar: FC = () => {
+  const hoverToolbar = useMemo(() => {
     if (!rect) return null
+
     return (
       <div className="hover-toolbar" style={{ top: rect.top + rect.height / 2, left: rect.left }}>
         <div className="hover-toolbar-wrapper">
           <Icon name="icon-add-plus" className="hover-toolbar-item" onClick={handleInsert}></Icon>
-          <Icon name="icon-drag" className="hover-toolbar-item"></Icon>
+          <Icon name="icon-drag" className="hover-toolbar-item" onClick={handleSelect}></Icon>
         </div>
         <div className="hover-toolbar-side"></div>
       </div>
     )
-  }
+  }, [handleInsert, handleSelect, rect])
 
   return {
     attrs: {
       onMouseOver,
-      onInput,
+      onInput: cleanHoverToolbar,
     },
-    HoverToolbar,
+    hoverToolbar,
   }
 }

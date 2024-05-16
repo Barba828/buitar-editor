@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { flatTypeArr, ToolType } from '../tools.config'
+import { flatTypeArr, ToolType } from '../components/tools.config'
 import { useSlateStatic } from 'slate-react'
 import { Ancestor, NodeEntry, Element as SlateElement } from 'slate'
 import { getSelectedNode } from '~common'
@@ -12,17 +12,20 @@ export const useBlockType = () => {
 
   useEffect(() => {
     const selectedNode = getSelectedNode(editor)
-    if (!selectedNode) {
-      return
+    if (node === selectedNode) return
+    if (selectedNode) {
+      const block = selectedNode[0] as SlateElement
+      const format = block?.type || 'paragraph'
+      const blockType = flatTypeArr.find((item) => item.key === format)
+      if (blockType) {
+        setNode(selectedNode)
+        setBlockType(blockType)
+      }
+    } else {
+      setBlockType(flatTypeArr[0])
+      setNode(undefined)
     }
-    const block = selectedNode[0] as SlateElement
-    const format = block?.type || 'paragraph'
-    const blockType = flatTypeArr.find((item) => item.key === format)
-    if (blockType) {
-      setNode(selectedNode)
-      setBlockType(blockType)
-    }
-  }, [editor, selection])
+  }, [selection]) // 仅观察「selection」
 
   return { selectType: blockType, selectNode: node }
 }

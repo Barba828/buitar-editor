@@ -65,15 +65,18 @@ export const toggleBlock = (
 
   if (!isActive) {
     switch (format) {
+      // LIST_TYPES
       case 'numbered-list':
       case 'bulleted-list':
         newProperties = {
           type: 'list-item',
         }
         break
+      // OTHER_WRAP_TYPES
       case 'block-quote':
       case 'toogle-list':
       case 'abc-tablature':
+      case 'block-tablature':
         newProperties = {
           type: 'paragraph',
         }
@@ -162,6 +165,7 @@ export const insertBlock = (
     case 'block-quote':
     case 'toogle-list':
     case 'abc-tablature':
+    case 'block-tablature':
       newProperties = {
         ...element,
         children: [
@@ -176,7 +180,7 @@ export const insertBlock = (
       break
   }
   Transforms.insertNodes(editor, newProperties, options)
-  
+
   /** 位于行首删除当前wrap内行 */
   if (isEmptyLine) {
     Transforms.removeNodes(editor, { at: currentPath.slice(0, -1) })

@@ -22,6 +22,10 @@
   }
 }
 
+.alpha-tab-element--active {
+  background: $blue-active-bg;
+}
+
 .alpha-tab-element--fullscreen {
   position: fixed;
   top: 0;
@@ -54,6 +58,9 @@
   top: 6px;
   right: 6px;
   transition: opacity 0.3s ease-in-out;
+  .icon-close {
+    color: $red-1;
+  }
 }
 
 .alpha-tab-element__trigger {

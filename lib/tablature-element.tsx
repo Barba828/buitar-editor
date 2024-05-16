@@ -1,6 +1,12 @@
 import { type SvgChordPoint, SvgTablature } from '@buitar/svg-chord'
-import { FC, memo, useCallback, useEffect, useMemo, useState } from 'react'
-import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react'
+import { FC, HTMLProps, memo, useCallback, useEffect, useMemo, useState } from 'react'
+import {
+  ReactEditor,
+  RenderElementProps,
+  useFocused,
+  useSelected,
+  useSlateStatic,
+} from 'slate-react'
 import { CustomBlockTablatureElement } from '~chord'
 import { ButtonGroup, getElementText, useIsLightMode } from '~common'
 import { Transforms } from 'slate'
@@ -31,8 +37,8 @@ const tranverseTablaturePoints = (text: string, stringNums: number = 6) => {
 const BLOCK_TABLATURE_MAX_SIZE = 10
 const BLOCK_TABLATURE_MIN_SIZE = 0
 
-export const TablatureElement: FC<RenderElementProps> = memo(
-  ({ attributes, element, children }) => {
+export const TablatureElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>> = memo(
+  ({ attributes, element, children, ...divProps }) => {
     const {
       stringNums = 6,
       size = 5,
@@ -43,6 +49,8 @@ export const TablatureElement: FC<RenderElementProps> = memo(
     const [points, setPoints] = useState<SvgChordPoint[]>([])
     const isLight = useIsLightMode()
     const editor = useSlateStatic()
+    const selected = useSelected()
+    const focused = useFocused()
 
     useEffect(() => {
       const text = getElementText(element)
@@ -76,14 +84,17 @@ export const TablatureElement: FC<RenderElementProps> = memo(
       () =>
         [
           title && { icon: <div className="inline-taps-item__tools-title">{title}</div> },
-          { icon: 'icon-edit-pencil', onClick: () => setEditable(!editable) },
+          {
+            icon: !editable ? 'icon-edit-pencil' : 'icon-done',
+            onClick: () => setEditable(!editable),
+          },
           { icon: 'icon-rotate-cw', onClick: handleRotate },
           size > BLOCK_TABLATURE_MIN_SIZE && {
             icon: 'icon-remove-minus',
             onClick: handleDecreaseSize,
           },
           size < BLOCK_TABLATURE_MAX_SIZE && { icon: 'icon-add-plus', onClick: handleIncreaseSize },
-          { icon: 'icon-remove', onClick: handleRemove },
+          { icon: 'icon-close', onClick: handleRemove },
         ].filter((it) => !!it),
       [editable, handleDecreaseSize, handleIncreaseSize, handleRemove, handleRotate, size, title]
     )
@@ -101,14 +112,17 @@ export const TablatureElement: FC<RenderElementProps> = memo(
 
     return (
       <div
+        {...attributes}
+        {...divProps}
         className={cx(
           'tablature-element',
           'flex-center',
           'tablature-element',
           { 'tablature-element--horizontal': horizontal },
-          { 'tablature-element--editable': editable }
+          { 'tablature-element--editable': editable },
+          { 'tablature-element--active': selected && !focused },
+          divProps.className
         )}
-        {...attributes}
         spellCheck={false}
         contentEditable={editable}
         suppressContentEditableWarning

@@ -84,12 +84,12 @@ export const InlineTapsItem = ({ attributes, element, children }: RenderElementP
       [
         { icon: <div className="inline-taps-item__tools-title">{title}</div> },
         { icon: 'icon-edit-pencil', onClick: handleEdit },
-        { icon: 'icon-title', onClick: handleChangeConcise },
+        { icon: 'icon-title', onClick: handleChangeConcise, checked: !concise },
         size > INLINE_TAPS_MIN_SIZE && { icon: 'icon-remove-minus', onClick: handleDecreaseSize },
         size < INLINE_TAPS_MAX_SIZE && { icon: 'icon-add-plus', onClick: handleIncreaseSize },
-        { icon: 'icon-remove', onClick: handleRemove },
+        { icon: 'icon-close', onClick: handleRemove },
       ].filter((it) => !!it),
-    [handleChangeConcise, handleDecreaseSize, handleEdit, handleIncreaseSize, handleRemove, size, title]
+    [concise, handleChangeConcise, handleDecreaseSize, handleEdit, handleIncreaseSize, handleRemove, size, title]
   )
 
   if (!taps) {
@@ -102,16 +102,17 @@ export const InlineTapsItem = ({ attributes, element, children }: RenderElementP
       data-taps-title={title}
       contentEditable={false}
       suppressContentEditableWarning
-      className="inline-taps-item__wrapper"
+      className={cx('inline-taps-item__wrapper', {
+        'inline-taps-item__wrapper--active': selected && focused,
+      })}
     >
       <SvgChord
         points={transToSvgPoints(taps.chordTaps)}
         size={10 * (5 + Number(size) || 1)}
         concise={concise}
         title={title}
-        className={cx('inline-taps-item', selected && focused && 'inline-taps-item--active')}
+        className={cx('inline-taps-item')}
         color={isLight ? '#444' : '#ddd'}
-        style={{ padding: concise ? undefined : '2px 3px' }}
       />
       {!readOnly && (
         <div className="inline-taps-item__tools">

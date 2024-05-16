@@ -1,7 +1,7 @@
 import { Transforms, Element as SlateElement, Editor, Range, Point, NodeEntry } from 'slate'
 import { getSelectedBlockActive, isBlockActive } from '~common'
 import { ToggleListElement } from '../custom-types'
-import { NONE_RICH_WRAP_TYPES, ONLY_ONE_WRAP_TYPES } from './config'
+import { NEED_WRAP_TYPES, NONE_RICH_WRAP_TYPES, ONLY_ONE_WRAP_TYPES } from './config'
 
 const SHORTCUTS: Record<string, BlockFormat> = {
   '*': 'bulleted-list',
@@ -119,7 +119,6 @@ export const withOnChange = (editor: Editor) => {
     if (isCleaned) {
       return
     }
-
     deleteBackward(...args)
   }
 
@@ -220,14 +219,23 @@ const cleanTypeOnStart = (editor: Editor) => {
     return
   }
 
-  /**当前block不是paragraph，则重置为paragraph */
-  Transforms.setNodes(editor, { type: 'paragraph' }, { at: path })
-  /**当前是list-item，则解除ol/ul包裹 */
-  if (block.type === 'list-item') {
+  if (NEED_WRAP_TYPES.includes(block.type)) {
+    /**当前 block 属于 NEED_WRAP_TYPES，则 unwrapNodes */
     Transforms.unwrapNodes(editor, {
-      match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && !!editor.isList?.(n.type),
+      at: path,
       split: true,
     })
+  } else {
+    /**当前 block 为非 paragraph 富文本，则重置为paragraph */
+    Transforms.setNodes(editor, { type: 'paragraph' }, { at: path })
+    /**当前是list-item，则解除该item项ol/ul包裹 */
+    if (block.type === 'list-item') {
+      Transforms.unwrapNodes(editor, {
+        at: path,
+        match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && !!editor.isList?.(n.type),
+        split: true,
+      })
+    }
   }
   return true
 }

@@ -4,7 +4,7 @@ import { useSlate } from 'slate-react'
 import { InputChordPopover } from '~chord'
 import { getSelectedRect, Icon, isBlockActive, isMarkActive, Popover } from '~common'
 import { TextTypePopover } from './text-type-popover'
-import { useBlockType } from './utils/use-block-type'
+import { useBlockType } from '../hooks/use-block-type'
 import { ONLY_ONE_WRAP_TYPES } from '../plugins/config'
 import cx from 'classnames'
 

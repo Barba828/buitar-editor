@@ -4,8 +4,9 @@ export const LIST_TYPES: BlockFormat[] = ['numbered-list', 'bulleted-list']
 export const OTHER_WRAP_TYPES: BlockFormat[] = [
   'toogle-list',
   'block-quote',
-  'abc-tablature',
   'code-block',
+  'abc-tablature',
+  'block-tablature',
 ]
 /**全部需要包裹的类型 */
 export const NEED_WRAP_TYPES: BlockFormat[] = [...LIST_TYPES, ...OTHER_WRAP_TYPES]

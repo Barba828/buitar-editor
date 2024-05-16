@@ -8,6 +8,8 @@ import {
   DefaultElement,
   RenderLeafProps,
   DefaultLeaf,
+  useFocused,
+  useSelected,
 } from 'slate-react'
 import {
   InlineChordElement,
@@ -17,13 +19,14 @@ import {
   AlphaTabElement,
   TablatureElement,
 } from '~chord'
-// import { SuspenseElement } from './components/elements/suspense-element'
 import { CheckListItemElement } from './components/elements/check-list-item'
 import { SelectToolbar } from './components/select-toolbar'
 import { SlashToolbar } from './components/slash-toolbar'
 import { ToggleListItem } from './components/elements/toggle-list-item'
 import { useHoverToolbar } from './hooks/use-hover-toolbar'
+import { Placeholder } from './components/placeholder/custom-placeholder.tsx'
 import { withPlugins } from './plugins'
+import cx from 'classnames'
 
 import './Editor.scss'
 
@@ -39,37 +42,20 @@ const Editor = () => {
         },
       ],
     },
-    {
-      type: 'block-tablature',
-      horizontal: false,
-      // size: 5,
-      children: [
-        {
-          type: 'paragraph',
-          children: [
-            {
-              text: '',
-            },
-          ],
-        },
-        // {
-        //   type: 'paragraph',
-        //   children: [
-        //     {
-        //       text: '3-5 5-6',
-        //     },
-        //   ],
-        // },
-        // {
-        //   type: 'paragraph',
-        //   children: [
-        //     {
-        //       text: '3-2 5-3',
-        //     },
-        //   ],
-        // },
-      ],
-    },
+    // {
+    //   type: 'block-tablature',
+    //   horizontal: false,
+    //   children: [
+    //     {
+    //       type: 'paragraph',
+    //       children: [
+    //         {
+    //           text: '',
+    //         },
+    //       ],
+    //     },
+    //   ],
+    // },
     // {
     //   type: 'paragraph',
     //   children: [
@@ -174,7 +160,7 @@ const Editor = () => {
     // ...(yellowJson as Descendant[]),
     // ...(ABCJson as Descendant[]),
   ])
-  const { attrs: hoverToolbarAttrs, HoverToolbar } = useHoverToolbar(editor)
+  const { attrs: hoverToolbarAttrs, hoverToolbar } = useHoverToolbar(editor)
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleChange = useCallback((_value: Descendant[]) => {
@@ -196,15 +182,26 @@ const Editor = () => {
       <SelectToolbar />
       <SlashToolbar />
 
-      <HoverToolbar />
+      {hoverToolbar}
       <InlineChordPopover />
     </Slate>
   )
 }
 
 const Element = (props: RenderElementProps) => {
+  const selected = useSelected()
+  const focused = useFocused()
+  const isSelected = selected && !focused
+  const className = cx(isSelected && 'slate-element-selected')
   const { element, attributes, children } = props
   switch (element.type) {
+    case 'paragraph':
+      return (
+        <p {...attributes} className={className}>
+          {children}
+          <Placeholder element={element} />
+        </p>
+      )
     case 'inline-chord':
       return <InlineChordElement {...props} />
     case 'block-tablature':
@@ -214,35 +211,86 @@ const Element = (props: RenderElementProps) => {
     case 'gtp-previewer':
       return <AlphaTabElement {...props} />
     case 'check-list-item':
-      return <CheckListItemElement {...props} />
-    case 'block-quote':
-      return <blockquote {...attributes}>{children}</blockquote>
+      return <CheckListItemElement {...props} className={className} />
     case 'toogle-list':
-      return <ToggleListItem {...props} />
+      return <ToggleListItem {...props} className={className} />
+    case 'block-quote':
+      return (
+        <blockquote {...attributes} className={className}>
+          {children}
+          <Placeholder element={element} />
+        </blockquote>
+      )
     case 'list-item':
-      return <li {...attributes}>{children}</li>
+      return (
+        <li {...attributes} className={className}>
+          {children}
+          <Placeholder element={element} />
+        </li>
+      )
     case 'numbered-list':
       return (
         <ol start={element.start} {...attributes}>
           {children}
+          <Placeholder element={element} />
         </ol>
       )
     case 'bulleted-list':
-      return <ul {...attributes}>{children}</ul>
+      return (
+        <ul {...attributes}>
+          {children}
+          <Placeholder element={element} />
+        </ul>
+      )
     case 'heading-1':
-      return <h1 {...attributes}>{children}</h1>
+      return (
+        <h1 {...attributes} className={className}>
+          {children}
+          <Placeholder element={element} />
+        </h1>
+      )
     case 'heading-2':
-      return <h2 {...attributes}>{children}</h2>
+      return (
+        <h2 {...attributes} className={className}>
+          {children}
+          <Placeholder element={element} />
+        </h2>
+      )
     case 'heading-3':
-      return <h3 {...attributes}>{children}</h3>
+      return (
+        <h3 {...attributes} className={className}>
+          {children}
+          <Placeholder element={element} />
+        </h3>
+      )
     case 'heading-4':
-      return <h4 {...attributes}>{children}</h4>
+      return (
+        <h4 {...attributes} className={className}>
+          {children}
+          <Placeholder element={element} />
+        </h4>
+      )
     case 'heading-5':
-      return <h5 {...attributes}>{children}</h5>
+      return (
+        <h5 {...attributes} className={className}>
+          {children}
+          <Placeholder element={element} />
+        </h5>
+      )
     case 'heading-6':
-      return <h6 {...attributes}>{children}</h6>
+      return (
+        <h6 {...attributes} className={className}>
+          {children}
+          <Placeholder element={element} />
+        </h6>
+      )
     default:
-      return <DefaultElement {...props} />
+      return (
+        <DefaultElement {...props}>
+          {children}
+          <Placeholder element={element} />
+        </DefaultElement>
+      )
   }
 }
 

@@ -18,6 +18,7 @@
 .inline-taps-item__wrapper {
   position: relative;
   display: inline-block;
+  margin: 0.2rem 0.5rem;
   &:hover,
   &:active {
     .inline-taps-item__tools {
@@ -27,6 +28,11 @@
       transition: all 0.3s ease-in-out;
       top: -30px;
       pointer-events: all;
+    }
+  }
+  &.inline-taps-item__wrapper--active {
+    .inline-taps-item {
+      background: $blue-active-bg !important;
     }
   }
 }
@@ -39,7 +45,7 @@
   height: 30px;
   left: 50%;
   pointer-events: none;
-  .icon-remove {
+  .icon-close {
     color: $red-1;
   }
 }
@@ -54,12 +60,11 @@
   vertical-align: middle;
   border-radius: 8px;
   background: $gray-0;
-  margin: 0.2rem 0.5rem;
   cursor: pointer;
   user-select: none;
+  padding: 0.2em;
   &:hover,
-  &:active,
-  &--active {
+  &:active {
     background: $gray-0--hover;
   }
 }
@@ -81,7 +86,7 @@
 .fixed-taps-item__fixed {
   position: absolute;
   display: inline-block;
-  bottom: 1.2rem;
+  bottom: 1.2em;
   left: 50%;
   transform: translateX(-50%);
   border-radius: 8px;
@@ -109,5 +114,5 @@
 .popover-taps-item__fixed {
   opacity: 0;
   transition: opacity 0.3s ease;
-  background: $gray-1;
+  background: $gray-0;
 }

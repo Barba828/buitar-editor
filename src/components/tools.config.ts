@@ -157,3 +157,8 @@ export const chordTypeMenu: ToolType[] = [
 ]
 
 export const flatTypeArr = [...textTypeMenu, ...tablatureTypeMenu, ...chordTypeMenu]
+
+export const textTypeMenuMap = new Map<string, ToolType>();
+textTypeMenu.forEach(tool => {
+  textTypeMenuMap.set(tool.key, tool);
+});

@@ -1,8 +1,9 @@
-import { FC, useCallback, useEffect, useState } from 'react'
+import { FC, HTMLProps, useCallback, useEffect, useState } from 'react'
 import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react'
 import { ToggleListElement, CustomElement } from '../../custom-types'
 import { Transforms, Element as SlateElement } from 'slate'
 import { Icon } from '~common'
+import cx from 'classnames'
 
 import './toggle-list-item.scss'
 
@@ -13,7 +14,12 @@ const deepFirstChildren = (node: SlateElement): CustomElement => {
   return node
 }
 
-export const ToggleListItem: FC<RenderElementProps> = ({ attributes, children, element }) => {
+export const ToggleListItem: FC<RenderElementProps & HTMLProps<HTMLDivElement>> = ({
+  attributes,
+  children,
+  element,
+  ...divProps
+}) => {
   const { extend = true } = element as ToggleListElement
   const editor = useSlateStatic()
   const [firstChildHeight, setFirstChildHeight] = useState(0)
@@ -38,7 +44,7 @@ export const ToggleListItem: FC<RenderElementProps> = ({ attributes, children, e
   }, [editor, element, extend])
 
   return (
-    <div className="toggle-list-item" {...attributes}>
+    <div {...divProps} {...attributes} className={cx('toggle-list-item', divProps.className)}>
       <div
         className="toggle-list-item__content"
         style={{ height: firstChildHeight && !extend ? `${firstChildHeight}px` : 'auto' }}

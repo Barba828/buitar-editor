@@ -1,8 +1,10 @@
 .tablature-element {
-  padding: 4px;
+  padding: 2px;
+  margin: 2px 0;
   flex-direction: column;
   position: relative;
   box-sizing: border-box;
+  border-radius: 1em;
 
   &:hover,
   &:active,
@@ -30,6 +32,11 @@
     display: flex;
     gap: 2px;
   }
+}
+
+.tablature-element--active {
+  background: $blue-active-bg;
+  transition: background 0.2s ease-in-out;
 }
 
 .tablature-element__svg-wrapper {
@@ -95,4 +102,7 @@
   right: 6px;
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
+  .icon-close {
+    color: $red-1;
+  }
 }

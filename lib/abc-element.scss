@@ -15,6 +15,10 @@
   }
 }
 
+.abc-editor--active {
+  background: $blue-active-bg;
+}
+
 .abc-editor__content {
   background-color: $gray-1;
   padding: 1em;
@@ -46,6 +50,9 @@
   &.abc-editor__left-btns {
     right: unset;
     left: 6px;
+  }
+  .icon-close {
+    color: $red-1;
   }
 }
 .abc-editor__trigger {
@@ -80,7 +87,7 @@
     background-color: unset;
     border-radius: 0;
     box-sizing: border-box;
-    
+
     padding: 40px 20px 0;
     margin-right: 4px;
     border-right: 1px solid $gray-1;

@@ -9,6 +9,7 @@
   user-select: none;
   overflow: hidden;
 }
+
 .btn-groups__btn {
   padding: 4px 6px;
   transition: all 0.3s ease-in-out;
@@ -20,4 +21,8 @@
   &:not(:last-child) {
       border-right: 1px solid $gray-0;
   }
+}
+
+.btn-groups__btn--active {
+  color: $blue-1;
 }
