@@ -27,6 +27,7 @@ export default defineConfig({
     alias: {
       '~chord': path.resolve(__dirname, './lib'),
       '~common': path.resolve(__dirname, './common'),
+      '~': path.resolve(__dirname, './src'),
     },
   },
   server: {

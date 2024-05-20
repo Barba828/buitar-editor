@@ -1,0 +1,1324 @@
+[
+    {
+        "type": "heading-1",
+        "children": [
+            {
+                "text": "Chord Card"
+            }
+        ]
+    },
+    {
+        "type": "heading-2",
+        "children": [
+            {
+                "text": "Inline Chord Card"
+            }
+        ]
+    },
+    {
+        "type": "paragraph",
+        "children": [
+            {
+                "text": "You can use "
+            },
+            {
+                "text": "-c",
+                "code": true
+            },
+            {
+                "text": " to quickly enter chord cards. For example, "
+            },
+            {
+                "text": "-cAm",
+                "code": true
+            },
+            {
+                "text": " will display all Am chord cards, just like "
+            },
+            {
+                "type": "inline-chord",
+                "taps": {
+                    "chordType": {
+                        "key": 34,
+                        "tone": 9,
+                        "over": 9,
+                        "tag": "m",
+                        "name": "minor triad",
+                        "constitute": [
+                            "1",
+                            "3b",
+                            "5"
+                        ],
+                        "name_zh": "小三和弦"
+                    },
+                    "chordTaps": [
+                        {
+                            "tone": 9,
+                            "pitch": 9,
+                            "note": "A",
+                            "interval": 6,
+                            "level": 2,
+                            "string": 2,
+                            "grade": 0,
+                            "index": 17
+                        },
+                        {
+                            "tone": 4,
+                            "pitch": 16,
+                            "note": "E",
+                            "interval": 3,
+                            "level": 3,
+                            "string": 3,
+                            "grade": 2,
+                            "index": 36
+                        },
+                        {
+                            "tone": 9,
+                            "pitch": 21,
+                            "note": "A",
+                            "interval": 6,
+                            "level": 3,
+                            "string": 4,
+                            "grade": 2,
+                            "index": 53
+                        },
+                        {
+                            "tone": 0,
+                            "pitch": 24,
+                            "note": "C",
+                            "interval": 1,
+                            "level": 4,
+                            "string": 5,
+                            "grade": 1,
+                            "index": 69
+                        },
+                        {
+                            "tone": 4,
+                            "pitch": 28,
+                            "note": "E",
+                            "interval": 3,
+                            "level": 4,
+                            "string": 6,
+                            "grade": 0,
+                            "index": 85
+                        }
+                    ]
+                },
+                "concise": true,
+                "size": 1,
+                "children": [
+                    {
+                        "text": ""
+                    }
+                ]
+            },
+            {
+                "text": "."
+            }
+        ]
+    },
+    {
+        "type": "paragraph",
+        "children": [
+            {
+                "text": "And you can also use "
+            },
+            {
+                "text": "-x",
+                "code": true
+            },
+            {
+                "text": " to define the chord position yourself, for example, "
+            },
+            {
+                "text": "-xx0220x ",
+                "code": true
+            },
+            {
+                "text": "means "
+            },
+            {
+                "type": "inline-chord",
+                "taps": {
+                    "chordTaps": [
+                        {
+                            "tone": 9,
+                            "pitch": 9,
+                            "note": "A",
+                            "interval": 6,
+                            "level": 2,
+                            "string": 2,
+                            "grade": 0,
+                            "index": 17
+                        },
+                        {
+                            "tone": 4,
+                            "pitch": 16,
+                            "note": "E",
+                            "interval": 3,
+                            "level": 3,
+                            "string": 3,
+                            "grade": 2,
+                            "index": 36
+                        },
+                        {
+                            "tone": 9,
+                            "pitch": 21,
+                            "note": "A",
+                            "interval": 6,
+                            "level": 3,
+                            "string": 4,
+                            "grade": 2,
+                            "index": 53
+                        },
+                        {
+                            "tone": 11,
+                            "pitch": 23,
+                            "note": "B",
+                            "interval": 7,
+                            "level": 3,
+                            "string": 5,
+                            "grade": 0,
+                            "index": 68
+                        }
+                    ],
+                    "chordType": {
+                        "key": 25,
+                        "tone": 9,
+                        "over": 9,
+                        "tag": "sus2",
+                        "name": "suspended 2 chord",
+                        "constitute": [
+                            "1",
+                            "2",
+                            "5"
+                        ],
+                        "name_zh": "挂二和弦"
+                    }
+                },
+                "concise": true,
+                "size": 1,
+                "children": [
+                    {
+                        "text": ""
+                    }
+                ]
+            },
+            {
+                "text": " chord.Among them, "
+            },
+            {
+                "text": "-x",
+                "code": true
+            },
+            {
+                "text": " indicates the fingering position of the six strings, and "
+            },
+            {
+                "text": "x",
+                "code": true
+            },
+            {
+                "text": " indicates that the string is silent."
+            }
+        ]
+    },
+    {
+        "type": "paragraph",
+        "children": [
+            {
+                "text": "And Capital letters indicate more detailed content."
+            }
+        ]
+    },
+    {
+        "type": "bulleted-list",
+        "children": [
+            {
+                "type": "list-item",
+                "children": [
+                    {
+                        "text": "-cAm "
+                    },
+                    {
+                        "type": "inline-chord",
+                        "taps": {
+                            "chordType": {
+                                "key": 34,
+                                "tone": 9,
+                                "over": 9,
+                                "tag": "m",
+                                "name": "minor triad",
+                                "constitute": [
+                                    "1",
+                                    "3b",
+                                    "5"
+                                ],
+                                "name_zh": "小三和弦"
+                            },
+                            "chordTaps": [
+                                {
+                                    "tone": 9,
+                                    "pitch": 9,
+                                    "note": "A",
+                                    "interval": 6,
+                                    "level": 2,
+                                    "string": 2,
+                                    "grade": 0,
+                                    "index": 17
+                                },
+                                {
+                                    "tone": 4,
+                                    "pitch": 16,
+                                    "note": "E",
+                                    "interval": 3,
+                                    "level": 3,
+                                    "string": 3,
+                                    "grade": 2,
+                                    "index": 36
+                                },
+                                {
+                                    "tone": 9,
+                                    "pitch": 21,
+                                    "note": "A",
+                                    "interval": 6,
+                                    "level": 3,
+                                    "string": 4,
+                                    "grade": 2,
+                                    "index": 53
+                                },
+                                {
+                                    "tone": 0,
+                                    "pitch": 24,
+                                    "note": "C",
+                                    "interval": 1,
+                                    "level": 4,
+                                    "string": 5,
+                                    "grade": 1,
+                                    "index": 69
+                                },
+                                {
+                                    "tone": 4,
+                                    "pitch": 28,
+                                    "note": "E",
+                                    "interval": 3,
+                                    "level": 4,
+                                    "string": 6,
+                                    "grade": 0,
+                                    "index": 85
+                                }
+                            ]
+                        },
+                        "concise": true,
+                        "size": 1,
+                        "children": [
+                            {
+                                "text": ""
+                            }
+                        ]
+                    },
+                    {
+                        "text": ""
+                    }
+                ]
+            },
+            {
+                "type": "list-item",
+                "children": [
+                    {
+                        "text": "-CAm "
+                    },
+                    {
+                        "type": "inline-chord",
+                        "taps": {
+                            "chordType": {
+                                "key": 34,
+                                "tone": 9,
+                                "over": 9,
+                                "tag": "m",
+                                "name": "minor triad",
+                                "constitute": [
+                                    "1",
+                                    "3b",
+                                    "5"
+                                ],
+                                "name_zh": "小三和弦"
+                            },
+                            "chordTaps": [
+                                {
+                                    "tone": 9,
+                                    "pitch": 9,
+                                    "note": "A",
+                                    "interval": 6,
+                                    "level": 2,
+                                    "string": 2,
+                                    "grade": 0,
+                                    "index": 17
+                                },
+                                {
+                                    "tone": 4,
+                                    "pitch": 16,
+                                    "note": "E",
+                                    "interval": 3,
+                                    "level": 3,
+                                    "string": 3,
+                                    "grade": 2,
+                                    "index": 36
+                                },
+                                {
+                                    "tone": 9,
+                                    "pitch": 21,
+                                    "note": "A",
+                                    "interval": 6,
+                                    "level": 3,
+                                    "string": 4,
+                                    "grade": 2,
+                                    "index": 53
+                                },
+                                {
+                                    "tone": 0,
+                                    "pitch": 24,
+                                    "note": "C",
+                                    "interval": 1,
+                                    "level": 4,
+                                    "string": 5,
+                                    "grade": 1,
+                                    "index": 69
+                                },
+                                {
+                                    "tone": 4,
+                                    "pitch": 28,
+                                    "note": "E",
+                                    "interval": 3,
+                                    "level": 4,
+                                    "string": 6,
+                                    "grade": 0,
+                                    "index": 85
+                                }
+                            ]
+                        },
+                        "concise": false,
+                        "size": 1,
+                        "children": [
+                            {
+                                "text": ""
+                            }
+                        ]
+                    },
+                    {
+                        "text": ""
+                    }
+                ]
+            },
+            {
+                "type": "list-item",
+                "children": [
+                    {
+                        "text": "-xx02210 "
+                    },
+                    {
+                        "type": "inline-chord",
+                        "taps": {
+                            "chordTaps": [
+                                {
+                                    "tone": 9,
+                                    "pitch": 9,
+                                    "note": "A",
+                                    "interval": 6,
+                                    "level": 2,
+                                    "string": 2,
+                                    "grade": 0,
+                                    "index": 17
+                                },
+                                {
+                                    "tone": 4,
+                                    "pitch": 16,
+                                    "note": "E",
+                                    "interval": 3,
+                                    "level": 3,
+                                    "string": 3,
+                                    "grade": 2,
+                                    "index": 36
+                                },
+                                {
+                                    "tone": 9,
+                                    "pitch": 21,
+                                    "note": "A",
+                                    "interval": 6,
+                                    "level": 3,
+                                    "string": 4,
+                                    "grade": 2,
+                                    "index": 53
+                                },
+                                {
+                                    "tone": 0,
+                                    "pitch": 24,
+                                    "note": "C",
+                                    "interval": 1,
+                                    "level": 4,
+                                    "string": 5,
+                                    "grade": 1,
+                                    "index": 69
+                                },
+                                {
+                                    "tone": 4,
+                                    "pitch": 28,
+                                    "note": "E",
+                                    "interval": 3,
+                                    "level": 4,
+                                    "string": 6,
+                                    "grade": 0,
+                                    "index": 85
+                                }
+                            ],
+                            "chordType": {
+                                "key": 34,
+                                "tone": 9,
+                                "over": 9,
+                                "tag": "m",
+                                "name": "minor triad",
+                                "constitute": [
+                                    "1",
+                                    "3b",
+                                    "5"
+                                ],
+                                "name_zh": "小三和弦"
+                            }
+                        },
+                        "concise": true,
+                        "size": 1,
+                        "children": [
+                            {
+                                "text": ""
+                            }
+                        ]
+                    },
+                    {
+                        "text": ""
+                    }
+                ]
+            },
+            {
+                "type": "list-item",
+                "children": [
+                    {
+                        "text": "-Xx02210 "
+                    },
+                    {
+                        "type": "inline-chord",
+                        "taps": {
+                            "chordTaps": [
+                                {
+                                    "tone": 9,
+                                    "pitch": 9,
+                                    "note": "A",
+                                    "interval": 6,
+                                    "level": 2,
+                                    "string": 2,
+                                    "grade": 0,
+                                    "index": 17
+                                },
+                                {
+                                    "tone": 4,
+                                    "pitch": 16,
+                                    "note": "E",
+                                    "interval": 3,
+                                    "level": 3,
+                                    "string": 3,
+                                    "grade": 2,
+                                    "index": 36
+                                },
+                                {
+                                    "tone": 9,
+                                    "pitch": 21,
+                                    "note": "A",
+                                    "interval": 6,
+                                    "level": 3,
+                                    "string": 4,
+                                    "grade": 2,
+                                    "index": 53
+                                },
+                                {
+                                    "tone": 0,
+                                    "pitch": 24,
+                                    "note": "C",
+                                    "interval": 1,
+                                    "level": 4,
+                                    "string": 5,
+                                    "grade": 1,
+                                    "index": 69
+                                },
+                                {
+                                    "tone": 4,
+                                    "pitch": 28,
+                                    "note": "E",
+                                    "interval": 3,
+                                    "level": 4,
+                                    "string": 6,
+                                    "grade": 0,
+                                    "index": 85
+                                }
+                            ],
+                            "chordType": {
+                                "key": 34,
+                                "tone": 9,
+                                "over": 9,
+                                "tag": "m",
+                                "name": "minor triad",
+                                "constitute": [
+                                    "1",
+                                    "3b",
+                                    "5"
+                                ],
+                                "name_zh": "小三和弦"
+                            }
+                        },
+                        "concise": false,
+                        "size": 1,
+                        "children": [
+                            {
+                                "text": ""
+                            }
+                        ]
+                    },
+                    {
+                        "text": ""
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "children": [
+            {
+                "text": "Of course, all the chord-card functionality above is available via the input"
+            },
+            {
+                "text": "/",
+                "code": true
+            },
+            {
+                "text": " expand menu."
+            }
+        ],
+        "type": "paragraph"
+    },
+    {
+        "type": "paragraph",
+        "children": [
+            {
+                "text": ""
+            }
+        ]
+    },
+    {
+        "type": "heading-2",
+        "children": [
+            {
+                "text": "Fixed Chord Card"
+            }
+        ]
+    },
+    {
+        "type": "paragraph",
+        "children": [
+            {
+                "text": "When you enter text, you can also edit the floating chord card by selecting the text, just like "
+            },
+            {
+                "text": "this",
+                "chord": {
+                    "taps": {
+                        "chordType": {
+                            "key": 34,
+                            "tone": 11,
+                            "over": 11,
+                            "tag": "m",
+                            "name": "minor triad",
+                            "constitute": [
+                                "1",
+                                "3b",
+                                "5"
+                            ],
+                            "name_zh": "小三和弦"
+                        },
+                        "chordTaps": [
+                            {
+                                "tone": 11,
+                                "pitch": 11,
+                                "note": "B",
+                                "interval": 7,
+                                "level": 2,
+                                "string": 2,
+                                "grade": 2,
+                                "index": 19
+                            },
+                            {
+                                "tone": 6,
+                                "pitch": 18,
+                                "note": "Gb",
+                                "interval": "5b",
+                                "level": 3,
+                                "string": 3,
+                                "grade": 4,
+                                "index": 38
+                            },
+                            {
+                                "tone": 11,
+                                "pitch": 23,
+                                "note": "B",
+                                "interval": 7,
+                                "level": 3,
+                                "string": 4,
+                                "grade": 4,
+                                "index": 55
+                            },
+                            {
+                                "tone": 2,
+                                "pitch": 26,
+                                "note": "D",
+                                "interval": 2,
+                                "level": 4,
+                                "string": 5,
+                                "grade": 3,
+                                "index": 71
+                            },
+                            {
+                                "tone": 6,
+                                "pitch": 30,
+                                "note": "Gb",
+                                "interval": "5b",
+                                "level": 4,
+                                "string": 6,
+                                "grade": 2,
+                                "index": 87
+                            }
+                        ]
+                    }
+                },
+                "bold": true
+            },
+            {
+                "text": " .The content and functions are the same as the "
+            },
+            {
+                "text": "inline chord",
+                "bold": true
+            },
+            {
+                "text": " above, except that the cards are suspended over the text, so it is more suitable for editing some simple songs."
+            }
+        ]
+    },
+    {
+        "type": "toogle-list",
+        "children": [
+            {
+                "type": "paragraph",
+                "children": [
+                    {
+                        "text": "Yellow",
+                        "bold": true
+                    }
+                ]
+            },
+            {
+                "type": "paragraph",
+                "children": [
+                    {
+                        "text": "Look",
+                        "chord": {
+                            "taps": {
+                                "chordType": {
+                                    "key": 43,
+                                    "tone": 11,
+                                    "over": 11,
+                                    "tag": "",
+                                    "name": "major triad",
+                                    "constitute": [
+                                        "1",
+                                        "3",
+                                        "5"
+                                    ],
+                                    "name_zh": "大三和弦"
+                                },
+                                "chordTaps": [
+                                    {
+                                        "tone": 11,
+                                        "pitch": 11,
+                                        "note": "B",
+                                        "interval": 7,
+                                        "level": 2,
+                                        "string": 2,
+                                        "grade": 2,
+                                        "index": 19
+                                    },
+                                    {
+                                        "tone": 6,
+                                        "pitch": 18,
+                                        "note": "Gb",
+                                        "interval": "5b",
+                                        "level": 3,
+                                        "string": 3,
+                                        "grade": 4,
+                                        "index": 38
+                                    },
+                                    {
+                                        "tone": 11,
+                                        "pitch": 23,
+                                        "note": "B",
+                                        "interval": 7,
+                                        "level": 3,
+                                        "string": 4,
+                                        "grade": 4,
+                                        "index": 55
+                                    },
+                                    {
+                                        "tone": 3,
+                                        "pitch": 27,
+                                        "note": "Eb",
+                                        "interval": "3b",
+                                        "level": 4,
+                                        "string": 5,
+                                        "grade": 4,
+                                        "index": 72
+                                    },
+                                    {
+                                        "tone": 6,
+                                        "pitch": 30,
+                                        "note": "Gb",
+                                        "interval": "5b",
+                                        "level": 4,
+                                        "string": 6,
+                                        "grade": 2,
+                                        "index": 87
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "text": " at the stars, "
+                    },
+                    {
+                        "text": "Look",
+                        "chord": {
+                            "taps": {
+                                "chordType": {
+                                    "key": 43,
+                                    "tone": 11,
+                                    "over": 11,
+                                    "tag": "",
+                                    "name": "major triad",
+                                    "constitute": [
+                                        "1",
+                                        "3",
+                                        "5"
+                                    ],
+                                    "name_zh": "大三和弦"
+                                },
+                                "chordTaps": [
+                                    {
+                                        "tone": 11,
+                                        "pitch": 11,
+                                        "note": "B",
+                                        "interval": 7,
+                                        "level": 2,
+                                        "string": 2,
+                                        "grade": 2,
+                                        "index": 19
+                                    },
+                                    {
+                                        "tone": 6,
+                                        "pitch": 18,
+                                        "note": "Gb",
+                                        "interval": "5b",
+                                        "level": 3,
+                                        "string": 3,
+                                        "grade": 4,
+                                        "index": 38
+                                    },
+                                    {
+                                        "tone": 11,
+                                        "pitch": 23,
+                                        "note": "B",
+                                        "interval": 7,
+                                        "level": 3,
+                                        "string": 4,
+                                        "grade": 4,
+                                        "index": 55
+                                    },
+                                    {
+                                        "tone": 3,
+                                        "pitch": 27,
+                                        "note": "Eb",
+                                        "interval": "3b",
+                                        "level": 4,
+                                        "string": 5,
+                                        "grade": 4,
+                                        "index": 72
+                                    },
+                                    {
+                                        "tone": 6,
+                                        "pitch": 30,
+                                        "note": "Gb",
+                                        "interval": "5b",
+                                        "level": 4,
+                                        "string": 6,
+                                        "grade": 2,
+                                        "index": 87
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "text": " how they shine for "
+                    },
+                    {
+                        "text": "you",
+                        "chord": {
+                            "taps": {
+                                "chordType": {
+                                    "key": 43,
+                                    "tone": 6,
+                                    "over": 6,
+                                    "tag": "",
+                                    "name": "major triad",
+                                    "constitute": [
+                                        "1",
+                                        "3",
+                                        "5"
+                                    ],
+                                    "name_zh": "大三和弦"
+                                },
+                                "chordTaps": [
+                                    {
+                                        "tone": 6,
+                                        "pitch": 6,
+                                        "note": "Gb",
+                                        "interval": "5b",
+                                        "level": 2,
+                                        "string": 1,
+                                        "grade": 2,
+                                        "index": 2
+                                    },
+                                    {
+                                        "tone": 1,
+                                        "pitch": 13,
+                                        "note": "Db",
+                                        "interval": "2b",
+                                        "level": 3,
+                                        "string": 2,
+                                        "grade": 4,
+                                        "index": 21
+                                    },
+                                    {
+                                        "tone": 6,
+                                        "pitch": 18,
+                                        "note": "Gb",
+                                        "interval": "5b",
+                                        "level": 3,
+                                        "string": 3,
+                                        "grade": 4,
+                                        "index": 38
+                                    },
+                                    {
+                                        "tone": 10,
+                                        "pitch": 22,
+                                        "note": "Bb",
+                                        "interval": "7b",
+                                        "level": 3,
+                                        "string": 4,
+                                        "grade": 3,
+                                        "index": 54
+                                    },
+                                    {
+                                        "tone": 1,
+                                        "pitch": 25,
+                                        "note": "Db",
+                                        "interval": "2b",
+                                        "level": 4,
+                                        "string": 5,
+                                        "grade": 2,
+                                        "index": 70
+                                    },
+                                    {
+                                        "tone": 6,
+                                        "pitch": 30,
+                                        "note": "Gb",
+                                        "interval": "5b",
+                                        "level": 4,
+                                        "string": 6,
+                                        "grade": 2,
+                                        "index": 87
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "text": " ."
+                    }
+                ]
+            },
+            {
+                "type": "paragraph",
+                "children": [
+                    {
+                        "text": "And",
+                        "chord": {
+                            "taps": {
+                                "chordType": {
+                                    "key": 43,
+                                    "tone": 6,
+                                    "over": 6,
+                                    "tag": "",
+                                    "name": "major triad",
+                                    "constitute": [
+                                        "1",
+                                        "3",
+                                        "5"
+                                    ],
+                                    "name_zh": "大三和弦"
+                                },
+                                "chordTaps": [
+                                    {
+                                        "tone": 6,
+                                        "pitch": 6,
+                                        "note": "Gb",
+                                        "interval": "5b",
+                                        "level": 2,
+                                        "string": 1,
+                                        "grade": 2,
+                                        "index": 2
+                                    },
+                                    {
+                                        "tone": 1,
+                                        "pitch": 13,
+                                        "note": "Db",
+                                        "interval": "2b",
+                                        "level": 3,
+                                        "string": 2,
+                                        "grade": 4,
+                                        "index": 21
+                                    },
+                                    {
+                                        "tone": 6,
+                                        "pitch": 18,
+                                        "note": "Gb",
+                                        "interval": "5b",
+                                        "level": 3,
+                                        "string": 3,
+                                        "grade": 4,
+                                        "index": 38
+                                    },
+                                    {
+                                        "tone": 10,
+                                        "pitch": 22,
+                                        "note": "Bb",
+                                        "interval": "7b",
+                                        "level": 3,
+                                        "string": 4,
+                                        "grade": 3,
+                                        "index": 54
+                                    },
+                                    {
+                                        "tone": 1,
+                                        "pitch": 25,
+                                        "note": "Db",
+                                        "interval": "2b",
+                                        "level": 4,
+                                        "string": 5,
+                                        "grade": 2,
+                                        "index": 70
+                                    },
+                                    {
+                                        "tone": 6,
+                                        "pitch": 30,
+                                        "note": "Gb",
+                                        "interval": "5b",
+                                        "level": 4,
+                                        "string": 6,
+                                        "grade": 2,
+                                        "index": 87
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "text": " everything you "
+                    },
+                    {
+                        "text": "do",
+                        "chord": {
+                            "taps": {
+                                "chordType": {
+                                    "key": 43,
+                                    "tone": 4,
+                                    "over": 4,
+                                    "tag": "",
+                                    "name": "major triad",
+                                    "constitute": [
+                                        "1",
+                                        "3",
+                                        "5"
+                                    ],
+                                    "name_zh": "大三和弦"
+                                },
+                                "chordTaps": [
+                                    {
+                                        "tone": 4,
+                                        "pitch": 4,
+                                        "note": "E",
+                                        "interval": 3,
+                                        "level": 2,
+                                        "string": 1,
+                                        "grade": 0,
+                                        "index": 0
+                                    },
+                                    {
+                                        "tone": 11,
+                                        "pitch": 11,
+                                        "note": "B",
+                                        "interval": 7,
+                                        "level": 2,
+                                        "string": 2,
+                                        "grade": 2,
+                                        "index": 19
+                                    },
+                                    {
+                                        "tone": 4,
+                                        "pitch": 16,
+                                        "note": "E",
+                                        "interval": 3,
+                                        "level": 3,
+                                        "string": 3,
+                                        "grade": 2,
+                                        "index": 36
+                                    },
+                                    {
+                                        "tone": 8,
+                                        "pitch": 20,
+                                        "note": "Ab",
+                                        "interval": "6b",
+                                        "level": 3,
+                                        "string": 4,
+                                        "grade": 1,
+                                        "index": 52
+                                    },
+                                    {
+                                        "tone": 11,
+                                        "pitch": 23,
+                                        "note": "B",
+                                        "interval": 7,
+                                        "level": 3,
+                                        "string": 5,
+                                        "grade": 0,
+                                        "index": 68
+                                    },
+                                    {
+                                        "tone": 4,
+                                        "pitch": 28,
+                                        "note": "E",
+                                        "interval": 3,
+                                        "level": 4,
+                                        "string": 6,
+                                        "grade": 0,
+                                        "index": 85
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "text": " , Yeah’ they were all "
+                    },
+                    {
+                        "text": "Yellow",
+                        "chord": {
+                            "taps": {
+                                "chordType": {
+                                    "key": 43,
+                                    "tone": 4,
+                                    "over": 4,
+                                    "tag": "",
+                                    "name": "major triad",
+                                    "constitute": [
+                                        "1",
+                                        "3",
+                                        "5"
+                                    ],
+                                    "name_zh": "大三和弦"
+                                },
+                                "chordTaps": [
+                                    {
+                                        "tone": 4,
+                                        "pitch": 4,
+                                        "note": "E",
+                                        "interval": 3,
+                                        "level": 2,
+                                        "string": 1,
+                                        "grade": 0,
+                                        "index": 0
+                                    },
+                                    {
+                                        "tone": 11,
+                                        "pitch": 11,
+                                        "note": "B",
+                                        "interval": 7,
+                                        "level": 2,
+                                        "string": 2,
+                                        "grade": 2,
+                                        "index": 19
+                                    },
+                                    {
+                                        "tone": 4,
+                                        "pitch": 16,
+                                        "note": "E",
+                                        "interval": 3,
+                                        "level": 3,
+                                        "string": 3,
+                                        "grade": 2,
+                                        "index": 36
+                                    },
+                                    {
+                                        "tone": 8,
+                                        "pitch": 20,
+                                        "note": "Ab",
+                                        "interval": "6b",
+                                        "level": 3,
+                                        "string": 4,
+                                        "grade": 1,
+                                        "index": 52
+                                    },
+                                    {
+                                        "tone": 11,
+                                        "pitch": 23,
+                                        "note": "B",
+                                        "interval": 7,
+                                        "level": 3,
+                                        "string": 5,
+                                        "grade": 0,
+                                        "index": 68
+                                    },
+                                    {
+                                        "tone": 4,
+                                        "pitch": 28,
+                                        "note": "E",
+                                        "interval": 3,
+                                        "level": 4,
+                                        "string": 6,
+                                        "grade": 0,
+                                        "index": 85
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "text": " ."
+                    }
+                ]
+            }
+        ],
+        "extend": true
+    },
+    {
+        "children": [
+            {
+                "text": "And you can use it with popover, just like "
+            },
+            {
+                "text": "this",
+                "chord": {
+                    "taps": {
+                        "chordType": {
+                            "key": 433,
+                            "tone": 7,
+                            "over": 7,
+                            "tag": "7",
+                            "name": "seventh chord",
+                            "constitute": [
+                                "1",
+                                "3",
+                                "5",
+                                "7b"
+                            ],
+                            "name_zh": "属七和弦"
+                        },
+                        "chordTaps": [
+                            {
+                                "tone": 7,
+                                "pitch": 7,
+                                "note": "G",
+                                "interval": 5,
+                                "level": 2,
+                                "string": 1,
+                                "grade": 3,
+                                "index": 3
+                            },
+                            {
+                                "tone": 11,
+                                "pitch": 11,
+                                "note": "B",
+                                "interval": 7,
+                                "level": 2,
+                                "string": 2,
+                                "grade": 2,
+                                "index": 19
+                            },
+                            {
+                                "tone": 2,
+                                "pitch": 14,
+                                "note": "D",
+                                "interval": 2,
+                                "level": 3,
+                                "string": 3,
+                                "grade": 0,
+                                "index": 34
+                            },
+                            {
+                                "tone": 7,
+                                "pitch": 19,
+                                "note": "G",
+                                "interval": 5,
+                                "level": 3,
+                                "string": 4,
+                                "grade": 0,
+                                "index": 51
+                            },
+                            {
+                                "tone": 11,
+                                "pitch": 23,
+                                "note": "B",
+                                "interval": 7,
+                                "level": 3,
+                                "string": 5,
+                                "grade": 0,
+                                "index": 68
+                            },
+                            {
+                                "tone": 5,
+                                "pitch": 29,
+                                "note": "F",
+                                "interval": 4,
+                                "level": 4,
+                                "string": 6,
+                                "grade": 1,
+                                "index": 86
+                            }
+                        ]
+                    },
+                    "popover": true
+                },
+                "bold": true
+            },
+            {
+                "text": " ."
+            }
+        ],
+        "type": "paragraph"
+    }
+]

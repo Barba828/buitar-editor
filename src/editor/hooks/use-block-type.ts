@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { flatTypeArr, ToolType } from '../components/tools.config'
+import { flatTypeArr, flatTypeMap, ToolType } from '~/editor/tools.config'
 import { useSlateStatic } from 'slate-react'
 import { Ancestor, NodeEntry, Element as SlateElement } from 'slate'
 import { getSelectedNode } from '~common'
@@ -16,7 +16,7 @@ export const useBlockType = () => {
     if (selectedNode) {
       const block = selectedNode[0] as SlateElement
       const format = block?.type || 'paragraph'
-      const blockType = flatTypeArr.find((item) => item.key === format)
+      const blockType = flatTypeMap.get(format)
       if (blockType) {
         setNode(selectedNode)
         setBlockType(blockType)

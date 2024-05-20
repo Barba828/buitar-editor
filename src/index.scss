@@ -4,8 +4,8 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #1a1a1a;
+  color: $gray-10;
+  background-color: $white-1;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -28,11 +28,11 @@
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: $purple-2;
   text-decoration: inherit;
 }
 a:hover {
-  color: #535bf2;
+  color: $purple-2--hover;
 }
 
 body {
@@ -51,31 +51,21 @@ h1 {
 button {
   border-radius: 8px;
   border: 1px solid transparent;
-  padding: 0.6em 1.2em;
+  padding: 0.3em 0.6em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  color: $gray-8;
+  background-color: $gray-1;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: all 0.2s ease-in-out;
+  margin: 0 2px;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: $purple-2;
+  background-color: $gray-1--hover;
 }
 button:focus,
 button:focus-visible {
   outline: unset;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
 }

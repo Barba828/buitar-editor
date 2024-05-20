@@ -1,6 +1,6 @@
 import { Transforms, Element as SlateElement, Editor, Range, Point, NodeEntry } from 'slate'
 import { getSelectedBlockActive, isBlockActive } from '~common'
-import { ToggleListElement } from '../custom-types'
+import { ToggleListElement } from '~/custom-types'
 import { NEED_WRAP_TYPES, NONE_RICH_WRAP_TYPES, ONLY_ONE_WRAP_TYPES } from './config'
 
 const SHORTCUTS: Record<string, BlockFormat> = {

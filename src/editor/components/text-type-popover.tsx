@@ -2,7 +2,7 @@ import { memo, useEffect, FC, useState, useCallback, useMemo } from 'react'
 import { useSlate } from 'slate-react'
 import { getSelectedRect, Popover, List, ListItem, type CommonPopoverProps  } from '~common'
 
-import { textTypeMenu, tablatureTypeMenu, type ToolType } from './tools.config'
+import { textTypeMenu, tablatureTypeMenu, type ToolType } from '~/editor/tools.config'
 
 export const TextTypePopover: FC<CommonPopoverProps> = memo(
   ({ visible = true, onVisibleChange }) => {

@@ -1,5 +1,6 @@
 .slate-custom-placeholder {
   position: absolute;
   top: 0px;
-  left: 0px;
+  user-select: none;
+  pointer-events: none;
 }

@@ -2,7 +2,7 @@ import { Editor, Element as SlateElement, Transforms, Path } from 'slate'
 import { getSelectedNode, isBlockActive, isMarkActive } from '~common'
 import { LIST_TYPES, NEED_WRAP_TYPES, ONLY_ONE_WRAP_TYPES, OTHER_WRAP_TYPES } from './config'
 import { ReactEditor } from 'slate-react'
-import { InsertNodesOptions, SetNodesOptions } from '../custom-types'
+import { InsertNodesOptions, SetNodesOptions } from '~/custom-types'
 
 export const isListFunc = (format: BlockFormat) => LIST_TYPES.includes(format)
 

@@ -6,15 +6,25 @@ Based on slate.js
 
 ## buglist
 - [x] block-quoto删除后会有两层paragraph
-- [ ] 从上至下select失效
+- [x] 从上至下select失效
+- [ ] Toggle List 的 HoverToolbar 会定位到包裹组件
+- [ ] placeholder在输入中文时不会消失
+- [ ] selected高亮逻辑，在失焦时都显示，比如说点击Popover，点击HoverToolbar
 
 ## todolist
+
+### function
 - [x] focused/selected高亮
 - [ ] 快捷键toggle
 - [ ] Tab键
-- [ ] cv选择块
-- [ ] placeholder
+- [ ] ctrl a选择块，cv
+- [x] placeholder
+- [ ] readonly
+- [ ] color
+### utils
+- [ ] save/share
+- [ ] print
 
 ## feature
 - [x] GTP tablature
-- [] ABC previewer & player
+- [ ] ABC previewer & player

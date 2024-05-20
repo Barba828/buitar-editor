@@ -1,8 +1,7 @@
 import { FC, HTMLProps } from 'react'
-import { useEmptySelected } from '~common'
 import { Transforms, Element as SlateElement } from 'slate'
 import { RenderElementProps, useSlateStatic, useReadOnly, ReactEditor } from 'slate-react'
-import { type CheckListItemElement as CheckListItemElementType } from '../../custom-types'
+import { type CheckListItemElement as CheckListItemElementType } from '~/custom-types'
 
 import cx from 'classnames'
 import './check-list-item.scss'
@@ -16,9 +15,8 @@ export const CheckListItemElement: FC<RenderElementProps & HTMLProps<HTMLDivElem
 }) => {
   const editor = useSlateStatic()
   const readOnly = useReadOnly()
-  const isEmptyElementSelected = useEmptySelected(element)
   const { checked } = element as CheckListItemElementType
-
+  
   return (
     <div
       {...attributes}

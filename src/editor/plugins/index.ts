@@ -4,7 +4,7 @@ import { withOnChange } from './with-on-change'
 import { withToggle } from './with-toggle'
 import { withValidation } from './with-validation'
 
-import { CustomEditor } from '../custom-types'
+import { CustomEditor } from '../../custom-types'
 
 const plugins = [withHistory, withToggle, withOnChange, withValidation, withChords]
 

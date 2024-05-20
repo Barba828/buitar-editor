@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Editor, Path, Transforms, Element as SlateElement } from 'slate'
+import { Editor, Path, Transforms, Element as SlateElement, Range } from 'slate'
 import { ReactEditor, useFocused } from 'slate-react'
 import { getParentNode, Icon } from '~common'
-import { CustomElement } from '../custom-types'
-import { NEED_WRAP_TYPES } from '../plugins/config'
-import { getClosetElement } from '../utils/get-closet-element'
+import { CustomElement } from '~/custom-types'
+import { NEED_WRAP_TYPES } from '~/editor/plugins/config'
+import { getClosetElement } from '~/editor/utils/get-closet-element'
+import { debounce } from '~common/utils/debounce'
 
 import './hover-toolbar.scss'
 
@@ -22,7 +23,7 @@ const getClosetRect = (editor: Editor, targetNode: CustomElement) => {
       ...rect,
       top: rect.top,
       height: rect.height || 40,
-      left: rect.left - 10,
+      left: rect.left - 16,
     }
   }
   if (targetNode.type === 'gtp-previewer' || NEED_WRAP_TYPES.includes(targetNode.type)) {
@@ -67,24 +68,32 @@ export const useHoverToolbar = (editor: Editor) => {
   }, [focused])
 
   const onMouseOver: React.MouseEventHandler<HTMLDivElement> = useCallback(
-    (event) => {
+    debounce((event) => {
       if (event.target) {
         const targetNode = getClosetElement(editor, event.target)?.[0] as SlateElement
         if (!targetNode) {
           return
         }
-
         const targetRect = getClosetRect(editor, targetNode)
-        if (targetRect) {
+        
+        if (targetRect && targetNode !== closestElement) {
           setClosestElement(targetNode)
           setRect(targetRect)
-        } else {
+        } else if (closestElement) {
           cleanHoverToolbar()
         }
       }
-    },
-    [editor]
+    }, 16),
+    [cleanHoverToolbar, editor]
   )
+
+  const onSelectionChange = useCallback(() => {
+    const { selection } = editor
+    if (!selection || !Range.isCollapsed(selection)) {
+      return
+    }
+    cleanHoverToolbar()
+  }, [cleanHoverToolbar, editor])
 
   const handleInsert = useCallback(() => {
     if (!closestElement) {
@@ -135,7 +144,7 @@ export const useHoverToolbar = (editor: Editor) => {
   return {
     attrs: {
       onMouseOver,
-      onInput: cleanHoverToolbar,
+      onSelectionChange,
     },
     hoverToolbar,
   }

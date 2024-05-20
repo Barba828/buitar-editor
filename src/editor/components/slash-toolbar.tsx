@@ -8,10 +8,10 @@ import {
   chordTypeMenu,
   flatTypeArr,
   type ToolType,
-} from './tools.config'
+} from '~/editor/tools.config'
 
 import './slash-toolbar.scss'
-import { NONE_RICH_WRAP_TYPES } from '../plugins/config'
+import { NONE_RICH_WRAP_TYPES } from '~/editor/plugins/config'
 
 export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
   const editor = useSlate()

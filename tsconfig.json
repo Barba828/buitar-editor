@@ -18,7 +18,9 @@
       "~chord": ["./lib"],
       "~chord/*": ["./lib/*"],
       "~common": ["./common"],
-      "~common/*": ["./common/*"]
+      "~common/*": ["./common/*"],
+      "~": ["./src"],
+      "~/*": ["./src/*"]
     },
 
     /* Linting */
