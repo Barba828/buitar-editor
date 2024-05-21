@@ -32,6 +32,14 @@
   }
 }
 
+.side-bar__item__title {
+  width: 0;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .side-bar__item__icons {
   opacity: 0;
   pointer-events: none;

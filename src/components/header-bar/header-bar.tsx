@@ -8,7 +8,9 @@ export const HeaderBar: FC<
   HTMLProps<HTMLDivElement> & { extend?: boolean; onTriggerExtend?: () => void }
 > = ({ extend, onTriggerExtend, ...props }) => {
   const { updateFile, addFile, doc } = useFilesContext()!
-  const printFile = useCallback(() => {}, [])
+  const printFile = useCallback(() => {
+    window.print()
+  }, [])
   const saveFile = useCallback(() => {
     if (doc) {
       updateFile()
@@ -23,7 +25,7 @@ export const HeaderBar: FC<
   }, [doc])
 
   return (
-    <div className="header-bar flex-center" {...props}>
+    <div className="header-bar flex-center print-hide" {...props}>
       <div className="flex-center" onClick={onTriggerExtend}>
         <Icon
           style={{ opacity: 0.8 }}

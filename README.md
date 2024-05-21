@@ -20,11 +20,18 @@ Based on slate.js
 - [ ] ctrl a选择块，cv
 - [x] placeholder
 - [ ] readonly
-- [ ] color
+- [ ] font color
+- [ ] code block
+- [ ] image
+- [ ] link
+
 ### utils
-- [ ] save/share
-- [ ] print
+- [x] save
+- [x] print
+- [ ] share
 
 ## feature
-- [x] GTP tablature
-- [ ] ABC previewer & player
+- [x] GTP previewer
+- [x] GTP player
+- [x] ABC previewer
+- [ ] ABC player

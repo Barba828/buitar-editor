@@ -4,14 +4,16 @@ import { HeaderBar } from '~/components/header-bar/header-bar'
 import { useState } from 'react'
 import { FilesProvider, useFilesContext } from '~/utils/use-files-context'
 
+import './App.scss'
+
 const App = () => {
   const [siderbarVisible, setSiderbarVisible] = useState(true)
 
   return (
     <FilesProvider>
-      <div style={{ display: 'flex' }}>
+      <div className='buitar-editor'>
         <SideBar extend={siderbarVisible}></SideBar>
-        <div style={{ flex: 1, height: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <div className="buitar-content">
           <HeaderBar
             extend={siderbarVisible}
             onTriggerExtend={() => setSiderbarVisible(!siderbarVisible)}
@@ -27,7 +29,7 @@ const EditorView = () => {
   const { doc } = useFilesContext()!
 
   return (
-    <div style={{ flex: 1, overflowY: 'scroll' }}>
+    <div className='buitar-editor__editor'>
       <Editor defaultValue={doc?.values}></Editor>
     </div>
   )

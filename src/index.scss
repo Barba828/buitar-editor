@@ -69,3 +69,9 @@ button:focus,
 button:focus-visible {
   outline: unset;
 }
+
+@media print {
+  .print-hide {
+    display: none;
+  }
+}

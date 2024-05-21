@@ -90,6 +90,7 @@ const Editor: FC<{ defaultValue?: Descendant[] }> = ({ defaultValue }) => {
       onSelectionChange={onSelectionChange}
     >
       <Editable
+        id="slate-editable"
         className="slate-editable"
         onMouseOver={onMouseOver}
         renderElement={Element}

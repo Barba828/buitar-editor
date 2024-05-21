@@ -7,6 +7,6 @@ declare global {
   interface Window {
     editor?: Editor
     slate?: EditorInterface
-    dbManager?: IndexedDBManager
+    fileDbManager?: IndexedDBManager
   }
 }

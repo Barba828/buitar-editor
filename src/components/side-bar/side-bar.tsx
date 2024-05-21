@@ -25,7 +25,7 @@ export const SideBar: FC<
             doc?.id === item.id && 'side-bar__item--active'
           )}
         >
-          {item.title}
+          <div className='side-bar__item__title'> {item.title}</div>
           <div className="side-bar__item__icons flex-center">
             <Icon name="icon-close-circle" onClick={() => deleteFile(item.id)}></Icon>
           </div>
@@ -36,7 +36,7 @@ export const SideBar: FC<
   )
 
   return (
-    <div className={cx('side-bar', extend && 'side-bar--extend')} {...props}>
+    <div className={cx('side-bar', 'print-hide', extend && 'side-bar--extend')} {...props}>
       <a
         className={cx('side-bar__item', 'side-bar__item--github', 'flex-center')}
         href="https://github.com/Barba828/buitar-editor"
@@ -44,7 +44,7 @@ export const SideBar: FC<
         <h2>Github</h2>
       </a>
 
-      <div className={cx('side-bar__item', 'flex-center')} onClick={() => addFile}>
+      <div className={cx('side-bar__item', 'flex-center')} onClick={() => addFile()}>
         New Files...
         <Icon name="icon-add-plus" style={{ fontSize: '1.5em', opacity: 0.6 }}></Icon>
       </div>

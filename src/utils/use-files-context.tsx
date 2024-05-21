@@ -1,5 +1,5 @@
 import { createContext, FC, ReactNode, useCallback, useContext, useEffect, useState } from 'react'
-import { dbManager, FileData } from './indexed-files'
+import { fileDbManager, FileData, initFileList } from './indexed-files'
 import { getTitle } from '~/editor/utils/get-title'
 
 interface FilesContextType {
@@ -21,8 +21,8 @@ export const FilesProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [doc, setDoc] = useState<FileData>()
 
   const readFiles = useCallback(async () => {
-    await dbManager.open()
-    const list = await dbManager.getAllData()
+    await fileDbManager.open()
+    const list = await fileDbManager.getAllData()
     setFileList(list)
     return list
   }, [])
@@ -51,7 +51,7 @@ export const FilesProvider: FC<{ children: ReactNode }> = ({ children }) => {
         title,
         values,
       } as FileData
-      dbManager.addData(newFile)
+      fileDbManager.addData(newFile)
       await readFiles()
       setDoc(newFile)
     },
@@ -73,7 +73,7 @@ export const FilesProvider: FC<{ children: ReactNode }> = ({ children }) => {
         title,
         values: values,
       }
-      dbManager.updateData(newDoc)
+      fileDbManager.updateData(newDoc)
       setDoc(newDoc)
     }
     await readFiles()
@@ -81,7 +81,7 @@ export const FilesProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   const deleteFile = useCallback(
     async (id: FileData['id']) => {
-      dbManager.deleteDataById(id)
+      fileDbManager.deleteDataById(id)
       await readFiles()
       setDoc(undefined)
       if (window.editor) {
@@ -101,11 +101,16 @@ export const FilesProvider: FC<{ children: ReactNode }> = ({ children }) => {
   )
 
   useEffect(() => {
-    readFiles().then((_list) => {
-      if (_list.length) {
-        setDoc(_list[0])
-      }
-    })
+    const initList = () => {
+      readFiles().then((_list) => {
+        if (_list.length) {
+          setDoc(_list[0])
+        } else {
+          initFileList().then(() => initList())
+        }
+      })
+    }
+    initList()
   }, [readFiles])
 
   const value = {

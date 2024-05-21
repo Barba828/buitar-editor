@@ -1,0 +1,24 @@
+.buitar-content {
+  flex: 1;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.buitar-editor {
+  display: flex;
+}
+
+.buitar-editor__editor {
+  flex: 1;
+  overflow-y: scroll;
+}
+
+@media print {
+  .buitar-editor__editor {
+    overflow-y: visible;
+  }
+  @page {
+    margin: 0; // 隐藏页眉页脚
+  }
+}
