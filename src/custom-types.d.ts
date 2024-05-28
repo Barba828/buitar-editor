@@ -113,6 +113,8 @@ export type CustomText = {
   code?: boolean
   underlined?: boolean
   strike?: boolean
+  link?: string
+  highlight?: boolean
   text: string
 } & CustomChordText
 

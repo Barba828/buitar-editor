@@ -112,6 +112,7 @@ export const SearchList: FC<SearchListProps> = memo(
             lists={customChordTapList}
             renderItem={(taps) => <TapsListItem taps={taps} size={120} />}
             onItemClick={onTapItemClick}
+            className="max-h-64"
           ></List>
         )
       )
@@ -121,6 +122,7 @@ export const SearchList: FC<SearchListProps> = memo(
           lists={chordTapList}
           renderItem={(taps) => <TapsListItem taps={taps} />}
           onItemClick={onTapItemClick}
+          className="max-h-64"
         ></List>
       )
     } else if (chordList?.length) {
@@ -129,6 +131,7 @@ export const SearchList: FC<SearchListProps> = memo(
           lists={chordList}
           onItemClick={onChordItemClick}
           renderItem={(chordName) => <ChordNameItem chordName={chordName} />}
+          className="max-h-64"
         ></List>
       )
     }

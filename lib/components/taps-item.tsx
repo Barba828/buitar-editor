@@ -143,7 +143,6 @@ export const FixedTapsItem = ({ leaf, children }: RenderLeafProps) => {
         title={title}
         className={cx('fixed-taps-item__fixed', popover && 'popover-taps-item__fixed')}
         color={isLight ? '#444' : '#ddd'}
-        style={{ padding: concise ? undefined : '2px 3px' }}
       />
       <span contentEditable={!readOnly} suppressContentEditableWarning>
         {children}

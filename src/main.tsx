@@ -5,6 +5,8 @@ import { fileDbManager} from '~/utils/indexed-files.ts'
 import App from './App.tsx'
 import './index.scss'
 
+import '~common/styles/tailwind.css'
+
 fileDbManager.open()
 
 window.slate = slate

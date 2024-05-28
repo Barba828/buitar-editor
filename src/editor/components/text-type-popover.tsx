@@ -54,8 +54,9 @@ export const TextTypePopover: FC<CommonPopoverProps> = memo(
         rect={rect}
         onVisibleChange={onVisibleChange}
         onClose={() => setRect(null)}
+        className='w-64'
       >
-        <List nestedLists={nestedList} renderItem={renderItem} onItemClick={onItemClick}></List>
+        <List className='max-h-96' nestedLists={nestedList} renderItem={renderItem} onItemClick={onItemClick}></List>
       </Popover>
     )
   }

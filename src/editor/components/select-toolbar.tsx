@@ -3,18 +3,24 @@ import { Editor, Range } from 'slate'
 import { useSlate } from 'slate-react'
 import { InputChordPopover } from '~chord'
 import { getSelectedRect, Icon, isBlockActive, isMarkActive, Popover } from '~common'
-import { TextTypePopover } from './text-type-popover'
+import { TextTypePopover } from '~/editor/components/text-type-popover'
+import { LinkTextPopover } from '~/editor/components/link-text-popover'
 import { useBlockType } from '~/editor/hooks/use-block-type'
 import { ONLY_ONE_WRAP_TYPES } from '~/editor/plugins/config'
 import cx from 'classnames'
 
 import './select-toolbar.scss'
 
+const defaultPopoverVisible = {
+  textType: false,
+  link: false,
+  chord: false,
+}
+
 export const SelectToolbar = () => {
   const [rect, setRect] = useState<DOMRect | null>(null)
   const [visible, setVisible] = useState<boolean>(false)
-  const [chordPopoverVisible, setChordPopoverVisible] = useState<boolean>(false)
-  const [textPopoverVisible, setTextPopoverVisible] = useState<boolean>(false)
+  const [popoverVisibleMap, setPopoverVisibleMap] = useState(defaultPopoverVisible)
   const editor = useSlate()
   const { selection } = editor
 
@@ -27,8 +33,7 @@ export const SelectToolbar = () => {
         selection && !Range.isCollapsed(selection) && Editor.string(editor, selection).length > 0
       )
     )
-    chordPopoverVisible && setChordPopoverVisible(false)
-    textPopoverVisible && setTextPopoverVisible(false)
+    setPopoverVisibleMap(defaultPopoverVisible)
   }, [editor, selection])
 
   /**显示toolbar位置 */
@@ -44,18 +49,18 @@ export const SelectToolbar = () => {
     setRect(selectedRect)
   }, [editor, visible, selection])
 
+  const handlePopoverVisibleChange = useCallback(
+    (key: keyof typeof defaultPopoverVisible) => {
+      const map = { ...defaultPopoverVisible, [key]: !popoverVisibleMap[key] }
+      setPopoverVisibleMap(map)
+    },
+    [popoverVisibleMap]
+  )
+
   /**当前展示是否是基本文本Tool */
   const isBasicToolbar = useMemo(() => {
     return isBlockActive(editor, ONLY_ONE_WRAP_TYPES)
   }, [editor, selection])
-
-  const cleanInputChord = useCallback(() => {
-    setChordPopoverVisible(false)
-    if (isMarkActive(editor, 'chord')) {
-      editor.removeMark('chord')
-      return
-    }
-  }, [editor])
 
   const cleanFormat = useCallback(() => {
     editor.toggleBlock?.({ type: selectType.key as BlockFormat }, { toActive: false })
@@ -76,7 +81,7 @@ export const SelectToolbar = () => {
         <div className="toolbar-menu-group">
           <div
             className="toolbar-menu-item"
-            onMouseDown={() => setTextPopoverVisible(!textPopoverVisible)}
+            onMouseDown={() => handlePopoverVisibleChange('textType')}
           >
             {selectType.title}
           </div>
@@ -107,29 +112,21 @@ export const SelectToolbar = () => {
         </div>
         {!isBasicToolbar && (
           <div className="toolbar-menu-group">
-            <div
-              className={cx(
-                'toolbar-menu-item',
-                isMarkActive(editor, 'chord') && 'toolbar-menu-item--active'
-              )}
-              onMouseDown={() => setChordPopoverVisible(!chordPopoverVisible)}
-            >
+            <FormatButton format="link" onMouseDown={() => handlePopoverVisibleChange('link')}>
+              <Icon name="icon-link-break" />
+              <Icon name="icon-right" className="toolbar-menu-item__right" />
+            </FormatButton>
+            <FormatButton format="chord" onMouseDown={() => handlePopoverVisibleChange('chord')}>
               <Icon name="icon-chord" />
-            </div>
-            <FormatChordButton option={'concise'}>
-              <Icon name="icon-title" />
-            </FormatChordButton>
-            <FormatChordButton option={'popover'}>
-              <Icon name="icon-popover" />
-            </FormatChordButton>
-            <FormatChordButton option={''} onClick={cleanInputChord}>
-              <Icon name="icon-remove" />
-            </FormatChordButton>
+              <Icon name="icon-right" className="toolbar-menu-item__right" />
+            </FormatButton>
           </div>
         )}
       </Popover>
-      <TextTypePopover visible={textPopoverVisible} onVisibleChange={setTextPopoverVisible} />
-      <InputChordPopover visible={chordPopoverVisible} onVisibleChange={setChordPopoverVisible} />
+
+      <TextTypePopover visible={popoverVisibleMap['textType']} />
+      <LinkTextPopover visible={popoverVisibleMap['link']}></LinkTextPopover>
+      <InputChordPopover visible={popoverVisibleMap['chord']} />
     </>
   )
 }
@@ -148,40 +145,7 @@ const FormatButton: FC<{ format: TextFormat } & HTMLProps<HTMLDivElement>> = ({
   return (
     <div
       className={cx('toolbar-menu-item', active && 'toolbar-menu-item--active')}
-      onMouseDown={onMouseDown}
-      {...props}
-    >
-      {children}
-    </div>
-  )
-}
-
-const FormatChordButton: FC<{ option: string } & HTMLProps<HTMLDivElement>> = ({
-  option,
-  children,
-  ...props
-}) => {
-  const editor = useSlate()
-  const marks = Editor.marks(editor)
-  const active = marks?.chord ? (marks.chord as never)?.[option] : false
-
-  const onMouseDown: MouseEventHandler<HTMLDivElement> = useCallback(
-    (e) => {
-      e.preventDefault()
-      const chord = Editor.marks(editor)?.['chord']
-      Editor.addMark(editor, 'chord', { ...chord, [option]: !active })
-    },
-    [active, editor, option]
-  )
-
-  if (!marks?.chord) {
-    return null
-  }
-
-  return (
-    <div
-      className={cx('toolbar-menu-item', active && 'toolbar-menu-item--active')}
-      onMouseDown={onMouseDown}
+      onMouseDown={props.onMouseDown ? props.onMouseDown : onMouseDown}
       {...props}
     >
       {children}

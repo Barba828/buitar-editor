@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   transform: translate(-100%, -50%);
-  transition: all 0.1s ease-in-out;
+  transition: all 0.1s linear;
 }
 
 .hover-toolbar-wrapper {

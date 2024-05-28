@@ -1,5 +1,5 @@
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
-import { Descendant, Transforms, createEditor } from 'slate'
+import { Descendant, Transforms, Range, createEditor } from 'slate'
 import {
   Slate,
   Editable,
@@ -11,6 +11,8 @@ import {
   useFocused,
   useSelected,
   ReactEditor,
+  useSlate,
+  useSlateStatic,
 } from 'slate-react'
 import {
   InlineChordElement,
@@ -24,15 +26,16 @@ import { CheckListItemElement } from '~/editor/components/elements/check-list-it
 import { SelectToolbar } from '~/editor/components/select-toolbar'
 import { SlashToolbar } from '~/editor/components/slash-toolbar'
 import { ToggleListItem } from '~/editor/components/elements/toggle-list-item'
-import { useHoverToolbar } from '~/editor/hooks/use-hover-toolbar'
 import { Placeholder } from '~/editor/components/placeholder/custom-placeholder.tsx'
+import { HoverToolbar } from '~/editor/components/hover-toolbar'
 import { withPlugins } from '~/editor/plugins'
+import { EditableProvider, useEditableContext } from '~/editor/hooks/use-editable-context'
 import cx from 'classnames'
 
 import './Editor.scss'
 import './style/theme.scss'
 
-const Editor: FC<{ defaultValue?: Descendant[] }> = ({ defaultValue }) => {
+const SlateEditor: FC<{ defaultValue?: Descendant[] }> = ({ defaultValue }) => {
   const editor = useMemo(() => {
     const _editor = withPlugins(withReact(createEditor()))
     window.editor = _editor
@@ -50,10 +53,6 @@ const Editor: FC<{ defaultValue?: Descendant[] }> = ({ defaultValue }) => {
       },
     ]
   )
-  const {
-    attrs: { onMouseOver, onSelectionChange },
-    hoverToolbar,
-  } = useHoverToolbar(editor)
 
   useEffect(() => {
     if (defaultValue) {
@@ -68,6 +67,19 @@ const Editor: FC<{ defaultValue?: Descendant[] }> = ({ defaultValue }) => {
     // console.log('debug _value', _value)
   }, [])
 
+  return (
+    <Slate editor={editor} initialValue={value} onChange={handleChange}>
+      <EditableProvider>
+        <Editor />
+      </EditableProvider>
+    </Slate>
+  )
+}
+
+const Editor = () => {
+  const editor = useSlateStatic()
+  const { onCompositionStart, onCompositionEnd, onMouseOver, onSelect } = useEditableContext()!
+
   const handleClickFooter = useCallback(() => {
     Transforms.insertNodes(
       editor,
@@ -81,20 +93,17 @@ const Editor: FC<{ defaultValue?: Descendant[] }> = ({ defaultValue }) => {
     Transforms.select(editor, editor.end([]))
     ReactEditor.focus(editor)
   }, [editor])
-
   return (
-    <Slate
-      editor={editor}
-      initialValue={value}
-      onChange={handleChange}
-      onSelectionChange={onSelectionChange}
-    >
+    <>
       <Editable
         id="slate-editable"
         className="slate-editable"
-        onMouseOver={onMouseOver}
         renderElement={Element}
         renderLeaf={Leaf}
+        onMouseOver={onMouseOver}
+        onSelect={onSelect}
+        onCompositionStart={onCompositionStart}
+        onCompositionEnd={onCompositionEnd}
         spellCheck={false}
         autoFocus
       />
@@ -102,10 +111,10 @@ const Editor: FC<{ defaultValue?: Descendant[] }> = ({ defaultValue }) => {
 
       <SelectToolbar />
       <SlashToolbar />
+      <HoverToolbar />
 
-      {hoverToolbar}
       <InlineChordPopover />
-    </Slate>
+    </>
   )
 }
 
@@ -113,7 +122,7 @@ const Element = (props: RenderElementProps) => {
   const selected = useSelected()
   const focused = useFocused()
   const isSelected = selected && !focused
-  const className = cx(isSelected && 'slate-element-selected')
+  const className = cx(isSelected && 'slate-element-selected??')
   const { element, attributes, children } = props
   switch (element.type) {
     case 'inline-chord':
@@ -210,6 +219,8 @@ const Element = (props: RenderElementProps) => {
 }
 
 const Leaf = (props: RenderLeafProps) => {
+  const editor = useSlate()
+  const { selection } = editor
   const { leaf } = props
   let { children } = props
 
@@ -233,11 +244,27 @@ const Leaf = (props: RenderLeafProps) => {
     children = <code>{children}</code>
   }
 
+  if (leaf.link) {
+    children = (
+      <a
+        onClick={(event) => {
+          // 选择a标签文本时不要跳转
+          if (selection && Range.isCollapsed(selection)) {
+            event.preventDefault()
+            window.open(leaf.link, '_blank')
+          }
+        }}
+        href={leaf.link}
+      >
+        {children}
+      </a>
+    )
+  }
+
   if (leaf.chord) {
     children = <FixedChordLeaf {...props}>{children}</FixedChordLeaf>
   }
-
   return <DefaultLeaf {...props}>{children}</DefaultLeaf>
 }
 
-export default Editor
+export default SlateEditor

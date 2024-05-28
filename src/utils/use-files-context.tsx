@@ -20,6 +20,12 @@ export const FilesProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [fileList, setFileList] = useState<FileData[]>([])
   const [doc, setDoc] = useState<FileData>()
 
+  useEffect(() => {
+    if (doc?.id) {
+      window.location.hash = String(doc?.id)
+    }
+  }, [doc])
+
   const readFiles = useCallback(async () => {
     await fileDbManager.open()
     const list = await fileDbManager.getAllData()
@@ -104,7 +110,18 @@ export const FilesProvider: FC<{ children: ReactNode }> = ({ children }) => {
     const initList = () => {
       readFiles().then((_list) => {
         if (_list.length) {
-          setDoc(_list[0])
+          const hashDocId = Number(window.location.hash?.replace('#', ''))
+          if(!hashDocId){
+            setDoc(_list[0])
+            return
+          }
+          const hashDoc = _list.find(item => item.id === hashDocId)
+          if(!hashDoc){
+            setDoc(_list[0])
+            return
+          }
+          setDoc(hashDoc)
+          return
         } else {
           initFileList().then(() => initList())
         }

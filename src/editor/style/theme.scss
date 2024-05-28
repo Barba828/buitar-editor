@@ -45,6 +45,16 @@ ul {
   margin-block-end: 0;
 }
 
+a {
+  font-weight: 500;
+  color: $gray-8;
+  text-decoration: inherit;
+  cursor: pointer;
+}
+a:hover {
+  color: $purple-2--hover;
+}
+
 p {
   margin-block-start: 0.1em;
   margin-block-end: 0.1em;

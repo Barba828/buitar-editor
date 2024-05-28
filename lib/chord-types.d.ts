@@ -2,7 +2,7 @@ import type { Descendant } from 'slate'
 import type { BoardChord } from '@buitar/to-guitar'
 import type { TablatureInstrument } from 'abcjs'
 
-type CustomChordType = {
+export type CustomChordType = {
   taps: BoardChord
   concise?: boolean
   popover?: boolean

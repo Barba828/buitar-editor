@@ -40,3 +40,9 @@
     color: $red-1;
   }
 }
+
+.toolbar-menu-item__right {
+  font-size: 12px;
+  transform: rotate(90deg);
+  opacity: 0.6;
+}

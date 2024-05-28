@@ -13,6 +13,9 @@ export type FileData = {
 
 const fileDbManager = new IndexedDBManager<FileData>('editorFiles', 1)
 
+/**
+ * 初始化默认文档
+ */
 const initFileList = async () => {
   await fileDbManager.open()
   const now = Date.now()

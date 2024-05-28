@@ -11,7 +11,7 @@ const App = () => {
 
   return (
     <FilesProvider>
-      <div className='buitar-editor'>
+      <div className="buitar-editor">
         <SideBar extend={siderbarVisible}></SideBar>
         <div className="buitar-content">
           <HeaderBar
@@ -29,7 +29,20 @@ const EditorView = () => {
   const { doc } = useFilesContext()!
 
   return (
-    <div className='buitar-editor__editor'>
+    <div className="buitar-editor__editor">
+      {/* <Editor
+        defaultValue={[
+          {
+            type: 'paragraph',
+            children: [
+              {
+                text: 'ssss',
+                link: 'https://www.baidu.com',
+              },
+            ],
+          },
+        ]}
+      ></Editor> */}
       <Editor defaultValue={doc?.values}></Editor>
     </div>
   )

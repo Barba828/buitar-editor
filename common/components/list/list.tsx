@@ -1,4 +1,4 @@
-import { HTMLProps, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { HTMLProps, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import cx from 'classnames'
 
 import './list.scss'
@@ -6,7 +6,7 @@ import './list.scss'
 interface ListProp<T> extends HTMLProps<HTMLDivElement> {
   lists?: Array<T>
   nestedLists?: Array<{ list: T[]; title?: string }>
-  renderItem?: (item: T, index: number) => JSX.Element
+  renderItem?: (item: T, index: number) => ReactNode
   onItemClick?: (item: T, index: number) => void
 }
 
@@ -139,7 +139,7 @@ export function List<T>({
   }
 
   return (
-    <div {...props} ref={ref} className="chord-list">
+    <div {...props} ref={ref} className={cx('chord-list', props.className)}>
       {children}
       {nestedLists?.length ? nestedLists.map(renderNestedItem) : lists?.map(renderItem)}
     </div>
