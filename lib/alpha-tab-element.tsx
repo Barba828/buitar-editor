@@ -11,13 +11,7 @@ import {
 } from 'react'
 import { AlphaTabApi, LayoutMode, synth } from '@coderline/alphatab'
 import type { Settings, RenderingResources } from '@coderline/alphatab'
-import {
-  ReactEditor,
-  RenderElementProps,
-  useFocused,
-  useSelected,
-  useSlateStatic,
-} from 'slate-react'
+import { ReactEditor, RenderElementProps, useSelected, useSlateStatic } from 'slate-react'
 import type { GTPPreviewerElement } from '~chord'
 import {
   ButtonGroup,
@@ -59,7 +53,6 @@ export const AlphaTabElement: FC<
   const { link: elementLink = '' } = element as GTPPreviewerElement
   const editor = useSlateStatic()
   const selected = useSelected()
-  const focused = useFocused()
   const containerRef = useRef<HTMLDivElement>(null)
   const elementRef = useRef<HTMLDivElement>(null)
   const toolRef = useRef<HTMLDivElement>(null)
@@ -211,7 +204,7 @@ export const AlphaTabElement: FC<
         { icon: 'icon-print', onClick: print },
         { icon: 'icon-paperclip-attechment', onClick: () => setShowLink(!showLink) },
         { icon: fullscreen ? 'icon-shrink' : 'icon-expand', onClick: changeFullsceen },
-        !fullscreen && { icon: 'icon-close', onClick: handleRemove },
+        !fullscreen && { icon: 'icon-remove', onClick: handleRemove },
       ].filter((it) => !!it),
     [changeFullsceen, fullscreen, handleRemove, print, showLink]
   )
@@ -351,7 +344,7 @@ export const AlphaTabElement: FC<
   )
 
   const btnsView = (
-    <ButtonGroup className="alpha-tab-element__btns" btns={btns}>
+    <ButtonGroup className="alpha-tab-element__btns top-2 right-2 absolute" btns={btns}>
       {linkInputView}
     </ButtonGroup>
   )
@@ -372,7 +365,7 @@ export const AlphaTabElement: FC<
       className={cx(
         'alpha-tab-element',
         { 'alpha-tab-element--fullscreen': fullscreen },
-        { 'alpha-tab-element--active': selected && !focused },
+        { 'select-element': selected },
         divProps.className
       )}
       contentEditable={false}

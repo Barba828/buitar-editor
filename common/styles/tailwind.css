@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.select-element::after {
+  @apply absolute inset-0 bg-blue-500 bg-opacity-20 content-[''] rounded;
+  animation: fadeIn 0.1s ease-in-out forwards; 
+}

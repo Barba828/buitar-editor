@@ -9,10 +9,10 @@ export interface ListItemProps extends HTMLProps<HTMLDivElement> {
   right?: ReactNode
 }
 
-export const ListItem: FC<ListItemProps> = ({ item, left, right, ...attrs }) => {
+export const ListItem: FC<ListItemProps> = ({ item, left, right, className, ...attrs }) => {
   const { title, desc, icon } = item
   return (
-    <div {...attrs} className={cx('toolbar-chord-item flex items-center w-full cursor-pointer', attrs.className)}>
+    <div {...attrs} className={cx('toolbar-chord-item flex items-center w-full cursor-pointer', className)}>
       {left ||
         (icon && (
           <div className="toolbar-chord-item--left flex-center">

@@ -40,19 +40,9 @@
 .abc-editor__btns {
   z-index: 1;
   position: absolute;
-  top: 6px;
-  right: 6px;
   opacity: 1;
   transition: opacity 0.3s ease-in-out;
-  &.abc-editor__footer-btns {
-    top: unset;
-    bottom: 6px;
-  }
-  &.abc-editor__left-btns {
-    right: unset;
-    left: 6px;
-  }
-  .icon-close {
+  .icon-remove {
     color: $red-1;
   }
 }

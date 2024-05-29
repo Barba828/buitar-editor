@@ -143,7 +143,7 @@ export const ABCElement: FC<
           icon: fullscreen ? 'icon-shrink' : 'icon-expand',
           onClick: () => setFullscreen(!fullscreen),
         },
-        !fullscreen && { icon: 'icon-close', onClick: handleRemove },
+        !fullscreen && { icon: 'icon-remove', onClick: handleRemove },
       ].filter((it) => !!it),
     [editable, fullscreen, handleCopy, handlePrint, handleRemove]
   )
@@ -187,7 +187,7 @@ export const ABCElement: FC<
         'abc-editor',
         { 'abc-editor--fullscreen': fullscreen },
         { 'abc-editor--short': short },
-        { 'abc-editor--active': selected && !focused },
+        { 'select-element': selected },
         divProps.className
       )}
       spellCheck={false}
@@ -195,12 +195,12 @@ export const ABCElement: FC<
       contentEditable={editable}
       suppressContentEditableWarning
     >
-      <ButtonGroup className="abc-editor__btns" btns={mainBtns}></ButtonGroup>
+      <ButtonGroup className="abc-editor__btns top-2 right-2" btns={mainBtns}></ButtonGroup>
 
-      <ButtonGroup className="abc-editor__btns abc-editor__left-btns" btns={leftBtns}></ButtonGroup>
+      <ButtonGroup className="abc-editor__btns top-2 left-2" btns={leftBtns}></ButtonGroup>
 
       <ButtonGroup
-        className="abc-editor__btns abc-editor__footer-btns"
+        className="abc-editor__btns bottom-2 right-2"
         btns={footerBtns}
       ></ButtonGroup>
 

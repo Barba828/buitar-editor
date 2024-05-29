@@ -25,14 +25,14 @@ const getClosetRect = (editor: Editor, targetNode: CustomElement) => {
       left: rect.left - 16,
     }
   }
-  if (targetNode.type === 'gtp-previewer' || NEED_WRAP_TYPES.includes(targetNode.type)) {
-    return {
-      ...rect,
-      top: rect.top,
-      height: 40,
-      left: rect.left,
-    }
-  }
+  // if (targetNode.type === 'gtp-previewer' || targetNode.type === 'image' || NEED_WRAP_TYPES.includes(targetNode.type)) {
+  //   return {
+  //     ...rect,
+  //     top: rect.top,
+  //     height: 40,
+  //     left: rect.left,
+  //   }
+  // }
 
   const parent = getParentNode(editor, targetNode)
   if (parent) {
@@ -47,7 +47,13 @@ const getClosetRect = (editor: Editor, targetNode: CustomElement) => {
     }
   }
 
-  return rect
+  // return rect
+  return {
+    ...rect,
+    top: rect.top,
+    height: 40,
+    left: rect.left,
+  }
 }
 
 export const HoverToolbar = memo(() => {

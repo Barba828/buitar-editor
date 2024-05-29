@@ -70,7 +70,7 @@ export function List<T>({
     if (!ref.current || !flatList.length) {
       return
     }
-    const container = ref.current.parentElement || ref.current
+    const container = ref.current
     const checkedTarget = ref.current.querySelector(`.chord-list-item[data-key="${checkedIndex}"]`)
 
     if (!container || !checkedTarget) {

@@ -23,9 +23,10 @@ import {
   TablatureElement,
 } from '~chord'
 import { CheckListItemElement } from '~/editor/components/elements/check-list-item'
+import { ImageItemElement } from '~/editor/components/elements/image-item'
+import { ToggleListItem } from '~/editor/components/elements/toggle-list-item'
 import { SelectToolbar } from '~/editor/components/select-toolbar'
 import { SlashToolbar } from '~/editor/components/slash-toolbar'
-import { ToggleListItem } from '~/editor/components/elements/toggle-list-item'
 import { Placeholder } from '~/editor/components/placeholder/custom-placeholder.tsx'
 import { HoverToolbar } from '~/editor/components/hover-toolbar'
 import { withPlugins } from '~/editor/plugins'
@@ -35,7 +36,7 @@ import cx from 'classnames'
 import './Editor.scss'
 import './style/theme.scss'
 
-const SlateEditor: FC<{ defaultValue?: Descendant[] }> = ({ defaultValue }) => {
+const SlateEditor: FC<{ defaultValue?: Descendant[], onChange?: ((value: Descendant[]) => void) }> = ({ defaultValue, onChange }) => {
   const editor = useMemo(() => {
     const _editor = withPlugins(withReact(createEditor()))
     window.editor = _editor
@@ -62,13 +63,8 @@ const SlateEditor: FC<{ defaultValue?: Descendant[] }> = ({ defaultValue }) => {
     }
   }, [defaultValue, editor])
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleChange = useCallback((_value: Descendant[]) => {
-    // console.log('debug _value', _value)
-  }, [])
-
   return (
-    <Slate editor={editor} initialValue={value} onChange={handleChange}>
+    <Slate editor={editor} initialValue={value} onChange={onChange}>
       <EditableProvider>
         <Editor />
       </EditableProvider>
@@ -151,6 +147,8 @@ const Element = (props: RenderElementProps) => {
       )
     case 'bulleted-list':
       return <ul {...attributes}>{children}</ul>
+    case 'image':
+      return <ImageItemElement {...props} />
     /** -------- 以下是基础类型（需要自定义Placeholder） -------- */
     case 'paragraph':
       return (

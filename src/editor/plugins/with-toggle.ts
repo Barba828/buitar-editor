@@ -109,6 +109,7 @@ export const insertBlock = (
   const [, currentPath] = Editor.node(editor, selection)
   const isEmptyLine = Editor.string(editor, currentPath).length === 0
 
+  /** 在ListItem节点插入，则需要到其父级List节点insert */
   if (isBlockActive(editor, LIST_TYPES)) {
     const aboveElementMatch = getSelectedNode(editor, LIST_TYPES)
     if (aboveElementMatch) {
@@ -117,6 +118,7 @@ export const insertBlock = (
     }
   }
 
+  /** 插入仅允许一层包裹的Block，判断当前是否在该Block下，若是，则到Block兄弟节点insert */
   if (ONLY_ONE_WRAP_TYPES.includes(element.type)) {
     const aboveElementMatch = getSelectedNode(editor, element.type)
     if (aboveElementMatch) {
@@ -124,23 +126,6 @@ export const insertBlock = (
       options.at = Path.next(abovePath)
     }
   }
-
-  /** ONLY_ONE_WRAP_TYPES 插入行为：找到同type的父级（可能就是自己）插入新行 */
-  // if (ONLY_ONE_WRAP_TYPES.includes(element.type)) {
-  //   const aboveElementMatch = getSelectedNode(editor, element.type)
-  //   if (aboveElementMatch) {
-  //     const [, abovePath] = aboveElementMatch
-  //     options.at = Path.next(abovePath)
-  //   }
-  //   /** 位于行首删除当前wrap内行（因为需要插入到父级新行，不能直接 toggle，toggle 会将父级wrap一起操作） */
-  //   if (isEmptyLine) {
-  //     Transforms.removeNodes(editor, { at: currentPath.slice(0, -1) })
-  //   }
-  // } else if (isEmptyLine) {
-  //   /** 位于行首直接toggle当前block */
-  //   editor.toggleBlock?.(element, { toActive: true, ...options })
-  //   return
-  // }
 
   let newProperties = {
     children: [{ text: '' }],

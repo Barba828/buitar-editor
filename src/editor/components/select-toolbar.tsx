@@ -114,11 +114,11 @@ export const SelectToolbar = () => {
           <div className="toolbar-menu-group">
             <FormatButton format="link" onMouseDown={() => handlePopoverVisibleChange('link')}>
               <Icon name="icon-link-break" />
-              <Icon name="icon-right" className="toolbar-menu-item__right" />
+              <Icon name="icon-right" className="ml-1 opacity-60 rotate-90 text-xs" />
             </FormatButton>
             <FormatButton format="chord" onMouseDown={() => handlePopoverVisibleChange('chord')}>
               <Icon name="icon-chord" />
-              <Icon name="icon-right" className="toolbar-menu-item__right" />
+              <Icon name="icon-right" className="ml-1 opacity-60 rotate-90 text-xs" />
             </FormatButton>
           </div>
         )}

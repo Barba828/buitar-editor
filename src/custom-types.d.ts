@@ -64,7 +64,7 @@ export type HeadingElement = {
 
 export type ImageElement = {
   type: 'image'
-  url?: string
+  url: string
   children: CustomText[]
 }
 

@@ -10,7 +10,7 @@ interface FilesContextType {
 
   readFiles: () => Promise<FileData[]>
   addFile: (values?: FileData['values']) => Promise<void>
-  updateFile: () => Promise<void>
+  updateFile: (file?: FileData) => Promise<void>
   deleteFile: (id: FileData['id']) => Promise<void>
 }
 
@@ -64,26 +64,31 @@ export const FilesProvider: FC<{ children: ReactNode }> = ({ children }) => {
     [readFiles]
   )
 
-  const updateFile = useCallback(async () => {
-    if (!window.editor?.children) {
-      return
-    }
-    const values = window.editor.children
-    const title = getTitle(values)
-    const updateTime = new Date().getTime()
-
-    if (doc) {
-      const newDoc = {
-        ...doc,
-        updateTime,
-        title,
-        values: values,
+  const updateFile = useCallback(
+    async (newDoc?: FileData) => {
+      if (!window.editor?.children) {
+        return
       }
-      fileDbManager.updateData(newDoc)
-      setDoc(newDoc)
-    }
-    await readFiles()
-  }, [doc, readFiles])
+      if (!newDoc && !doc) {
+        return
+      }
+      let updateDoc = newDoc
+      if (!updateDoc) {
+        const values = window.editor.children
+        const title = getTitle(values)
+        const updateTime = new Date().getTime()
+        updateDoc = {
+          ...doc,
+          updateTime,
+          title,
+          values: values,
+        } as FileData
+      }
+      fileDbManager.updateData(updateDoc)
+      await readFiles()
+    },
+    [doc, readFiles]
+  )
 
   const deleteFile = useCallback(
     async (id: FileData['id']) => {
@@ -111,12 +116,12 @@ export const FilesProvider: FC<{ children: ReactNode }> = ({ children }) => {
       readFiles().then((_list) => {
         if (_list.length) {
           const hashDocId = Number(window.location.hash?.replace('#', ''))
-          if(!hashDocId){
+          if (!hashDocId) {
             setDoc(_list[0])
             return
           }
-          const hashDoc = _list.find(item => item.id === hashDocId)
-          if(!hashDoc){
+          const hashDoc = _list.find((item) => item.id === hashDocId)
+          if (!hashDoc) {
             setDoc(_list[0])
             return
           }

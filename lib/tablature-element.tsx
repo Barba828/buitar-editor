@@ -121,7 +121,7 @@ export const TablatureElement: FC<
         'tablature-element',
         { 'tablature-element--horizontal': horizontal },
         { 'tablature-element--editable': editable },
-        { 'tablature-element--active': selected && !focused },
+        { 'select-element': selected },
         divProps.className
       )}
       spellCheck={false}

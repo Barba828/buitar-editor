@@ -10,7 +10,6 @@ import {
   type ToolType,
 } from '~/editor/tools.config'
 
-import './slash-toolbar.scss'
 import { NONE_RICH_WRAP_TYPES } from '~/editor/plugins/config'
 
 export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
@@ -114,7 +113,7 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
   }, [editor, onChange])
 
   const renderItem = useCallback((item: ToolType) => {
-    return <ListItem item={item} className="slash-item" />
+    return <ListItem item={item} />
   }, [])
 
   const cleanSearch = useCallback(() => {
@@ -162,9 +161,9 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
   return (
     <Popover
       data-cy="input-toolbar-portal"
-      style={{ maxHeight: '360px' }}
       rect={rect}
       onClose={cleanSearch}
+      className='w-64 max-h-96'
     >
       <List
         nestedLists={nestedList}

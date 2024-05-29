@@ -22,10 +22,6 @@
   }
 }
 
-.alpha-tab-element--active {
-  background: $blue-active-bg;
-}
-
 .alpha-tab-element--fullscreen {
   position: fixed;
   top: 0;
@@ -54,11 +50,8 @@
 .alpha-tab-element__btns {
   opacity: 0;
   z-index: 1;
-  position: absolute;
-  top: 6px;
-  right: 6px;
   transition: opacity 0.3s ease-in-out;
-  .icon-close {
+  .icon-remove {
     color: $red-1;
   }
 }

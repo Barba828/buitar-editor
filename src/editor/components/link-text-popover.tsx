@@ -32,18 +32,17 @@ export const LinkTextPopover: FC<CommonPopoverProps> = memo(
       setText(e.target.value)
     }, [])
 
-    const saveLink = useCallback(() => {
+    const saveLink = useCallback(({ title, desc }: ListItemProps['item']) => {
       const chordText = {
-        text: text.replace(/\n/g, '').trim(),
-        link: link,
+        text: title?.replace(/\n/g, '').trim() || '',
+        link: desc,
       }
 
       Transforms.insertNodes(editor, chordText)
-
       Editor.removeMark(editor, 'link')
       editor.insertText(' ')
       Transforms.move(editor)
-    }, [editor, link, text])
+    }, [editor])
     const removeLink = useCallback(() => {
       if (isMarkActive(editor, 'link')) {
         editor.removeMark('link')
