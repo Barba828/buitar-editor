@@ -68,6 +68,22 @@ export type ImageElement = {
   children: CustomText[]
 }
 
+export type VideoElement = {
+  type: 'video'
+  url: string
+  children: CustomText[]
+}
+export type BookmarkElement = {
+  type: 'bookmark'
+  url: string
+  title?: string
+  description?: string
+  keywords?: string
+  image?: string
+  icon?: string
+  children: CustomText[]
+}
+
 export type LinkElement = { type: 'link'; url?: string; children: Descendant[] }
 
 export type ListItemElement = { type: 'list-item'; children: Descendant[] }
@@ -82,6 +98,8 @@ export type CustomElement =
   | CheckListItemElement
   | HeadingElement
   | ImageElement
+  | VideoElement
+  | BookmarkElement
   | LinkElement
   | ListItemElement
   | OrderedListElement

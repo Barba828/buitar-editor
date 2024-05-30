@@ -1,28 +1,28 @@
+import isUrl from 'is-url'
 import { FC, HTMLProps, useCallback, useMemo, useState } from 'react'
 import { Transforms } from 'slate'
 import {
-  RenderElementProps,
-  useSlateStatic,
   ReactEditor,
-  useSelected,
+  RenderElementProps,
   useFocused,
+  useSelected,
+  useSlateStatic,
 } from 'slate-react'
-import type { ImageElement } from '~/custom-types'
+import { VideoElement } from '~/custom-types'
 import cx from 'classnames'
 import { ButtonGroup, Icon, Modal } from '~common'
-import isUrl from 'is-url'
 
-export const ImageBlockElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>> = ({
+export const VideoBlockElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>> = ({
   attributes,
   children,
   element,
   ...divProps
 }) => {
   const editor = useSlateStatic()
+  const originUrl = (element as VideoElement).url
   const selected = useSelected()
   const focused = useFocused()
   const [showModal, setShowModal] = useState(false)
-  const originUrl = (element as ImageElement).url
   const [url, setUrl] = useState(originUrl)
 
   const handleRemove = useCallback(() => {
@@ -56,7 +56,7 @@ export const ImageBlockElement: FC<RenderElementProps & HTMLProps<HTMLDivElement
       visible={showModal}
       onVisibleChange={(value) => setShowModal(value)}
       onOk={changeElementLink}
-      header="Change image url"
+      header="Set embed page url"
     >
       <input
         className="alpha-tab-element__input"
@@ -72,30 +72,39 @@ export const ImageBlockElement: FC<RenderElementProps & HTMLProps<HTMLDivElement
   return (
     <div {...attributes} {...divProps}>
       {children}
+
       <div
         contentEditable={false}
-        className={cx(
-          'relative group cursor-pointer my-4 rounded overflow-hidden bg-gray-100 dark:bg-zinc-800',
-          {
-            'select-element': selected && focused,
-          },
-          originUrl ? 'w-fit' : 'w-full'
-        )}
+        className={cx('relative group cursor-pointer my-4 rounded overflow-hidden bg-gray-100 dark:bg-zinc-800', {
+          'select-element': selected && focused,
+        })}
       >
         {originUrl ? (
-          <img
-            src={originUrl}
-            className={cx(
-              'block max-w-full max-h-100 min-h-10 min-w-96 '
-            )}
-          />
+          <div
+            style={{
+              padding: '75% 0 0 0',
+              position: 'relative',
+            }}
+          >
+            <iframe
+              src={`${url}?title=0&byline=0&portrait=0`}
+              style={{
+                position: 'absolute',
+                top: '0',
+                left: '0',
+                width: '100%',
+                height: '100%',
+              }}
+              className="border-0"
+            />
+          </div>
         ) : (
           <div
             onClick={() => setShowModal(true)}
             className="h-10 flex items-center justify-start pl-2"
           >
             <Icon name="icon-image" className="opacity-50 text-xl mr-2"></Icon>
-            <div className="font-bold opacity-50 text-sm">Add an Image</div>
+            <div className="font-bold opacity-50 text-sm">Add an embed with url</div>
           </div>
         )}
         <ButtonGroup

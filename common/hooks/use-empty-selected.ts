@@ -1,6 +1,11 @@
 import { Element, Range } from 'slate'
 import { useFocused, useSelected, useSlateStatic } from 'slate-react'
 
+/**
+ * 检查选中的元素是否为空
+ * @param element 
+ * @returns 
+ */
 export const useEmptySelected = (element: Element) => {
   const editor = useSlateStatic()
   const focused = useFocused()

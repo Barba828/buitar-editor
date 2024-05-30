@@ -23,7 +23,9 @@ import {
   TablatureElement,
 } from '~chord'
 import { CheckListItemElement } from '~/editor/components/elements/check-list-item'
-import { ImageItemElement } from '~/editor/components/elements/image-item'
+import { ImageBlockElement } from '~/editor/components/elements/image-item'
+import { VideoBlockElement } from '~/editor/components/elements/video-item'
+import { BookmarkBlockElement } from '~/editor/components/elements/bookmark-item'
 import { ToggleListItem } from '~/editor/components/elements/toggle-list-item'
 import { SelectToolbar } from '~/editor/components/select-toolbar'
 import { SlashToolbar } from '~/editor/components/slash-toolbar'
@@ -148,7 +150,11 @@ const Element = (props: RenderElementProps) => {
     case 'bulleted-list':
       return <ul {...attributes}>{children}</ul>
     case 'image':
-      return <ImageItemElement {...props} />
+      return <ImageBlockElement {...props} />
+    case 'video':
+      return <VideoBlockElement {...props} />
+    case 'bookmark':
+      return <BookmarkBlockElement {...props} />
     /** -------- 以下是基础类型（需要自定义Placeholder） -------- */
     case 'paragraph':
       return (

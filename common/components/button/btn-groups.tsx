@@ -16,7 +16,7 @@ interface ButtonGroupProps extends HTMLProps<HTMLDivElement> {
 
 export const ButtonGroup: FC<ButtonGroupProps> = ({ btns, className, children, ...props }) => {
   return (
-    <div {...props} className={cx('btn-groups', className)} contentEditable={false}>
+    <div {...props} className={cx('btn-groups z-10', className)} contentEditable={false}>
       {btns
         ?.filter((it) => !!it)
         ?.map(({ icon, onClick, checked, ...iconsProps }, index) => (

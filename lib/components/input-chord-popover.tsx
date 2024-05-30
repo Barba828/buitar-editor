@@ -1,4 +1,4 @@
-import { memo, useEffect, FC, useCallback, useState, ChangeEventHandler, useMemo } from 'react'
+import { memo, useEffect, FC, useCallback, useState, ChangeEventHandler } from 'react'
 import { useSlate } from 'slate-react'
 import { Editor, Transforms } from 'slate'
 import { BoardChord } from '@buitar/to-guitar'
@@ -64,7 +64,6 @@ export const InputChordPopover: FC<CommonPopoverProps> = memo(
     }, [editor])
     const changeChord = (option: keyof CustomChordType) => {
       const active = chordMarks?.[option]
-      console.log('lnz chordMarks', chordMarks);
       Editor.addMark(editor, 'chord', { ...chordMarks, [option]: !active })
     }
 

@@ -4,10 +4,11 @@ import { withOnChange } from './with-on-change'
 import { withToggle } from './with-toggle'
 import { withValidation } from './with-validation'
 import { withImages } from './with-image'
+import { withEmbeds } from './with-embed'
 
 import { CustomEditor } from '../../custom-types'
 
-const plugins = [withHistory, withToggle, withOnChange, withValidation, withChords, withImages]
+const plugins = [withHistory, withToggle, withOnChange, withValidation, withChords, withImages, withEmbeds]
 
 /**
  * @refer https://github.com/objectlegal/slate-snippets?tab=readme-ov-file#create-a-withplugins-hook--composer

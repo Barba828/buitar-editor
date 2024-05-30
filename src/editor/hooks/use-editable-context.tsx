@@ -6,8 +6,10 @@ import { debounce } from '~common/utils/debounce'
 import { getClosetElement } from '~/editor/utils/get-closet-element'
 
 interface EditableContextType {
+  /**输入法正在输入 */
   imeComposing: boolean
   isCollapsedSelected: boolean
+  /**最近的Block元素 */
   closestElement?: CustomElement
 
   onCompositionStart?: React.CompositionEventHandler<HTMLDivElement>

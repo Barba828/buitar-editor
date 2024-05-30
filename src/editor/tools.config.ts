@@ -1,7 +1,7 @@
 import { Element as SlateElement } from 'slate'
 
 export type ToolType = {
-  tag: 'text' | 'chord' | 'tablature'
+  tag: 'text' | 'embed' | 'chord' | 'tablature'
   key: SlateElement['type'] | string
   title: string
   desc: string
@@ -101,6 +101,30 @@ export const textTypeMenu: ToolType[] = [
   },
 ]
 
+export const embedTypeMenu: ToolType[] = [
+  {
+    tag: 'embed',
+    key: 'image',
+    title: 'Image',
+    desc: 'Add embed image',
+    icon: 'icon-image',
+  },
+  {
+    tag: 'embed',
+    key: 'video',
+    title: 'Embed',
+    desc: 'Embed page with a link',
+    icon: 'icon-paperclip-attechment',
+  },
+  {
+    tag: 'embed',
+    key: 'bookmark',
+    title: 'Page Bookmark',
+    desc: 'Add page bookmark with a link',
+    icon: 'icon-bookmark',
+  },
+]
+
 export const tablatureTypeMenu: ToolType[] = [
   {
     tag: 'tablature',
@@ -158,7 +182,7 @@ export const chordTypeMenu: ToolType[] = [
 
 export const flatTypeArr = [...textTypeMenu, ...tablatureTypeMenu, ...chordTypeMenu]
 
-export const flatTypeMap = new Map<string, ToolType>();
-flatTypeArr.forEach(tool => {
-  flatTypeMap.set(tool.key, tool);
-});
+export const flatTypeMap = new Map<string, ToolType>()
+flatTypeArr.forEach((tool) => {
+  flatTypeMap.set(tool.key, tool)
+})

@@ -34,6 +34,10 @@ export const withImages = (editor: Editor) => {
     const text = data.getData('text/plain')
     const { files } = data
 
+    /**
+     * 1.处理粘贴image文件，使用fileReader读取二进制保存
+     * @param data
+     */
     if (files && files.length > 0) {
       for (const file of files) {
         const reader = new FileReader()
@@ -41,7 +45,7 @@ export const withImages = (editor: Editor) => {
 
         if (mime === 'image') {
           reader.addEventListener('load', () => {
-            const url = reader.result
+            const url = reader.result as string
             insertImage(editor, url)
           })
 
@@ -49,6 +53,9 @@ export const withImages = (editor: Editor) => {
         }
       }
     } else if (isImageUrl(text)) {
+      /**
+       * 粘贴图片url
+       */
       insertImage(editor, text)
     } else {
       insertData(data)

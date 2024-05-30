@@ -8,6 +8,7 @@ import {
   chordTypeMenu,
   flatTypeArr,
   type ToolType,
+  embedTypeMenu,
 } from '~/editor/tools.config'
 
 import { NONE_RICH_WRAP_TYPES } from '~/editor/plugins/config'
@@ -42,6 +43,10 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
       {
         title: 'Basic blocks',
         list: textTypeMenu.slice(0, 10),
+      },
+      {
+        title: 'Embed blocks',
+        list: embedTypeMenu,
       },
       {
         title: 'Tablature blocks',
@@ -131,6 +136,7 @@ export const SlashToolbar: FC<HTMLProps<HTMLDivElement>> = (props) => {
       }
       switch (item.tag) {
         case 'text':
+        case 'embed':
         case 'tablature':
           const newProperties = { type: item.key as BlockFormat }
           editor.insertBlock?.(newProperties)

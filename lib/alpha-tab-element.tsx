@@ -58,7 +58,7 @@ export const AlphaTabElement: FC<
   const toolRef = useRef<HTMLDivElement>(null)
   const [fullscreen, setFullscreen] = useState(false)
   const [showTracks, setShowTracks] = useState(false)
-  const [showLink, setShowLink] = useState(false)
+  const [showModal, setShowModal] = useState(false)
   const [link, setLink] = useState(elementLink)
   const isLightMode = useIsLightMode()
 
@@ -202,11 +202,11 @@ export const AlphaTabElement: FC<
     () =>
       [
         { icon: 'icon-print', onClick: print },
-        { icon: 'icon-paperclip-attechment', onClick: () => setShowLink(!showLink) },
+        { icon: 'icon-paperclip-attechment', onClick: () => setShowModal(!showModal) },
         { icon: fullscreen ? 'icon-shrink' : 'icon-expand', onClick: changeFullsceen },
         !fullscreen && { icon: 'icon-remove', onClick: handleRemove },
       ].filter((it) => !!it),
-    [changeFullsceen, fullscreen, handleRemove, print, showLink]
+    [changeFullsceen, fullscreen, handleRemove, print, showModal]
   )
 
   const tracksView = (
@@ -279,8 +279,8 @@ export const AlphaTabElement: FC<
 
   const linkInputView = (
     <Modal
-      visible={showLink}
-      onVisibleChange={(value) => setShowLink(value)}
+      visible={showModal}
+      onVisibleChange={(value) => setShowModal(value)}
       onOk={changeElementLink}
       header="Change GTP file url"
     >
@@ -344,40 +344,47 @@ export const AlphaTabElement: FC<
   )
 
   const btnsView = (
-    <ButtonGroup className="alpha-tab-element__btns top-2 right-2 absolute" btns={btns}>
+    <ButtonGroup className="alpha-tab-element__btns top-2 right-2 absolute opacity-0 group-hover:opacity-100" btns={btns}>
       {linkInputView}
     </ButtonGroup>
   )
 
   const emptyView = !elementLink ? (
-    <div className="alpha-tab-element__empty flex-center" onClick={() => setShowLink(!showLink)}>
-      <Icon name="icon-paperclip-attechment"></Icon>
-      {placeholder || 'Click to load GTP file'}
+    <div
+      onClick={() => setShowModal(true)}
+      className="h-10 flex items-center justify-start pl-2 py-1 cursor-pointer"
+    >
+      <Icon name="icon-paperclip-attechment" className="opacity-50 text-xl mr-2"></Icon>
+      <div className="font-bold opacity-50 text-sm">{placeholder || 'Click to load GTP file'}</div>
     </div>
   ) : (
-    !ready && <Skeleton line={4} />
+    !ready && (
+      <div className="p-4">
+        <Skeleton line={4} />
+      </div>
+    )
   )
 
   return (
-    <div
-      {...attributes}
-      {...divProps}
-      className={cx(
-        'alpha-tab-element',
-        { 'alpha-tab-element--fullscreen': fullscreen },
-        { 'select-element': selected },
-        divProps.className
-      )}
-      contentEditable={false}
-      suppressContentEditableWarning
-    >
-      <div style={{ display: 'none' }}>{children}</div>
-      <div ref={containerRef} className="alpha-tab-element__container">
-        <div ref={elementRef}></div>
+    <div {...attributes} {...divProps}>
+      {children}
+
+      <div
+        className={cx(
+          'alpha-tab-element group my-4 rounded-lg overflow-hidden bg-gray-100 dark:bg-zinc-800',
+          { 'alpha-tab-element--fullscreen my-0 rounded-none fixed': fullscreen },
+          { 'select-element': selected && !fullscreen }
+        )}
+        contentEditable={false}
+        suppressContentEditableWarning
+      >
+        <div ref={containerRef} className="alpha-tab-element__container">
+          <div ref={elementRef}></div>
+        </div>
+        {emptyView}
+        {fullscreen && toolsView}
+        {btnsView}
       </div>
-      {emptyView}
-      {fullscreen && toolsView}
-      {btnsView}
     </div>
   )
 })

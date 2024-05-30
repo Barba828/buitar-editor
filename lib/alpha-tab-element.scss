@@ -3,22 +3,16 @@
   max-width: 95vw;
   width: 100%;
 
-  background: $gray-0;
-  border-radius: 1em;
-  padding: 1em;
-  margin: 1em 0;
   color: $gray-8;
   font-size: 0.9em;
   position: relative;
   box-sizing: border-box;
-
-  overflow: hidden;
   z-index: 1;
 
-  &:hover{
-    .alpha-tab-element__btns {
-      opacity: 1;
-    }
+  overflow: hidden;
+
+  .icon-remove {
+    color: $red-1;
   }
 }
 
@@ -31,28 +25,14 @@
   max-height: unset;
   max-width: unset;
   z-index: $zIndex-dialog;
-  padding: 0;
-  margin: 0;
-  border-radius: 0;
-  background: $white-1;
 
   display: flex;
   flex-direction: column;
-
   .alpha-tab-element__container {
     flex: 1;
     height: 0;
     overflow: scroll;
     width: 100%;
-  }
-}
-
-.alpha-tab-element__btns {
-  opacity: 0;
-  z-index: 1;
-  transition: opacity 0.3s ease-in-out;
-  .icon-remove {
-    color: $red-1;
   }
 }
 

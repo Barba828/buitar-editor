@@ -50,8 +50,8 @@ export const TablatureElement: FC<
   const [points, setPoints] = useState<SvgChordPoint[]>([])
   const isLight = useIsLightMode()
   const editor = useSlateStatic()
-  const selected = useSelected()
   const focused = useFocused()
+  const selected = useSelected()
 
   useEffect(() => {
     const text = getElementText(element)
@@ -100,17 +100,6 @@ export const TablatureElement: FC<
     [editable, handleDecreaseSize, handleIncreaseSize, handleRemove, handleRotate, size, title]
   )
 
-  // const triggerLeft = (
-  //   <div className="tablature-element__svg-trigger">
-  //     <div className="flex-center">
-  //       <Icon name="icon-add-plus" />
-  //     </div>
-  //     <div className="flex-center">
-  //       <Icon name="icon-remove-minus" />
-  //     </div>
-  //   </div>
-  // )
-
   return (
     <div
       {...attributes}
@@ -121,7 +110,7 @@ export const TablatureElement: FC<
         'tablature-element',
         { 'tablature-element--horizontal': horizontal },
         { 'tablature-element--editable': editable },
-        { 'select-element': selected },
+        { 'select-element': selected && !focused },
         divProps.className
       )}
       spellCheck={false}
@@ -131,7 +120,6 @@ export const TablatureElement: FC<
       <ButtonGroup className="tablature-element__btns" btns={btns}></ButtonGroup>
 
       <div className="tablature-element__svg-wrapper">
-        {/* {triggerLeft} */}
         <SvgTablature
           className="tablature-element__svg"
           points={points}

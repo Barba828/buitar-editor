@@ -187,7 +187,7 @@ export const ABCElement: FC<
         'abc-editor',
         { 'abc-editor--fullscreen': fullscreen },
         { 'abc-editor--short': short },
-        { 'select-element': selected },
+        { 'select-element': selected && !focused },
         divProps.className
       )}
       spellCheck={false}
@@ -199,10 +199,7 @@ export const ABCElement: FC<
 
       <ButtonGroup className="abc-editor__btns top-2 left-2" btns={leftBtns}></ButtonGroup>
 
-      <ButtonGroup
-        className="abc-editor__btns bottom-2 right-2"
-        btns={footerBtns}
-      ></ButtonGroup>
+      <ButtonGroup className="abc-editor__btns bottom-2 right-2" btns={footerBtns}></ButtonGroup>
 
       <div className="abc-editor__content" style={{ display: editable ? 'block' : 'none' }}>
         {children}
