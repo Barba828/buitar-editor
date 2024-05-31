@@ -16,17 +16,19 @@ export type CustomInlineChordElement = {
 
 export type CustomBlockTablatureElement = {
   type: 'block-tablature'
-  children?: Descendant[]
   title?: string
   stringNums?: number
   size?: number
   horizontal?: boolean
   range?: [number, number]
+  data?: string
+  children?: Descendant[]
 }
 
 export type ABCTablatureElement = {
   type: 'abc-tablature'
   instrument?: TablatureInstrument
+  data?: string
   children?: Descendant[]
 }
 

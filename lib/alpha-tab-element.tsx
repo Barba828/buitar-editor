@@ -11,7 +11,7 @@ import {
 } from 'react'
 import { AlphaTabApi, LayoutMode, synth } from '@coderline/alphatab'
 import type { Settings, RenderingResources } from '@coderline/alphatab'
-import { ReactEditor, RenderElementProps, useSelected, useSlateStatic } from 'slate-react'
+import { ReactEditor, RenderElementProps, useFocused, useSelected, useSlateStatic } from 'slate-react'
 import type { GTPPreviewerElement } from '~chord'
 import {
   ButtonGroup,
@@ -53,6 +53,7 @@ export const AlphaTabElement: FC<
   const { link: elementLink = '' } = element as GTPPreviewerElement
   const editor = useSlateStatic()
   const selected = useSelected()
+  const focused = useFocused()
   const containerRef = useRef<HTMLDivElement>(null)
   const elementRef = useRef<HTMLDivElement>(null)
   const toolRef = useRef<HTMLDivElement>(null)
@@ -371,9 +372,10 @@ export const AlphaTabElement: FC<
 
       <div
         className={cx(
-          'alpha-tab-element group my-4 rounded-lg overflow-hidden bg-gray-100 dark:bg-zinc-800',
-          { 'alpha-tab-element--fullscreen my-0 rounded-none fixed': fullscreen },
-          { 'select-element': selected && !fullscreen }
+          'alpha-tab-element group text-sm rounded-lg overflow-hidden w-full box-border',
+          { 'my-4 relative': !fullscreen },
+          { 'alpha-tab-element--fullscreen fixed m-0 p-0 rounded-none flex top-0 left-0 flex-col': fullscreen },
+          { 'select-element': selected && !focused && !fullscreen }
         )}
         contentEditable={false}
         suppressContentEditableWarning

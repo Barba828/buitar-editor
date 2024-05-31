@@ -24,16 +24,6 @@
   }
 }
 
-.tablature-element--editable {
-  .tablature-element__content {
-    display: block;
-  }
-  .tablature-element__svg-trigger {
-    display: flex;
-    gap: 2px;
-  }
-}
-
 .tablature-element--active {
   background: $blue-active-bg;
   transition: background 0.2s ease-in-out;
@@ -80,14 +70,8 @@
 }
 
 .tablature-element__content {
-  display: none;
-  position: relative;
   background: $gray-0;
   width: 90%;
-  border-radius: 1em;
-  padding: 4px 1em;
-  margin: 0.6em;
-  font-size: 0.9em;
   transition: background 0.2s ease-in-out;
   &:hover,
   &:active,

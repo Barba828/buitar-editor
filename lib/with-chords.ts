@@ -21,9 +21,9 @@ export const withChords = (editor: CustomTypes['Editor']) => {
     return element.type === 'inline-chord'
       ? true
       : element.type === 'abc-tablature'
-      ? false
+      ? true
       : element.type === 'block-tablature'
-      ? false
+      ? true
       : element.type === 'gtp-previewer'
       ? true
       : isVoid(element)

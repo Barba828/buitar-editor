@@ -1,33 +1,20 @@
 .alpha-tab-element {
   max-height: 40vh;
   max-width: 95vw;
-  width: 100%;
-
+  background: $gray-0;
   color: $gray-8;
-  font-size: 0.9em;
-  position: relative;
-  box-sizing: border-box;
   z-index: 1;
-
-  overflow: hidden;
-
   .icon-remove {
     color: $red-1;
   }
 }
 
 .alpha-tab-element--fullscreen {
-  position: fixed;
-  top: 0;
-  left: 0;
   width: 100vw;
   height: 100vh;
   max-height: unset;
   max-width: unset;
   z-index: $zIndex-dialog;
-
-  display: flex;
-  flex-direction: column;
   .alpha-tab-element__container {
     flex: 1;
     height: 0;

@@ -149,8 +149,6 @@ export const insertBlock = (
       break
     case 'block-quote':
     case 'toogle-list':
-    case 'abc-tablature':
-    case 'block-tablature':
       newProperties = {
         ...element,
         children: [
