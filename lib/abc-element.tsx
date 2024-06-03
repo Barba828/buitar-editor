@@ -157,7 +157,7 @@ export const ABCElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>> = me
           icon: (
             <Selector
               className={cx(
-                'abc-editor__trigger',
+                'abc-editor__trigger bg-transparent',
                 !instrument && 'abc-editor__trigger--no-instrument'
               )}
               lists={instruments}
@@ -183,7 +183,7 @@ export const ABCElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>> = me
             { 'abc-editor--short': short },
             {
               'select-element after:rounded-lg':
-                selected && !focused && !editable && !fullscreen && short,
+                selected && focused && !editable && !fullscreen && short,
             }
           )}
           contentEditable={false}
@@ -204,7 +204,7 @@ export const ABCElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>> = me
           {editable && (
             <textarea
               className={cx(
-                'abc-editor__content rounded-lg p-2 box-border border-none outline-none resize-y overflow-y-scroll w-full min-h-32'
+                'abc-editor__content rounded-lg p-2 pt-6 box-border border-none outline-none resize-y overflow-y-scroll w-full min-h-32'
               )}
               value={text}
               onChange={(e) => setText(e.target.value)}

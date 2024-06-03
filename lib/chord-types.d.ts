@@ -35,6 +35,7 @@ export type ABCTablatureElement = {
 export type GTPPreviewerElement = {
   type: 'gtp-previewer'
   link: string
+  extend?: boolean
   children?: Descendant[]
 }
 

@@ -71,12 +71,12 @@ export const BookmarkBlockElement: FC<RenderElementProps & HTMLProps<HTMLDivElem
       visible={showModal}
       onVisibleChange={(value) => setShowModal(value)}
       onOk={changeElementLink}
-      header="Change image url"
+      header="Set bookmark url"
     >
       <input
-        className="alpha-tab-element__input"
         contentEditable={true}
-        placeholder="Input GTP file url"
+        placeholder="Input bookmark url"
+        className='primary-text-input'
         onChange={(e) => setUrl(e.target.value)}
         defaultValue={originUrl}
         autoFocus

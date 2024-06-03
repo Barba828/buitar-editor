@@ -33,12 +33,16 @@ import { Placeholder } from '~/editor/components/placeholder/custom-placeholder.
 import { HoverToolbar } from '~/editor/components/hover-toolbar'
 import { withPlugins } from '~/editor/plugins'
 import { EditableProvider, useEditableContext } from '~/editor/hooks/use-editable-context'
+import type { CustomElement } from '~/custom-types'
 import cx from 'classnames'
 
 import './Editor.scss'
 import './style/theme.scss'
 
-const SlateEditor: FC<{ defaultValue?: Descendant[], onChange?: ((value: Descendant[]) => void) }> = ({ defaultValue, onChange }) => {
+const SlateEditor: FC<{
+  defaultValue?: Descendant[]
+  onChange?: (value: Descendant[]) => void
+}> = ({ defaultValue, onChange }) => {
   const editor = useMemo(() => {
     const _editor = withPlugins(withReact(createEditor()))
     window.editor = _editor
@@ -78,15 +82,21 @@ const Editor = () => {
   const editor = useSlateStatic()
   const { onCompositionStart, onCompositionEnd, onMouseOver, onSelect } = useEditableContext()!
 
+  /**
+   * 如果末尾是非空行，插入一个空行
+   */
   const handleClickFooter = useCallback(() => {
-    Transforms.insertNodes(
-      editor,
-      {
-        type: 'paragraph',
-        children: [{ text: '' }],
-      },
-      { at: editor.end([]) }
-    )
+    const lastNode = editor.children[editor.children.length - 1]
+    if (!editor.isEmpty(lastNode as CustomElement)) {
+      Transforms.insertNodes(
+        editor,
+        {
+          type: 'paragraph',
+          children: [{ text: '' }],
+        },
+        { at: editor.end([]) }
+      )
+    }
 
     Transforms.select(editor, editor.end([]))
     ReactEditor.focus(editor)

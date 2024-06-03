@@ -4,7 +4,6 @@ import { useFocused, ReactEditor, useSlateStatic } from 'slate-react'
 import { CustomElement } from '~/custom-types'
 import { useEditableContext } from '~/editor/hooks/use-editable-context'
 import { getParentNode, Icon } from '~common'
-import { NEED_WRAP_TYPES } from '~/editor/plugins/config'
 
 import './hover-toolbar.scss'
 
@@ -21,18 +20,10 @@ const getClosetRect = (editor: Editor, targetNode: CustomElement) => {
     return {
       ...rect,
       top: rect.top,
-      height: rect.height || 40,
+      height: rect.height || 30,
       left: rect.left - 16,
     }
   }
-  // if (targetNode.type === 'gtp-previewer' || targetNode.type === 'image' || NEED_WRAP_TYPES.includes(targetNode.type)) {
-  //   return {
-  //     ...rect,
-  //     top: rect.top,
-  //     height: 40,
-  //     left: rect.left,
-  //   }
-  // }
 
   const parent = getParentNode(editor, targetNode)
   if (parent) {
@@ -51,7 +42,7 @@ const getClosetRect = (editor: Editor, targetNode: CustomElement) => {
   return {
     ...rect,
     top: rect.top,
-    height: 40,
+    height: 30,
     left: rect.left,
   }
 }
@@ -113,6 +104,7 @@ export const HoverToolbar = memo(() => {
     if (!closestElement) {
       return
     }
+    ReactEditor.focus(editor)
     const path = ReactEditor.findPath(editor, closestElement)
     Transforms.select(editor, path)
   }, [editor, closestElement])

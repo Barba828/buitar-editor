@@ -23,15 +23,34 @@ export const ImageBlockElement: FC<RenderElementProps & HTMLProps<HTMLDivElement
   const focused = useFocused()
   const [showModal, setShowModal] = useState(false)
   const originUrl = (element as ImageElement).url
-  const [url, setUrl] = useState(originUrl)
+  const [url, setUrl] = useState(originUrl && originUrl.startsWith('data:') ? '' : originUrl)
 
   const handleRemove = useCallback(() => {
     Transforms.removeNodes(editor, { at: ReactEditor.findPath(editor, element) })
   }, [editor, element])
 
-  const changeElementLink = useCallback(() => {
-    Transforms.setNodes(editor, { url }, { at: ReactEditor.findPath(editor, element) })
-  }, [editor, element, url])
+  const changeElementLink = useCallback(
+    (targetUrl?: string) => {
+      Transforms.setNodes(editor, { url: targetUrl }, { at: ReactEditor.findPath(editor, element) })
+    },
+    [editor, element]
+  )
+
+  const handleloadFile: React.ChangeEventHandler<HTMLInputElement> = useCallback(
+    (e) => {
+      const file = e.target.files?.[0]
+      if (file) {
+        // setLink(URL.createObjectURL(file))
+        const reader = new FileReader()
+        reader.onload = () => {
+          changeElementLink(reader.result as string)
+          setShowModal(false)
+        }
+        reader.readAsDataURL(file)
+      }
+    },
+    [changeElementLink]
+  )
 
   const btns = useMemo(
     () =>
@@ -55,18 +74,23 @@ export const ImageBlockElement: FC<RenderElementProps & HTMLProps<HTMLDivElement
     <Modal
       visible={showModal}
       onVisibleChange={(value) => setShowModal(value)}
-      onOk={changeElementLink}
+      onOk={() => changeElementLink(url)}
       header="Change image url"
     >
       <input
-        className="alpha-tab-element__input"
         contentEditable={true}
-        placeholder="Input GTP file url"
+        placeholder="Input image url"
+        className="primary-text-input"
         onChange={(e) => setUrl(e.target.value)}
-        defaultValue={originUrl}
+        value={url}
         autoFocus
         spellCheck={false}
       ></input>
+      <label htmlFor="fileInput" className="primary-file-input">
+        <Icon name="icon-paperclip-attechment"></Icon>
+        <div className="text-sm ml-2"> Upload local GTP file</div>
+        <input type="file" id="fileInput" accept="image/*" onChange={handleloadFile} />
+      </label>
     </Modal>
   )
   return (
@@ -83,12 +107,7 @@ export const ImageBlockElement: FC<RenderElementProps & HTMLProps<HTMLDivElement
         )}
       >
         {originUrl ? (
-          <img
-            src={originUrl}
-            className={cx(
-              'block max-w-full max-h-100 min-h-10 min-w-96 '
-            )}
-          />
+          <img src={originUrl} className={cx('block max-w-full max-h-100 min-h-10 min-w-96 ')} />
         ) : (
           <div
             onClick={() => setShowModal(true)}

@@ -16,14 +16,18 @@ interface ButtonGroupProps extends HTMLProps<HTMLDivElement> {
 
 export const ButtonGroup: FC<ButtonGroupProps> = ({ btns, className, children, ...props }) => {
   return (
-    <div {...props} className={cx('btn-groups z-10', className)} contentEditable={false}>
+    <div {...props} className={cx('btn-groups z-50', className)} contentEditable={false}>
       {btns
         ?.filter((it) => !!it)
         ?.map(({ icon, onClick, checked, ...iconsProps }, index) => (
           <div
             key={index}
             className={cx('btn-groups__btn', 'flex-center', { 'btn-groups__btn--active': checked })}
-            onClick={onClick}
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              onClick?.()
+            }}
           >
             {typeof icon === 'string' ? <Icon name={icon} {...iconsProps}></Icon> : icon}
           </div>

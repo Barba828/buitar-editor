@@ -19,32 +19,37 @@
   opacity: 0.4;
 }
 
-.input-container {
-  input {
-    display: block;
-    border: none;
-    line-height: 1.6rem;
-    transition: background 0.3s ease-in-out;
-    border-radius: 4px;
-    padding: 2px 4px;
-    opacity: 0.6;
-    font-weight: 600;
-    border: 1.6px solid $gray-0;
-    background: transparent;
-    width: 100%;
-    box-sizing: border-box;
-    &:focus,
-    &:hover,
-    &:active {
-      background: $gray-0;
-      outline: none;
-    }
-    &::placeholder {
-      color: $gray-3;
-    }
+.primary-text-input {
+  @apply opacity-60 block border-none outline-none leading-7 rounded box-border w-full;
+  transition: background 0.3s ease-in-out;
+  padding: 2px 4px;
+  font-weight: 600;
+  border: 1.6px solid $gray-2;
+  background: transparent;
+  &:focus,
+  &:hover,
+  &:active {
+    background: $gray-0;
+    border-color: $gray-0;
+  }
+  &::placeholder {
+    color: $gray-6;
+  }
 
-    &:not(:last-child) {
-      margin-bottom: 6px;
-    }
+  &:not(:last-child) {
+    margin-bottom: 6px;
+  }
+}
+
+.primary-file-input {
+  @apply flex p-2 mt-2 rounded items-center cursor-pointer opacity-60;
+  background: $gray-0;
+  transition: background 0.3s ease-in-out;
+  &:hover,
+  &:active {
+    background: $gray-1;
+  }
+  > input {
+    display: none;
   }
 }

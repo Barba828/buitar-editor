@@ -110,11 +110,9 @@ export const TablatureElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>
             'tablature-element',
             { 'tablature-element--horizontal': horizontal },
             { 'tablature-element--editable': editable },
-            { 'select-element': selected && !focused }
+            { 'select-element': selected && focused && !editable }
           )}
-          spellCheck={false}
-          contentEditable={editable}
-          suppressContentEditableWarning
+          contentEditable={false}
         >
           <ButtonGroup className="tablature-element__btns" btns={btns}></ButtonGroup>
 
@@ -127,13 +125,12 @@ export const TablatureElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>
               fontColor={isLight ? '#eee' : '#222'}
               size={60 + size * 10}
               horizontal={horizontal}
-              contentEditable={false}
             />
           </div>
           {editable && (
             <textarea
               className={cx(
-                'tablature-element__content relative rounded-lg p-2 m-2 box-border text-sm border-none outline-none resize-y overflow-y-scroll w-full min-h-20'
+                'tablature-element__content relative rounded-lg p-2 m-2 box-border text-sm border-none outline-none resize-none w-full h-32'
               )}
               value={text}
               onChange={(e) => setText(e.target.value)}

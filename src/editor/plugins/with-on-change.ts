@@ -1,6 +1,6 @@
 import { Transforms, Element as SlateElement, Editor, Range, Point, NodeEntry } from 'slate'
 import { getSelectedBlockActive, isBlockActive } from '~common'
-import { ToggleListElement } from '~/custom-types'
+import { CustomElement, ToggleListElement } from '~/custom-types'
 import { NEED_WRAP_TYPES, NONE_RICH_WRAP_TYPES, ONLY_ONE_WRAP_TYPES } from './config'
 
 const SHORTCUTS: Record<string, BlockFormat> = {
@@ -119,6 +119,19 @@ export const withOnChange = (editor: Editor) => {
     if (isCleaned) {
       return
     }
+
+    const { selection } = editor
+    if (selection && Range.isCollapsed(selection)) {
+      const previous = Editor.previous(editor, { at: selection })
+      if (previous) {
+        const [prevNode, prevPath] = previous
+        if (Editor.isVoid(editor, prevNode as CustomElement)) {
+          Transforms.select(editor, Editor.range(editor, prevPath))
+          return
+        }
+      }
+    }
+
     deleteBackward(...args)
   }
 

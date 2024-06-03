@@ -73,13 +73,12 @@ export const InputChordPopover: FC<CommonPopoverProps> = memo(
 
     return (
       <Popover
-        className="input-container"
         data-cy="input-chord-portal"
         onVisibleChange={onVisibleChange}
         rect={rect}
       >
-        <input placeholder="Text" onChange={onInputTextChange} value={text}></input>
-        <input placeholder="Chord Name" onChange={onInputChange} value={search} autoFocus></input>
+        <input placeholder="Text" className='primary-text-input' onChange={onInputTextChange} value={text}></input>
+        <input placeholder="Chord Name" className='primary-text-input' onChange={onInputChange} value={search} autoFocus></input>
         <SearchList search={search} onSelectChord={setSearch} onSelectTaps={onSelectTaps} />
         {leaf?.chord && (
           <>

@@ -59,9 +59,9 @@ export const VideoBlockElement: FC<RenderElementProps & HTMLProps<HTMLDivElement
       header="Set embed page url"
     >
       <input
-        className="alpha-tab-element__input"
         contentEditable={true}
-        placeholder="Input GTP file url"
+        placeholder="Input embed page url"
+        className='primary-text-input'
         onChange={(e) => setUrl(e.target.value)}
         defaultValue={originUrl}
         autoFocus

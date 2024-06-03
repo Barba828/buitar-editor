@@ -1,25 +1,34 @@
 .alpha-tab-element {
-  max-height: 40vh;
-  max-width: 95vw;
   background: $gray-0;
   color: $gray-8;
   z-index: 1;
+  .alpha-tab-element__container {
+    max-height: 36vh;
+    overflow-y: scroll;
+  }
   .icon-remove {
     color: $red-1;
   }
 }
 
+.alpha-tab-element--extend {
+  .alpha-tab-element__container {
+    max-height: 90vh;
+  }
+}
+
 .alpha-tab-element--fullscreen {
+  z-index: $zIndex-dialog;
   width: 100vw;
   height: 100vh;
-  max-height: unset;
-  max-width: unset;
-  z-index: $zIndex-dialog;
   .alpha-tab-element__container {
+    max-height: unset;
+    max-width: unset;
     flex: 1;
     height: 0;
     overflow: scroll;
     width: 100%;
+    padding-bottom: 6em;
   }
 }
 
@@ -59,23 +68,9 @@
   opacity: 0.8;
 }
 
-.alpha-tab-element__input {
-  border: none;
-  outline: none;
-  width: 100%;
-  height: 3em;
-  border-radius: 4px;
-  background-color: $gray-0;
-  color: $gray-8;
-  padding: 10px;
-  box-sizing: border-box;
-  &:hover,
-  &:focus {
-    background-color: $gray-0--hover;
-  }
-}
-
 .alpha-tab-element__tools {
+  position: fixed;
+  bottom: 0;
   min-height: 4em;
   width: 100%;
   display: flex;
@@ -84,6 +79,7 @@
   gap: 1em;
   padding: 10px 20px;
   box-sizing: border-box;
+  background: $gray-0;
 
   button {
     background-color: transparent;

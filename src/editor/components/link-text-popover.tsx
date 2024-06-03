@@ -90,18 +90,18 @@ export const LinkTextPopover: FC<CommonPopoverProps> = memo(
       <Popover
         data-cy="link-text-portal"
         rect={rect}
-        className="input-container"
         onVisibleChange={onVisibleChange}
         onClose={() => setRect(null)}
       >
         <div className="text-xs font-bold text-gray-500 dark:text-gray-400 m-1">Link title</div>
-        <input placeholder="Input Text" onChange={onInputTextChange} defaultValue={text}></input>
+        <input placeholder="Input Text" className='primary-text-input' onChange={onInputTextChange} defaultValue={text}></input>
         <div className="text-xs font-bold text-gray-500 dark:text-gray-400 m-1">Url</div>
         <input
           placeholder="Input Link"
           onChange={onInputChange}
           defaultValue={link}
           autoFocus
+          className='primary-text-input'
         ></input>
         <List
           lists={lists}
