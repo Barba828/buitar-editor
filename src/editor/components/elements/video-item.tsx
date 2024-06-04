@@ -71,11 +71,11 @@ export const VideoBlockElement: FC<RenderElementProps & HTMLProps<HTMLDivElement
   )
   return (
     <div {...attributes} {...divProps}>
-      {children}
+      <div className='hidden'>{children}</div>
 
       <div
         contentEditable={false}
-        className={cx('relative group cursor-pointer my-4 rounded overflow-hidden bg-gray-100 dark:bg-zinc-800', {
+        className={cx('relative group block-element-empty select-none', {
           'select-element': selected && focused,
         })}
       >

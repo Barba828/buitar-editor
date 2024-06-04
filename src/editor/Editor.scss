@@ -3,24 +3,22 @@
   max-width: 720px;
   min-width: 200px;
   margin: auto;
-  padding: 4vw;
+  padding: 2px 4vw 2px;
   box-sizing: border-box;
   outline: unset;
   background-color: $white-1;
 }
 
-.slate-element-selected {
-  background-color: $blue-active-bg;
-  border-radius: 6px;
-  // .slate-element-selected {
-  //   background-color: unset;
-  //   border-radius: unset;
-  // }
-}
-
-.slate-editable-footer {
+.slate-editable-after {
   height: 50vh;
   width: 100%;
+  cursor: text;
+}
+
+.slate-editable-before {
+  height: 3vw;
+  width: 100%;
+  cursor: text;
 }
 
 .slate-element-paragraph {

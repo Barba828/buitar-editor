@@ -2,12 +2,16 @@
   background: $gray-0;
   color: $gray-8;
   z-index: 1;
+  transition: background 0.3s ease-in-out;
   .alpha-tab-element__container {
     max-height: 36vh;
     overflow-y: scroll;
   }
   .icon-remove {
     color: $red-1;
+  }
+  &:hover {
+    background: $gray-0--hover;
   }
 }
 

@@ -4,7 +4,6 @@ import type { Settings, RenderingResources } from '@coderline/alphatab'
 import {
   ReactEditor,
   RenderElementProps,
-  useFocused,
   useSelected,
   useSlateStatic,
 } from 'slate-react'
@@ -48,7 +47,6 @@ export const AlphaTabElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>>
     const { link: elementLink = '', extend = false } = element as GTPPreviewerElement
     const editor = useSlateStatic()
     const selected = useSelected()
-    const focused = useFocused()
     const containerRef = useRef<HTMLDivElement>(null)
     const elementRef = useRef<HTMLDivElement>(null)
     const toolRef = useRef<HTMLDivElement>(null)
@@ -429,11 +427,11 @@ export const AlphaTabElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>>
 
     return (
       <div {...attributes} {...divProps}>
-        {children}
+        <div className='hidden'>{children}</div>
 
         <div
           className={cx(
-            'alpha-tab-element group text-sm rounded-lg w-full box-border',
+            'alpha-tab-element group text-sm rounded-lg w-full box-border select-none',
             { 'my-4 relative': !fullscreen },
             {
               'alpha-tab-element--fullscreen fixed m-0 p-0 rounded-none top-0 left-0 flex flex-col':
@@ -442,7 +440,7 @@ export const AlphaTabElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>>
             {
               'alpha-tab-element--extend': extend,
             },
-            { 'select-element': selected && focused && !fullscreen }
+            { 'select-element after:rounded-lg': selected && !fullscreen }
           )}
           contentEditable={false}
         >

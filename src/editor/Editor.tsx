@@ -8,11 +8,8 @@ import {
   DefaultElement,
   RenderLeafProps,
   DefaultLeaf,
-  useFocused,
-  useSelected,
   ReactEditor,
   useSlate,
-  useSlateStatic,
 } from 'slate-react'
 import {
   InlineChordElement,
@@ -33,11 +30,13 @@ import { Placeholder } from '~/editor/components/placeholder/custom-placeholder.
 import { HoverToolbar } from '~/editor/components/hover-toolbar'
 import { withPlugins } from '~/editor/plugins'
 import { EditableProvider, useEditableContext } from '~/editor/hooks/use-editable-context'
+import { useHotkey } from '~/editor/hooks/use-hotkey'
 import type { CustomElement } from '~/custom-types'
 import cx from 'classnames'
 
 import './Editor.scss'
 import './style/theme.scss'
+import { useTopSelected } from './hooks/use-top-selected'
 
 const SlateEditor: FC<{
   defaultValue?: Descendant[]
@@ -79,14 +78,20 @@ const SlateEditor: FC<{
 }
 
 const Editor = () => {
-  const editor = useSlateStatic()
+  const editor = useSlate()
+  const { selection } = useSlate()
   const { onCompositionStart, onCompositionEnd, onMouseOver, onSelect } = useEditableContext()!
+  const { onKeyDown } = useHotkey()
+
+  useEffect(() => {
+    console.log('selection', selection)
+  }, [selection])
 
   /**
    * 如果末尾是非空行，插入一个空行
    */
-  const handleClickFooter = useCallback(() => {
-    const lastNode = editor.children[editor.children.length - 1]
+  const handleClickAfter = useCallback(() => {
+    const lastNode = editor.children?.[editor.children.length - 1]
     if (!editor.isEmpty(lastNode as CustomElement)) {
       Transforms.insertNodes(
         editor,
@@ -101,8 +106,28 @@ const Editor = () => {
     Transforms.select(editor, editor.end([]))
     ReactEditor.focus(editor)
   }, [editor])
+  /**
+   * 如果首个节点是非空行，插入一个空行
+   */
+  const handleClickBefore = useCallback(() => {
+    const fisrtNode = editor.children?.[0]
+    if (!editor.isEmpty(fisrtNode as CustomElement)) {
+      Transforms.insertNodes(
+        editor,
+        {
+          type: 'paragraph',
+          children: [{ text: '' }],
+        },
+        { at: editor.start([]) }
+      )
+    }
+
+    Transforms.select(editor, [0])
+    ReactEditor.focus(editor)
+  }, [editor])
   return (
     <>
+      <div className="slate-editable-before" onClick={handleClickBefore}></div>
       <Editable
         id="slate-editable"
         className="slate-editable"
@@ -112,10 +137,11 @@ const Editor = () => {
         onSelect={onSelect}
         onCompositionStart={onCompositionStart}
         onCompositionEnd={onCompositionEnd}
+        onKeyDown={onKeyDown}
         spellCheck={false}
         autoFocus
       />
-      <div className="slate-editable-footer" onClick={handleClickFooter}></div>
+      <div className="slate-editable-after" onClick={handleClickAfter}></div>
 
       <SelectToolbar />
       <SlashToolbar />
@@ -127,10 +153,8 @@ const Editor = () => {
 }
 
 const Element = (props: RenderElementProps) => {
-  const selected = useSelected()
-  const focused = useFocused()
-  const isSelected = selected && !focused
-  const className = cx(isSelected && 'slate-element-selected??')
+  const isSelected = useTopSelected(props.element)
+  const className = cx(isSelected && 'select-element')
   const { element, attributes, children } = props
   switch (element.type) {
     case 'inline-chord':

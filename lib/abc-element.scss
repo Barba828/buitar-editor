@@ -1,6 +1,10 @@
 .abc-editor {
   background: $gray-0;
   color: $gray-8;
+  transition: background 0.3s ease-in-out;
+  &:hover {
+    background: $gray-0--hover;
+  }
 }
 
 .abc-editor__content {

@@ -3,12 +3,11 @@ import { FC, HTMLProps, memo, useCallback, useEffect, useMemo, useState } from '
 import {
   ReactEditor,
   RenderElementProps,
-  useFocused,
   useSelected,
   useSlateStatic,
 } from 'slate-react'
 import { CustomBlockTablatureElement } from '~chord'
-import { ButtonGroup, getElementText, Icon, useIsLightMode } from '~common'
+import { ButtonGroup, useIsLightMode } from '~common'
 import { Transforms } from 'slate'
 import cx from 'classnames'
 
@@ -51,7 +50,6 @@ export const TablatureElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>
     const [points, setPoints] = useState<SvgChordPoint[]>([])
     const isLight = useIsLightMode()
     const editor = useSlateStatic()
-    const focused = useFocused()
     const selected = useSelected()
 
     useEffect(() => {
@@ -102,15 +100,16 @@ export const TablatureElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>
 
     return (
       <div {...attributes} {...divProps}>
-        {children}
+        <div className='hidden'>{children}</div>
+
         <div
           className={cx(
-            'tablature-element',
+            'tablature-element rounded-lg select-none',
             'flex-center',
             'tablature-element',
             { 'tablature-element--horizontal': horizontal },
             { 'tablature-element--editable': editable },
-            { 'select-element': selected && focused && !editable }
+            { 'select-element after:rounded-lg': selected && !editable }
           )}
           contentEditable={false}
         >

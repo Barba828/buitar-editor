@@ -25,6 +25,16 @@ const getClosetRect = (editor: Editor, targetNode: CustomElement) => {
     }
   }
 
+  if (targetNode.type === 'toogle-list') {
+    const childRect = ReactEditor.toDOMNode(editor, targetNode.children?.[0]).getBoundingClientRect()
+    return {
+      ...childRect,
+      top: childRect.top,
+      height: childRect.height,
+      left: childRect.left - 20,
+    }
+  }
+
   const parent = getParentNode(editor, targetNode)
   if (parent) {
     const parentNode = parent[0] as CustomElement

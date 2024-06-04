@@ -16,7 +16,6 @@ export const CheckListItemElement: FC<RenderElementProps & HTMLProps<HTMLDivElem
   const editor = useSlateStatic()
   const readOnly = useReadOnly()
   const { checked } = element as CheckListItemElementType
-  
   return (
     <div
       {...attributes}

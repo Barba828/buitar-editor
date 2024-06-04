@@ -6,12 +6,3 @@
   @apply absolute inset-0 bg-blue-500 bg-opacity-20 content-[''] rounded pointer-events-none;
   animation: fadeIn 0.1s ease-in-out forwards;
 }
-
-/* .card-input-span {
-  @apply block p-2 box-border min-h-6 whitespace-pre-wrap break-words invisible max-h-80 overflow-y-auto;
-}
-
-.card-input {
-  @apply p-2 box-border border-none outline-none resize-none leading-6 
-  absolute top-0 left-0 w-full h-full overflow-hidden max-h-80 overflow-y-auto;
-} */

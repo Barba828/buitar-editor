@@ -111,11 +111,11 @@ export const BookmarkBlockElement: FC<RenderElementProps & HTMLProps<HTMLDivElem
 
   return (
     <div {...attributes} {...divProps}>
-      {children}
+      <div className='hidden'>{children}</div>
       <div
         contentEditable={false}
         className={cx(
-          'relative group cursor-pointer my-4 rounded-lg overflow-hidden bg-gray-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-300 hover:text-zinc-600 dark:hover:text-zinc-200',
+          'relative group block-element-empty select-none',
           {
             'select-element': selected && focused,
           }

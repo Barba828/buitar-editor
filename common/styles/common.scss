@@ -53,3 +53,13 @@
     display: none;
   }
 }
+
+.block-element-empty {
+  @apply cursor-pointer my-4 rounded overflow-hidden;
+  background: $gray-0;
+  transition: background 0.3s ease-in-out;
+  &:hover,
+  &:active {
+    background: $gray-0--hover;
+  }
+}

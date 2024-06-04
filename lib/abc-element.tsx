@@ -3,7 +3,6 @@ import { Transforms } from 'slate'
 import {
   ReactEditor,
   RenderElementProps,
-  useFocused,
   useSelected,
   useSlateStatic,
 } from 'slate-react'
@@ -13,10 +12,6 @@ import { ButtonGroup, Icon, Selector, type SelectorItem, toast } from '~common'
 import cx from 'classnames'
 
 import './abc-element.scss'
-
-// const isABCTablatureElement = (element: SlateElement): element is ABCTablatureElement => {
-//   return element.type === 'abc-tablature'
-// }
 
 const instruments: Array<SelectorItem<TablatureInstrument>> = [
   { value: '', label: '--' },
@@ -29,7 +24,6 @@ export const ABCElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>> = me
     const musicSheetRef = useRef<HTMLDivElement>(null)
     const editor = useSlateStatic()
     const selected = useSelected()
-    const focused = useFocused()
     const { instrument, data: originText } = element as ABCTablatureElement
     const [fullscreen, setFullscreen] = useState(false)
     const [editable, setEditable] = useState(false)
@@ -171,10 +165,10 @@ export const ABCElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>> = me
 
     return (
       <div {...attributes} {...divProps} data-slate-tablature={instrument}>
-        {children}
+        <div className='hidden'>{children}</div>
         <div
           className={cx(
-            'abc-editor rounded-lg group  box-border text-sm',
+            'abc-editor rounded-lg group box-border text-sm select-none',
             { 'relative my-4 p-4': !fullscreen },
             {
               'abc-editor--fullscreen fixed m-0 p-0 rounded-none top-0 left-0 flex flex-row':
@@ -183,7 +177,7 @@ export const ABCElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>> = me
             { 'abc-editor--short': short },
             {
               'select-element after:rounded-lg':
-                selected && focused && !editable && !fullscreen && short,
+                selected && !editable && !fullscreen && short,
             }
           )}
           contentEditable={false}
