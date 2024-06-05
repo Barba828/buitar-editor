@@ -99,10 +99,9 @@ const Editor = () => {
           type: 'paragraph',
           children: [{ text: '' }],
         },
-        { at: editor.end([]) }
+        { at: [editor.children.length] }
       )
     }
-
     Transforms.select(editor, editor.end([]))
     ReactEditor.focus(editor)
   }, [editor])
@@ -118,7 +117,7 @@ const Editor = () => {
           type: 'paragraph',
           children: [{ text: '' }],
         },
-        { at: editor.start([]) }
+        { at: [0] }
       )
     }
 
@@ -127,7 +126,9 @@ const Editor = () => {
   }, [editor])
   return (
     <>
-      <div className="slate-editable-before" onClick={handleClickBefore}></div>
+      <div className="slate-editable-before slate-editable-tip" onClick={handleClickBefore}>
+        Add a new line
+      </div>
       <Editable
         id="slate-editable"
         className="slate-editable"
@@ -140,7 +141,9 @@ const Editor = () => {
         spellCheck={false}
         autoFocus
       />
-      <div className="slate-editable-after" onClick={handleClickAfter}></div>
+      <div className="slate-editable-after slate-editable-tip" onClick={handleClickAfter}>
+        Add a new line
+      </div>
 
       <SelectToolbar />
       <SlashToolbar />
