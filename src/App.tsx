@@ -51,19 +51,6 @@ const EditorView = () => {
 
   return (
     <div className="buitar-editor__editor">
-      {/* <Editor
-        defaultValue={[
-          {
-            type: 'paragraph',
-            children: [
-              {
-                text: 'ssss',
-                link: 'https://www.baidu.com',
-              },
-            ],
-          },
-        ]}
-      ></Editor> */}
       <Editor defaultValue={doc?.values} onChange={handleChange}></Editor>
     </div>
   )
