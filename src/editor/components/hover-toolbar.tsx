@@ -114,9 +114,9 @@ export const HoverToolbar = memo(() => {
     if (!closestElement) {
       return
     }
-    ReactEditor.focus(editor)
     const path = ReactEditor.findPath(editor, closestElement)
     Transforms.select(editor, path)
+    ReactEditor.blur(editor)
   }, [editor, closestElement])
 
   useEffect(() => {
@@ -136,8 +136,8 @@ export const HoverToolbar = memo(() => {
   return (
     <div className="hover-toolbar" style={{ top: rect.top + rect.height / 2, left: rect.left }}>
       <div className="hover-toolbar-wrapper">
-        <Icon name="icon-add-plus" className="hover-toolbar-item" onClick={handleInsert}></Icon>
-        <Icon name="icon-drag" className="hover-toolbar-item" onClick={handleDrag}></Icon>
+        <Icon name="icon-add-plus" className="hover-toolbar-item" onMouseDown={handleInsert}></Icon>
+        <Icon name="icon-drag" className="hover-toolbar-item" onMouseDown={handleDrag}></Icon>
       </div>
       <div className="hover-toolbar-side"></div>
     </div>

@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useState, FC, HTMLProps, MouseEventHandler, useMemo } from 'react'
 import { Editor, Range } from 'slate'
-import { useSlate } from 'slate-react'
+import { useFocused, useSlate } from 'slate-react'
 import { InputChordPopover } from '~chord'
 import { getSelectedRect, Icon, isBlockActive, isMarkActive, Popover } from '~common'
 import { TextTypePopover } from '~/editor/components/text-type-popover'
@@ -22,6 +22,7 @@ export const SelectToolbar = () => {
   const [visible, setVisible] = useState<boolean>(false)
   const [popoverVisibleMap, setPopoverVisibleMap] = useState(defaultPopoverVisible)
   const editor = useSlate()
+  const focused = useFocused()
   const { selection } = editor
 
   const { selectType } = useBlockType()
@@ -30,7 +31,7 @@ export const SelectToolbar = () => {
   useEffect(() => {
     setVisible(
       Boolean(
-        selection && !Range.isCollapsed(selection) && Editor.string(editor, selection).length > 0
+        focused && selection && !Range.isCollapsed(selection) && Editor.string(editor, selection).length > 0
       )
     )
     setPopoverVisibleMap(defaultPopoverVisible)

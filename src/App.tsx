@@ -32,6 +32,11 @@ const App = () => {
 const EditorView = () => {
   const { doc, updateFile } = useFilesContext()!
 
+  // const handleChange = useCallback(async (_value: Descendant[]) => {
+  //   console.log('auto save', _value);
+  // },
+  // []
+  // )
   /**自动保存 */
   const handleChange = useCallback(
     debounce(async (_value: Descendant[]) => {

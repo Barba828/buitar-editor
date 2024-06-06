@@ -1,5 +1,5 @@
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
-import { Descendant, Transforms, Range, createEditor } from 'slate'
+import { Descendant, Transforms, Range, createEditor, Text, Element as SlateElement } from 'slate'
 import {
   Slate,
   Editable,
@@ -30,6 +30,7 @@ import { Placeholder } from '~/editor/components/placeholder/custom-placeholder.
 import { HoverToolbar } from '~/editor/components/hover-toolbar'
 import { withPlugins } from '~/editor/plugins'
 import { EditableProvider, useEditableContext } from '~/editor/hooks/use-editable-context'
+import { useFormatEmptyEditor, useFormatSubElement } from '~/editor/hooks/use-format-sub-element'
 import { useHotkey } from '~/editor/hooks/use-hotkey'
 import type { CustomElement } from '~/custom-types'
 import cx from 'classnames'
@@ -81,6 +82,7 @@ const Editor = () => {
   const editor = useSlate()
   const { onCompositionStart, onCompositionEnd, onMouseOver, onSelect } = useEditableContext()!
   const { onKeyDown } = useHotkey()
+  useFormatEmptyEditor()
 
   useEffect(() => {
     window.addEventListener('keydown', onKeyDown)
@@ -158,6 +160,7 @@ const Element = (props: RenderElementProps) => {
   const isSelected = useTopSelected(props.element)
   const className = cx(isSelected && 'select-element')
   const { element, attributes, children } = props
+  useFormatSubElement(element)
   switch (element.type) {
     case 'inline-chord':
       return <InlineChordElement {...props} />
@@ -179,12 +182,12 @@ const Element = (props: RenderElementProps) => {
       )
     case 'numbered-list':
       return (
-        <ol start={element.start} {...attributes}>
+        <ol start={element.start} {...attributes} className={className}>
           {children}
         </ol>
       )
     case 'bulleted-list':
-      return <ul {...attributes}>{children}</ul>
+      return <ul {...attributes} className={className}>{children}</ul>
     case 'image':
       return <ImageBlockElement {...props} />
     case 'video':

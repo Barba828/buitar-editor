@@ -1,14 +1,6 @@
-import {
-  createContext,
-  FC,
-  ReactNode,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-} from 'react'
+import { createContext, FC, ReactNode, useCallback, useContext, useMemo, useState } from 'react'
 import { CustomElement } from '~/custom-types'
-import { Range } from 'slate'
+import { Editor, Range } from 'slate'
 import { useSlate } from 'slate-react'
 import { debounce } from '~common/utils/debounce'
 import { getClosetElement } from '~/editor/utils/get-closet-element'
@@ -45,12 +37,34 @@ export const EditableProvider: FC<{ children: ReactNode }> = ({ children }) => {
     if (!selection || Range.isCollapsed(selection)) {
       return 0
     }
+
     /**
-     * 获取当前选择区域的深度，根据选区 focus, anchor 的重合path前缀获取，如果path一致，则取path.length - 1
+     * 获取当前选择区域的深度，根据选区 focus, anchor 的重合path前缀获取
      */
     const { focus, anchor } = selection
-    const selectionDepth = focus.path.findIndex((n, index) => n !== anchor.path[index])
-    return selectionDepth === -1 ? focus.path.length - 1 : selectionDepth + 1
+    const _depth = focus.path.findIndex((n, index) => n !== anchor.path[index]) + 1
+
+    /**
+     * 1. path 完全一致，则取表示 selection 中仅行内offset不同，则深度为 focus.path.length - 1
+     */
+    if (_depth <= 0) {
+      return focus.path.length - 1
+    }
+
+    const [parentAnchor, parentFocus] = Editor.edges(editor, focus.path.slice(0, _depth))
+    const parentSelection = {
+      anchor: parentAnchor,
+      focus: parentFocus,
+    }
+
+    /**
+     * 2. path 仅有一致前缀时，判断该前缀的父级 parentSelection 是否就是 selection ，若是则深度为 selectionDepth - 1
+     */
+    if (Range.equals(selection, parentSelection)) {
+      return _depth - 1
+    }
+
+    return _depth
   }, [selection])
 
   const onCompositionStart = useCallback(() => {

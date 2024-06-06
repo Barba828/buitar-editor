@@ -11,26 +11,39 @@ const useHotkey = () => {
 
   const onKeyDown = (event: KeyboardEvent) => {
     if (isHotkey('mod+a', event)) {
-      event.preventDefault()
-
       const { selection } = editor
-      if (selection && Range.isCollapsed(selection)) {
+      if (!selection) return
+      if (Range.isCollapsed(selection)) {
         const match = Editor.above(editor, {
           match: (n) =>
-            !Editor.isEditor(n) && SlateElement.isElement(n) && Editor.isBlock(editor, n),
+            !Editor.isEditor(n) &&
+            SlateElement.isElement(n) &&
+            Editor.isBlock(editor, n) &&
+            !Editor.isVoid(editor, n),
         })
         if (match && match[0] && !editor.isEmpty(match[0] as SlateElement)) {
+          /** 当前行非空，选中当前行 */
           editor.select(match[1])
-          return
+        } else {
+          /** 当前行为空，全选 */
+          editor.select({
+            anchor: editor.start([]),
+            focus: editor.end([]),
+          })
+          ReactEditor.blur(editor)
         }
-      }
+        event.preventDefault()
+        return
+      } else {
+        editor.select({
+          anchor: editor.start([]),
+          focus: editor.end([]),
+        })
+        ReactEditor.blur(editor)
 
-      editor.select({
-        anchor: editor.start([]),
-        focus: editor.end([]),
-      })
-      ReactEditor.blur(editor)
-      return
+        event.preventDefault()
+        return
+      }
     }
 
     if (isHotkey('mod+s', event)) {
@@ -73,7 +86,11 @@ const useHotkey = () => {
 
     if (isHotkey(['backspace', 'delete'], event)) {
       if (selection && !Range.isCollapsed(selection) && !focused) {
-        Transforms.removeNodes(editor, { at: selection })
+        Transforms.removeNodes(editor, { at: selection, mode: 'highest' })
+        ReactEditor.focus(editor)
+
+        event.preventDefault()
+        return
       }
     }
   }

@@ -120,6 +120,7 @@ export const withOnChange = (editor: Editor) => {
       return
     }
 
+    // 若在void block退格，则先选中该block
     const { selection } = editor
     if (selection && Range.isCollapsed(selection)) {
       const previous = Editor.previous(editor, { at: selection })
