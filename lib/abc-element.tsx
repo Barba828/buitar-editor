@@ -169,14 +169,17 @@ export const ABCElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>> = me
         <div
           className={cx(
             'abc-editor rounded-lg group box-border text-sm select-none',
-            { 'relative my-4 p-4': !fullscreen },
             {
+              'relative my-4 p-4': !fullscreen,
               'abc-editor--fullscreen fixed m-0 p-0 rounded-none top-0 left-0 flex flex-row':
                 fullscreen,
-            },
-            { 'abc-editor--extend': extend },
-            {
+              'abc-editor--extend': extend,
               'select-element after:rounded-lg': selected && !editable && !fullscreen,
+            },
+            {
+              'select-element-1': selected,
+              'select-element-2': editable,
+              'select-element-3': fullscreen,
             }
           )}
           contentEditable={false}
@@ -206,7 +209,6 @@ export const ABCElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>> = me
           <div className="abc-editor__previewer" style={!text && !editable ? { height: 0 } : {}}>
             <div ref={musicSheetRef}></div>
           </div>
-
         </div>
       </div>
     )

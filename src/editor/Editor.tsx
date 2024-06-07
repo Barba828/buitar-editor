@@ -189,11 +189,11 @@ const Element = (props: RenderElementProps) => {
     case 'bulleted-list':
       return <ul {...attributes} className={className}>{children}</ul>
     case 'image':
-      return <ImageBlockElement {...props} />
+      return <ImageBlockElement {...props} className={className} />
     case 'video':
-      return <VideoBlockElement {...props} />
+      return <VideoBlockElement {...props} className={className} />
     case 'bookmark':
-      return <BookmarkBlockElement {...props} />
+      return <BookmarkBlockElement {...props} className={className} />
     /** -------- 以下是基础类型（需要自定义Placeholder） -------- */
     case 'paragraph':
       return (

@@ -1,13 +1,7 @@
 import isUrl from 'is-url'
 import { FC, HTMLProps, useCallback, useMemo, useState } from 'react'
 import { Transforms } from 'slate'
-import {
-  ReactEditor,
-  RenderElementProps,
-  useFocused,
-  useSelected,
-  useSlateStatic,
-} from 'slate-react'
+import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react'
 import type { BookmarkElement } from '~/custom-types'
 import cx from 'classnames'
 import { ButtonGroup, Icon, Modal, Skeleton } from '~common'
@@ -21,8 +15,6 @@ export const BookmarkBlockElement: FC<RenderElementProps & HTMLProps<HTMLDivElem
 }) => {
   const editor = useSlateStatic()
   const { url: originUrl, title, description, image } = element as BookmarkElement
-  const selected = useSelected()
-  const focused = useFocused()
   const [showModal, setShowModal] = useState(false)
   const [metaLoading, setMetaLoading] = useState(false) // 请求bookmark meta信息
   const [url, setUrl] = useState(originUrl)
@@ -76,7 +68,7 @@ export const BookmarkBlockElement: FC<RenderElementProps & HTMLProps<HTMLDivElem
       <input
         contentEditable={true}
         placeholder="Input bookmark url"
-        className='primary-text-input'
+        className="primary-text-input"
         onChange={(e) => setUrl(e.target.value)}
         defaultValue={originUrl}
         autoFocus
@@ -92,7 +84,11 @@ export const BookmarkBlockElement: FC<RenderElementProps & HTMLProps<HTMLDivElem
     </div>
   )
 
-  const loadingView = <div className='p-4'><Skeleton line={2}></Skeleton></div>
+  const loadingView = (
+    <div className="p-4">
+      <Skeleton line={2}></Skeleton>
+    </div>
+  )
 
   const bookmarkView = (
     <a
@@ -111,16 +107,8 @@ export const BookmarkBlockElement: FC<RenderElementProps & HTMLProps<HTMLDivElem
 
   return (
     <div {...attributes} {...divProps}>
-      <div className='hidden'>{children}</div>
-      <div
-        contentEditable={false}
-        className={cx(
-          'relative group block-element-empty select-none',
-          {
-            'select-element': selected && focused,
-          }
-        )}
-      >
+      <div className="hidden">{children}</div>
+      <div contentEditable={false} className={cx('relative group block-element-empty select-none')}>
         {metaLoading ? loadingView : originUrl ? bookmarkView : emptyView}
         <ButtonGroup
           className="absolute top-2 right-2 opacity-0 group-hover:opacity-100"

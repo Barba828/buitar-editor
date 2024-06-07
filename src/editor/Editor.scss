@@ -6,7 +6,7 @@
   padding: 2px 4vw 2px;
   box-sizing: border-box;
   outline: unset;
-  background-color: $white-1;
+  // background-color: $white-1;
 }
 
 .slate-editable-after {
@@ -33,6 +33,6 @@
 
 .slate-element-paragraph {
   position: relative;
-  padding: 0.1em 0;
+  padding: 0.1em 0.2em;
   margin: 0.1em 0;
 }

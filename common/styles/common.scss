@@ -19,6 +19,15 @@
   opacity: 0.4;
 }
 
+.select-element {
+  position: relative;
+  &::after {
+    @apply absolute inset-0 content-[''] rounded pointer-events-none;
+    animation: fadeIn 0.1s ease-in-out forwards;
+    background-color: rgb(59 130 246 / 0.1);
+  }
+}
+
 .primary-text-input {
   @apply opacity-60 block border-none outline-none leading-7 rounded box-border w-full;
   transition: background 0.3s ease-in-out;

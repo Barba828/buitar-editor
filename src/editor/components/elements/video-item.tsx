@@ -4,8 +4,6 @@ import { Transforms } from 'slate'
 import {
   ReactEditor,
   RenderElementProps,
-  useFocused,
-  useSelected,
   useSlateStatic,
 } from 'slate-react'
 import { VideoElement } from '~/custom-types'
@@ -20,8 +18,6 @@ export const VideoBlockElement: FC<RenderElementProps & HTMLProps<HTMLDivElement
 }) => {
   const editor = useSlateStatic()
   const originUrl = (element as VideoElement).url
-  const selected = useSelected()
-  const focused = useFocused()
   const [showModal, setShowModal] = useState(false)
   const [url, setUrl] = useState(originUrl)
 
@@ -75,9 +71,7 @@ export const VideoBlockElement: FC<RenderElementProps & HTMLProps<HTMLDivElement
 
       <div
         contentEditable={false}
-        className={cx('relative group block-element-empty select-none', {
-          'select-element': selected && focused,
-        })}
+        className={cx('relative group block-element-empty select-none')}
       >
         {originUrl ? (
           <div

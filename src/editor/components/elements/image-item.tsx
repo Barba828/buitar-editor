@@ -4,8 +4,6 @@ import {
   RenderElementProps,
   useSlateStatic,
   ReactEditor,
-  useSelected,
-  useFocused,
 } from 'slate-react'
 import type { ImageElement } from '~/custom-types'
 import cx from 'classnames'
@@ -19,8 +17,6 @@ export const ImageBlockElement: FC<RenderElementProps & HTMLProps<HTMLDivElement
   ...divProps
 }) => {
   const editor = useSlateStatic()
-  const selected = useSelected()
-  const focused = useFocused()
   const [showModal, setShowModal] = useState(false)
   const originUrl = (element as ImageElement).url
   const [url, setUrl] = useState(originUrl && originUrl.startsWith('data:') ? '' : originUrl)
@@ -95,14 +91,11 @@ export const ImageBlockElement: FC<RenderElementProps & HTMLProps<HTMLDivElement
   )
   return (
     <div {...attributes} {...divProps}>
-      <div className='hidden'>{children}</div>
+      <div className="hidden">{children}</div>
       <div
         contentEditable={false}
         className={cx(
           'relative group block-element-empty select-none',
-          {
-            'select-element': selected && focused,
-          },
           originUrl ? 'w-fit' : 'w-full'
         )}
       >

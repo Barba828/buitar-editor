@@ -9,13 +9,11 @@
 
 .popover-container {
   position: absolute;
-  // top: -100vh;
-  // left: -100vw;
   opacity: 0;
   z-index: calc($zIndex-dialog + 1);
   padding: 4px;
-  // max-height: 360px;
-  overflow-y: scroll;
+  // overflow-y: scroll;
+  overflow: auto;
   background-color: $white-1;
   border-radius: 4px;
   box-shadow: $shadow-popover;

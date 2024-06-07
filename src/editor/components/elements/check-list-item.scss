@@ -1,5 +1,6 @@
 .check-list-item {
   position: relative;
+  margin: 0.1em 0;
 }
 
 .check-list-item--checked {
@@ -11,10 +12,11 @@
 
 .check-list-item__checkbox {
   vertical-align: middle;
+  margin-left: 0.25em;
 }
 
 .check-list-item__text {
-  margin-left: 0.75em;
+  margin-left: 0.5em;
   &:focus {
     outline: none;
   }
