@@ -11,6 +11,7 @@ const useHotkey = () => {
 
   const onKeyDown = (event: KeyboardEvent) => {
     if (isHotkey('mod+a', event)) {
+      if (!focused) return
       const { selection } = editor
       if (!selection) return
       if (Range.isCollapsed(selection)) {
@@ -53,6 +54,8 @@ const useHotkey = () => {
     }
 
     if (isHotkey('mod+d', event)) {
+      if (!focused || !selection) return
+
       const match = Editor.above(editor, {
         match: (n) => SlateElement.isElement(n) && Editor.isBlock(editor, n),
       })
@@ -66,12 +69,15 @@ const useHotkey = () => {
     }
 
     if (isHotkey('esc', event)) {
+      if (!focused) return
       event.preventDefault()
       ReactEditor.blur(editor)
       return
     }
 
     if (isHotkey('tab', event)) {
+      if (!focused || !selection) return
+
       const match = Editor.above(editor, {
         match: (n) => SlateElement.isElement(n) && Editor.isBlock(editor, n),
       })

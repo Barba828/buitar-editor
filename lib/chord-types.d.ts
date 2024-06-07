@@ -29,6 +29,7 @@ export type ABCTablatureElement = {
   type: 'abc-tablature'
   instrument?: TablatureInstrument
   data?: string
+  extend?: boolean
   children?: Descendant[]
 }
 

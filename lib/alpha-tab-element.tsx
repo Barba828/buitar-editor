@@ -1,12 +1,7 @@
 import { FC, HTMLProps, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { AlphaTabApi, LayoutMode, synth } from '@coderline/alphatab'
+import { AlphaTabApi, LayoutMode, synth, model } from '@coderline/alphatab'
 import type { Settings, RenderingResources } from '@coderline/alphatab'
-import {
-  ReactEditor,
-  RenderElementProps,
-  useSelected,
-  useSlateStatic,
-} from 'slate-react'
+import { ReactEditor, RenderElementProps, useSelected, useSlateStatic } from 'slate-react'
 import type { GTPPreviewerElement } from '~chord'
 import {
   ButtonGroup,
@@ -56,7 +51,7 @@ export const AlphaTabElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>>
     const [link, setLink] = useState(typeof elementLink === 'string' ? elementLink : '')
     const isLightMode = useIsLightMode()
 
-    const [api, setApi] = useState<AlphaTabApi>()
+    const [alphaTabApi, setAlphaTabApi] = useState<AlphaTabApi>()
     const [alphaTabError, setAlphaTabError] = useState<Error>()
     const [score, setScore] = useState<AlphaTabApi['score']>()
     const [tracks, setTracks] = useState<AlphaTabApi['tracks']>([])
@@ -66,26 +61,8 @@ export const AlphaTabElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>>
     const [endSecond, setEndSecond] = useState(Infinity)
     const [playing, setPlaying] = useState(false)
 
+    /** 初始化 */
     useEffect(() => {
-      setReady(false)
-      const themeResources = (isLightMode
-        ? {
-          staffLineColor: '#222', // 六线谱线的颜色
-          barSeparatorColor: '#222', // 小节分隔符颜色
-          barNumberColor: '#646cff', // 小节号的颜色
-          mainGlyphColor: '#111', // 主要音符的颜色
-          secondaryGlyphColor: '#181818', // 次要音符的颜色
-          scoreInfoColor: '#080808', // 歌曲信息的颜色
-        }
-        : {
-          staffLineColor: '#ddd', // 六线谱线的颜色
-          barSeparatorColor: '#ddd', // 小节分隔符颜色
-          barNumberColor: '#646cff', // 小节号的颜色
-          mainGlyphColor: '#eee', // 主要音符的颜色
-          secondaryGlyphColor: '#e8e8e8', // 次要音符的颜色
-          scoreInfoColor: '#f8f8f8', // 歌曲信息的颜色
-        }) as unknown as RenderingResources
-
       const api = new AlphaTabApi(elementRef.current!, {
         core: {
           // file: elementLink,
@@ -99,14 +76,9 @@ export const AlphaTabElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>>
           scrollElement: containerRef.current! as HTMLElement,
         },
         display: {
-          resources: themeResources,
           scale: 0.5,
         },
       } as Settings)
-
-      api.load(elementLink)
-
-      setApi(api)
 
       api.scoreLoaded.on((score) => {
         console.log('scoreLoaded', score, api)
@@ -146,41 +118,80 @@ export const AlphaTabElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>>
       api.error.on((e) => {
         setAlphaTabError(e)
       })
-
+      setAlphaTabApi(api)
       return () => {
-        api.destroy()
+        api?.destroy()
       }
-    }, [elementLink, isLightMode])
+    }, [])
+    /** 监听 gtp谱链接 */
+    useEffect(() => {
+      if (!elementLink || !alphaTabApi) {
+        return
+      }
+      setReady(false)
+      alphaTabApi.load(elementLink)
+    }, [elementLink, alphaTabApi])
+    /** 监听 theme */
+    useEffect(() => {
+      if (!alphaTabApi) {
+        return
+      }
+      const themeResources = (
+        isLightMode
+          ? {
+            staffLineColor: new model.Color(34, 34, 34), // 六线谱线的颜色
+            barSeparatorColor: new model.Color(34, 34, 34), // 小节分隔符颜色
+            barNumberColor: new model.Color(100, 108, 255), // 小节号的颜色
+            mainGlyphColor: new model.Color(17, 17, 17), // 主要音符的颜色
+            secondaryGlyphColor: new model.Color(24, 24, 24), // 次要音符的颜色
+            scoreInfoColor: new model.Color(8, 8, 8), // 歌曲信息的颜色
+          }
+          : {
+            staffLineColor: new model.Color(221, 221, 221), // 六线谱线的颜色
+            barSeparatorColor: new model.Color(221, 221, 221), // 小节分隔符颜色
+            barNumberColor: new model.Color(100, 108, 255), // 小节号的颜色
+            mainGlyphColor: new model.Color(238, 238, 238), // 主要音符的颜色
+            secondaryGlyphColor: new model.Color(232, 232, 232), // 次要音符的颜色
+            scoreInfoColor: new model.Color(248, 248, 248), // 歌曲信息的颜色
+          }
+      ) as RenderingResources
+      alphaTabApi.settings.display.resources = {
+        ...alphaTabApi.settings.display.resources,
+        ...themeResources,
+      }
+      alphaTabApi.updateSettings()
+      alphaTabApi.render()
+    }, [isLightMode, alphaTabApi])
 
     const playPause = () => {
-      api?.playPause()
+      alphaTabApi?.playPause()
     }
     const playStop = () => {
-      api?.stop()
+      alphaTabApi?.stop()
     }
 
     const print = () => {
-      api?.print()
+      alphaTabApi?.print()
     }
 
     const changeZoomIn = (item: SelectorItem<string>) => {
-      if (!api) {
+      if (!alphaTabApi) {
         return
       }
       const zoomLevel = parseInt(item.value) / 100
-      api.settings.display.scale = zoomLevel
-      api.updateSettings()
-      api.render()
+      alphaTabApi.settings.display.scale = zoomLevel
+      alphaTabApi.updateSettings()
+      alphaTabApi.render()
     }
 
     const changeLayout = (item: SelectorItem<LayoutMode>) => {
-      if (!api) {
+      if (!alphaTabApi) {
         return
       }
 
-      api.settings.display.layoutMode = item.value
-      api.updateSettings()
-      api.render()
+      alphaTabApi.settings.display.layoutMode = item.value
+      alphaTabApi.updateSettings()
+      alphaTabApi.render()
     }
 
     const changeElementLink = useCallback(
@@ -203,14 +214,14 @@ export const AlphaTabElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>>
     }, [editor, element, extend])
 
     const changeFullsceen = useCallback(() => {
-      if (!api) {
+      if (!alphaTabApi) {
         return
       }
-      api.settings.display.scale = fullscreen ? 0.5 : 1
-      api.updateSettings()
-      api.render()
+      alphaTabApi.settings.display.scale = fullscreen ? 0.5 : 1
+      alphaTabApi.updateSettings()
+      alphaTabApi.render()
       setFullscreen(!fullscreen)
-    }, [api, fullscreen])
+    }, [alphaTabApi, fullscreen])
 
     const handleRemove = useCallback(() => {
       Transforms.removeNodes(editor, { at: ReactEditor.findPath(editor, element) })
@@ -238,19 +249,26 @@ export const AlphaTabElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>>
         [
           ready && { icon: 'icon-print', onClick: print },
           { icon: 'icon-paperclip-attechment', onClick: () => setShowModal(!showModal) },
-          ready &&
-            !fullscreen && {
-            icon: extend ? 'icon-shrink' : 'icon-expand',
-            onClick: changeElementExtend,
-            className: '-rotate-45',
-          },
           ready && {
-            icon: fullscreen ? 'icon-shrink' : 'icon-play-line',
+            icon: fullscreen ? 'icon-shrink' : 'icon-expand',
             onClick: changeFullsceen,
           },
           !fullscreen && { icon: 'icon-remove', onClick: handleRemove },
         ].filter((it) => !!it),
-      [changeElementExtend, changeFullsceen, extend, fullscreen, handleRemove, print, showModal]
+      [changeFullsceen, fullscreen, handleRemove, print, ready, showModal]
+    )
+
+    const footerBtns = useMemo(
+      () =>
+        [
+          ready &&
+            !fullscreen && {
+            icon: 'icon-trigger',
+            onClick: changeElementExtend,
+            className: extend ? 'rotate-180' : '',
+          },
+        ].filter((it) => !!it),
+      [changeElementExtend, extend, fullscreen, ready]
     )
 
     const tracksView = (
@@ -269,7 +287,7 @@ export const AlphaTabElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>>
               renderTracks.includes(track) && 'alpha-tab-element__tools__track--active'
             )}
             style={{ borderColor: track.color.rgba }}
-            onClick={() => api?.renderTracks([track])}
+            onClick={() => alphaTabApi?.renderTracks([track])}
           >
             <div className="alpha-tab-element__tools__track-info">
               <div>
@@ -280,7 +298,7 @@ export const AlphaTabElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>>
                 <button
                   onClick={() => {
                     track.playbackInfo.isMute = !track.playbackInfo.isMute
-                    api?.changeTrackMute([track], track.playbackInfo.isMute)
+                    alphaTabApi?.changeTrackMute([track], track.playbackInfo.isMute)
                     setTracks(tracks)
                   }}
                   className={cx({
@@ -292,7 +310,7 @@ export const AlphaTabElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>>
                 <button
                   onClick={() => {
                     track.playbackInfo.isSolo = !track.playbackInfo.isSolo
-                    api?.changeTrackSolo([track], track.playbackInfo.isSolo)
+                    alphaTabApi?.changeTrackSolo([track], track.playbackInfo.isSolo)
                     setTracks(tracks)
                   }}
                   className={cx({
@@ -312,7 +330,7 @@ export const AlphaTabElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>>
               defaultValue={1}
               onChange={(e) => {
                 track.playbackInfo.volume = Number(e.target.value)
-                api?.changeTrackVolume([track], track.playbackInfo.volume)
+                alphaTabApi?.changeTrackVolume([track], track.playbackInfo.volume)
                 setTracks(tracks)
               }}
             ></input>
@@ -398,12 +416,18 @@ export const AlphaTabElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>>
     )
 
     const btnsView = (
-      <ButtonGroup
-        className="alpha-tab-element__btns top-2 right-2 absolute opacity-0 group-hover:opacity-100"
-        btns={btns}
-      >
-        {linkInputView}
-      </ButtonGroup>
+      <>
+        <ButtonGroup
+          className="absolute top-2 right-2 opacity-0 group-hover:opacity-100"
+          btns={btns}
+        >
+          {linkInputView}
+        </ButtonGroup>
+        <ButtonGroup
+          className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100"
+          btns={footerBtns}
+        ></ButtonGroup>
+      </>
     )
 
     const emptyView =
@@ -426,8 +450,14 @@ export const AlphaTabElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>>
       )
 
     return (
-      <div {...attributes} {...divProps}>
-        <div className='hidden'>{children}</div>
+      <div
+        {...attributes}
+        {...divProps}
+        onClick={(e) => {
+          e.stopPropagation()
+        }}
+      >
+        <div className="hidden">{children}</div>
 
         <div
           className={cx(

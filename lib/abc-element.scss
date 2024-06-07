@@ -5,6 +5,10 @@
   &:hover {
     background: $gray-0--hover;
   }
+  .abc-editor__previewer {
+    max-height: 30vh;
+    overflow-y: scroll;
+  }
 }
 
 .abc-editor__content {
@@ -61,21 +65,9 @@
   }
 }
 
-.abc-editor--short {
-  max-height: 40vh;
-  overflow-y: hidden;
-  position: relative;
+.abc-editor--extend {
   .abc-editor__previewer {
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      background: linear-gradient(0deg, $gray-0 0, $gray-0 20%, transparent 100%);
-      height: 10vh;
-      width: 100%;
-      pointer-events: none;
-    }
+    max-height: 90vh;
   }
 }
 

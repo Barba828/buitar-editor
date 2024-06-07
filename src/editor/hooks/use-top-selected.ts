@@ -15,7 +15,6 @@ const useTopSelected = (element: SlateElement) => {
   const path = useMemo(() => ReactEditor.findPath(editor, element), [editor, element])
   
   const isSelected = useMemo(() => {
-    // console.log('lnz selectedDepth', selectedDepth, element, path);
     return path.length === selectedDepth && selected
   }, [selectedDepth, path, selected])
 

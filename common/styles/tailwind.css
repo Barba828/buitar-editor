@@ -3,6 +3,6 @@
 @tailwind utilities;
 
 .select-element::after {
-  @apply absolute inset-0 bg-blue-500 bg-opacity-20 content-[''] rounded pointer-events-none;
+  @apply absolute inset-0 bg-blue-500 bg-opacity-10 content-[''] rounded pointer-events-none;
   animation: fadeIn 0.1s ease-in-out forwards;
 }

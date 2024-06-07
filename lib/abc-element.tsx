@@ -1,11 +1,6 @@
 import { FC, HTMLProps, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Transforms } from 'slate'
-import {
-  ReactEditor,
-  RenderElementProps,
-  useSelected,
-  useSlateStatic,
-} from 'slate-react'
+import { ReactEditor, RenderElementProps, useSelected, useSlateStatic } from 'slate-react'
 import { type ABCTablatureElement } from '~chord'
 import abcjs, { type TablatureInstrument } from 'abcjs'
 import { ButtonGroup, Icon, Selector, type SelectorItem, toast } from '~common'
@@ -24,10 +19,9 @@ export const ABCElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>> = me
     const musicSheetRef = useRef<HTMLDivElement>(null)
     const editor = useSlateStatic()
     const selected = useSelected()
-    const { instrument, data: originText } = element as ABCTablatureElement
+    const { instrument, data: originText, extend = false } = element as ABCTablatureElement
     const [fullscreen, setFullscreen] = useState(false)
     const [editable, setEditable] = useState(false)
-    const [short, setShort] = useState(true)
     const [text, setText] = useState(originText || '')
 
     useEffect(() => {
@@ -45,19 +39,6 @@ export const ABCElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>> = me
       // })
     }, [text, instrument])
 
-    useEffect(() => {
-      setShort(!editable)
-    }, [editable])
-    useEffect(() => {
-      setShort(!fullscreen)
-    }, [fullscreen])
-    useEffect(() => {
-      if (short) {
-        setEditable(false)
-        setFullscreen(false)
-      }
-    }, [short])
-
     const handleABCIntrumentChange = useCallback(
       (item: SelectorItem<TablatureInstrument>) => {
         const nextInstrument = item.value
@@ -69,6 +50,14 @@ export const ABCElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>> = me
       },
       [editor, element]
     )
+
+    const changeElementExtend = useCallback(() => {
+      Transforms.setNodes(
+        editor,
+        { extend: !extend },
+        { at: ReactEditor.findPath(editor, element) }
+      )
+    }, [editor, element, extend])
 
     const handlePrint = useCallback(() => {
       // window.print()
@@ -102,15 +91,6 @@ export const ABCElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>> = me
       setEditable(!editable)
     }, [editable, editor, element, text])
 
-    const showSetShortBtn = useMemo(
-      () =>
-        !editable &&
-        !fullscreen &&
-        musicSheetRef.current?.scrollHeight &&
-        musicSheetRef.current.scrollHeight > 200,
-      [fullscreen, editable, text]
-    )
-
     const mainBtns = useMemo(
       () =>
         [
@@ -132,17 +112,13 @@ export const ABCElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>> = me
     const footerBtns = useMemo(
       () =>
         [
-          showSetShortBtn && {
-            icon: (
-              <Icon
-                name="icon-trigger"
-                style={{ transform: `rotate(${short ? 0 : 180}deg)` }}
-              ></Icon>
-            ),
-            onClick: () => setShort(!short),
+          !fullscreen && {
+            icon: 'icon-trigger',
+            onClick: changeElementExtend,
+            className: extend ? 'rotate-180' : '',
           },
         ].filter((it) => !!it),
-      [short, showSetShortBtn]
+      [changeElementExtend, extend, fullscreen]
     )
 
     const leftBtns = useMemo(
@@ -163,9 +139,33 @@ export const ABCElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>> = me
       [handleABCIntrumentChange, instrument]
     )
 
+    const btnsView = (
+      <>
+        <ButtonGroup
+          className="abc-editor__btns absolute top-2 right-2 opacity-0 group-hover:opacity-100"
+          btns={mainBtns}
+        ></ButtonGroup>
+        <ButtonGroup
+          className="abc-editor__btns absolute top-2 left-2 opacity-0 group-hover:opacity-100"
+          btns={leftBtns}
+        ></ButtonGroup>
+        <ButtonGroup
+          className="abc-editor__btns absolute bottom-2 right-2 opacity-0 group-hover:opacity-100"
+          btns={footerBtns}
+        ></ButtonGroup>
+      </>
+    )
+
     return (
-      <div {...attributes} {...divProps} data-slate-tablature={instrument}>
-        <div className='hidden'>{children}</div>
+      <div
+        {...attributes}
+        {...divProps}
+        data-slate-tablature={instrument}
+        onClick={(e) => {
+          e.stopPropagation()
+        }}
+      >
+        <div className="hidden">{children}</div>
         <div
           className={cx(
             'abc-editor rounded-lg group box-border text-sm select-none',
@@ -174,26 +174,14 @@ export const ABCElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>> = me
               'abc-editor--fullscreen fixed m-0 p-0 rounded-none top-0 left-0 flex flex-row':
                 fullscreen,
             },
-            { 'abc-editor--short': short },
+            { 'abc-editor--extend': extend },
             {
-              'select-element after:rounded-lg':
-                selected && !editable && !fullscreen && short,
+              'select-element after:rounded-lg': selected && !editable && !fullscreen,
             }
           )}
           contentEditable={false}
         >
-          <ButtonGroup
-            className="abc-editor__btns absolute top-2 right-2 opacity-0 group-hover:opacity-100"
-            btns={mainBtns}
-          ></ButtonGroup>
-          <ButtonGroup
-            className="abc-editor__btns absolute top-2 left-2 opacity-0 group-hover:opacity-100"
-            btns={leftBtns}
-          ></ButtonGroup>
-          <ButtonGroup
-            className="abc-editor__btns absolute bottom-2 right-2 opacity-0 group-hover:opacity-100"
-            btns={footerBtns}
-          ></ButtonGroup>
+          {btnsView}
 
           {editable && (
             <textarea
@@ -206,7 +194,6 @@ export const ABCElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>> = me
               autoFocus
             ></textarea>
           )}
-
           {!text && !editable && (
             <div
               onClick={() => setEditable(true)}
@@ -219,6 +206,7 @@ export const ABCElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>> = me
           <div className="abc-editor__previewer" style={!text && !editable ? { height: 0 } : {}}>
             <div ref={musicSheetRef}></div>
           </div>
+
         </div>
       </div>
     )
