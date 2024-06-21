@@ -57,9 +57,9 @@ export const AlphaTabElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>>
     const [tracks, setTracks] = useState<AlphaTabApi['tracks']>([])
     const [renderTracks, setRenderTracks] = useState<AlphaTabApi['tracks']>([])
     const [ready, setReady] = useState(false)
+    const [playing, setPlaying] = useState(false)
     const [currentSecond, setCurrentSecond] = useState(0)
     const [endSecond, setEndSecond] = useState(Infinity)
-    const [playing, setPlaying] = useState(false)
 
     /** 初始化 */
     useEffect(() => {
@@ -381,8 +381,8 @@ export const AlphaTabElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>>
             <Icon name={playing ? 'icon-pause' : 'icon-play'}></Icon>
           </button>
         </div>
-        <div style={{ whiteSpace: 'nowrap' }}>
-          <span style={{ fontWeight: 'bold' }}>{score?.title}</span>
+        <div className="whitespace-nowrap">
+          <span className="font-bold">{score?.title}</span>
           <span> - {score?.artist}</span>
         </div>
         <div style={{ flex: 1 }}>
