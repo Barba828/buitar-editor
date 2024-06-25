@@ -1,6 +1,7 @@
 import { createContext, FC, ReactNode, useCallback, useContext, useEffect, useState } from 'react'
 import { fileDbManager, FileData, initFileList } from './indexed-files'
 import { getTitle } from '~/editor/utils/get-title'
+import { useHash } from 'react-use/lib/useHash'
 
 interface FilesContextType {
   doc?: FileData
@@ -19,10 +20,11 @@ const FilesContext = createContext<FilesContextType | undefined>(undefined)
 export const FilesProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [fileList, setFileList] = useState<FileData[]>([])
   const [doc, setDoc] = useState<FileData>()
+  const [hash, setHash] = useHash()
 
   useEffect(() => {
     if (doc?.id) {
-      window.location.hash = String(doc?.id)
+      setHash(`${doc.id}`)
     }
   }, [doc])
 
@@ -65,7 +67,7 @@ export const FilesProvider: FC<{ children: ReactNode }> = ({ children }) => {
   )
 
   const updateFile = useCallback(
-    async (newDoc?: FileData) => {
+    async (newDoc?: FileData) => {      
       if (!window.editor?.children) {
         return
       }
@@ -85,6 +87,9 @@ export const FilesProvider: FC<{ children: ReactNode }> = ({ children }) => {
         } as FileData
       }
       fileDbManager.updateData(updateDoc)
+      if (updateDoc.id === doc?.id) {
+        setDoc(updateDoc)
+      }
       await readFiles()
     },
     [doc, readFiles]
@@ -115,7 +120,7 @@ export const FilesProvider: FC<{ children: ReactNode }> = ({ children }) => {
     const initList = () => {
       readFiles().then((_list) => {
         if (_list.length) {
-          const hashDocId = Number(window.location.hash?.replace('#', ''))
+          const hashDocId = Number(hash.replace('#', ''))
           if (!hashDocId) {
             setDoc(_list[0])
             return

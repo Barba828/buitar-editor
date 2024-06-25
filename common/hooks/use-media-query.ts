@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import useMedia from "react-use/lib/useMedia"
 
 export const isLightMode = () => {
   const mediaQuery = window.matchMedia('(prefers-color-scheme: light)')
@@ -6,16 +6,6 @@ export const isLightMode = () => {
 }
 
 export const useIsLightMode = () => {
-  const [isLight, setIsLight] = useState(isLightMode())
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: light)')
-    const listener = () => {
-      setIsLight(mediaQuery.matches)
-    }
-    mediaQuery.addEventListener('change', listener)
-    return () => {
-      mediaQuery.removeEventListener('change', listener)
-    }
-  }, [])
+  const isLight = useMedia('(prefers-color-scheme: light)');
   return isLight
 }

@@ -14,26 +14,9 @@ import './hover-toolbar.scss'
  * @param targetNode
  * @returns
  */
-const getClosetRect = (editor: Editor, targetNode: CustomElement) => {
+const getClosetRect = (editor: Editor, targetNode: CustomElement, mouseY: number): DOMRect => {
   const rect = ReactEditor.toDOMNode(editor, targetNode).getBoundingClientRect()
-  if (targetNode.type === 'list-item') {
-    return {
-      ...rect,
-      top: rect.top,
-      height: rect.height || 30,
-      left: rect.left - 16,
-    }
-  }
-
-  if (targetNode.type === 'toogle-list') {
-    const childRect = ReactEditor.toDOMNode(editor, targetNode.children?.[0]).getBoundingClientRect()
-    return {
-      ...childRect,
-      top: childRect.top,
-      height: childRect.height,
-      left: childRect.left - 20,
-    }
-  }
+  const isFromTop = Math.abs(rect.top - mouseY) < rect.height / 2 // rect顶部top位置，距离鼠标Y差值小于rect高/2，则认为是从rect上往下移入
 
   const parent = getParentNode(editor, targetNode)
   if (parent) {
@@ -43,23 +26,69 @@ const getClosetRect = (editor: Editor, targetNode: CustomElement) => {
         ...rect,
         top: rect.top,
         height: rect.height,
-        left: rect.left - 20,
+        left: rect.left - 30,
       }
     }
   }
 
-  // return rect
+  // list-item类型的元素，左侧 marker 占位 20 px
+  if (targetNode.type === 'list-item') {
+    return {
+      ...rect,
+      top: rect.top,
+      height: rect.height,
+      left: rect.left - 20, // list-item左侧距离为20px
+    }
+  }
+
+  // toogle-list 获取其第一个/最后一个子元素的rect
+  if (targetNode.type === 'toogle-list') {
+    if(isFromTop){
+      return getClosetRect(editor, targetNode.children?.[0] as CustomElement, mouseY)
+    }
+    const leastChild = targetNode.children?.[targetNode.children.length - 1] as CustomElement
+    return getClosetRect(editor, leastChild, mouseY)
+  }
+
+  // block-quote 获取其第一个的rect
+  if (targetNode.type === 'block-quote') {
+    const leastChild = targetNode.children?.[0] as CustomElement
+    const _rect = getClosetRect(editor, leastChild, mouseY)
+    return {
+      ..._rect,
+      left: _rect.left - 20,
+    }
+  }
+
+  if (targetNode.type === 'heading-1') {
+    return {
+      ...rect,
+      top: rect.top,
+      height: 48,
+      left: rect.left,
+    }
+  }
+
+  if (editor.isVoid(targetNode)) {
+    return {
+      ...rect,
+      top: rect.top,
+      height: 30,
+      left: rect.left,
+    }
+  }
+
   return {
     ...rect,
     top: rect.top,
-    height: 30,
+    height: rect.height,
     left: rect.left,
   }
 }
 
 export const HoverToolbar = memo(() => {
   const [rect, setRect] = useState<DOMRect | null>(null)
-  const { closestElement } = useEditableContext()!
+  const { closestElement, mouseY } = useEditableContext()!
   const editor = useSlateStatic()
   const { selection } = editor
   const focused = useFocused()
@@ -79,7 +108,7 @@ export const HoverToolbar = memo(() => {
       cleanHoverToolbar()
       return
     }
-    const targetRect = getClosetRect(editor, closestElement)
+    const targetRect = getClosetRect(editor, closestElement, mouseY)
     if (targetRect) {
       setRect(targetRect)
     } else if (closestElement) {

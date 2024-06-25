@@ -1,5 +1,5 @@
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
-import { Descendant, Transforms, Range, createEditor, Text, Element as SlateElement } from 'slate'
+import { Descendant, Transforms, Range, createEditor} from 'slate'
 import {
   Slate,
   Editable,
@@ -187,7 +187,11 @@ const Element = (props: RenderElementProps) => {
         </ol>
       )
     case 'bulleted-list':
-      return <ul {...attributes} className={className}>{children}</ul>
+      return (
+        <ul {...attributes} className={className}>
+          {children}
+        </ul>
+      )
     case 'image':
       return <ImageBlockElement {...props} className={className} />
     case 'video':

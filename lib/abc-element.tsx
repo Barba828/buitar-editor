@@ -499,11 +499,11 @@ export const ABCElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>> = me
         <div className="" style={{ display: 'none' }} ref={musicToolsRef}></div>
         {ready && (
           <div className="flex-center">
-            <button onClick={handleDownloadWav}>
+            <button onClick={handleDownloadWav} className="flex-center">
               <Icon name="icon-download"></Icon>
               <span>Wav</span>
             </button>
-            <button onClick={handleDownloadMidi}>
+            <button onClick={handleDownloadMidi} className="flex-center">
               <Icon name="icon-download"></Icon>
               <span>Midi</span>
             </button>

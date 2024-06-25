@@ -14,9 +14,14 @@ interface EditableContextType {
   selectedDepth: number
   /**输入法正在输入 */
   imeComposing: boolean
+  /**是否collapsed选中 */
   isCollapsedSelected: boolean
+  /**鼠标移动方向向下 */
+  isMouseDown: boolean
   /**最近的Block元素 */
   closestElement?: CustomElement
+  mouseX: number
+  mouseY: number
 
   onCompositionStart?: React.CompositionEventHandler<HTMLDivElement>
   onCompositionEnd?: React.CompositionEventHandler<HTMLDivElement>
@@ -31,7 +36,11 @@ export const EditableProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const { selection } = editor
   const [imeComposing, setImeComposing] = useState<boolean>(false)
   const [isCollapsedSelected, setIsCollapsedSelected] = useState<boolean>(false)
+
   const [closestElement, setClosestElement] = useState<CustomElement>()
+  const [isMouseDown, setIsMouseDown] = useState(true)
+  const [mouseX, setMouseX] = useState(-1)
+  const [mouseY, setMouseY] = useState(-1)
 
   const selectedDepth = useMemo(() => {
     if (!selection || Range.isCollapsed(selection)) {
@@ -84,8 +93,12 @@ export const EditableProvider: FC<{ children: ReactNode }> = ({ children }) => {
         }
         setClosestElement(targetNode)
       }
+
+      setIsMouseDown(event.clientY > mouseY)
+      setMouseX(event.clientX)
+      setMouseY(event.clientY)
     }, 16),
-    [editor]
+    [editor, mouseY, closestElement]
   )
 
   const onSelect = useCallback(
@@ -101,6 +114,9 @@ export const EditableProvider: FC<{ children: ReactNode }> = ({ children }) => {
     closestElement,
     imeComposing,
     isCollapsedSelected,
+    isMouseDown,
+    mouseX,
+    mouseY,
 
     onCompositionStart,
     onCompositionEnd,

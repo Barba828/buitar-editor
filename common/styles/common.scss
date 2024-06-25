@@ -71,4 +71,14 @@
   &:active {
     background: $gray-0--hover;
   }
+  &:before {
+    content: '';
+    position: absolute;
+    top: -1rem;
+    bottom: -1rem;
+    left: 0px;
+    right: 0px;
+    background-color: transparent;
+    pointer-events: none;
+  }
 }
