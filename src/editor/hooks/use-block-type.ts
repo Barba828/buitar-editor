@@ -25,7 +25,7 @@ export const useBlockType = () => {
       setBlockType(flatTypeArr[0])
       setNode(undefined)
     }
-  }, [selection]) // 仅观察「selection」
+  }, [selection]) // 仅watch「selection」
 
   return { selectType: blockType, selectNode: node }
 }

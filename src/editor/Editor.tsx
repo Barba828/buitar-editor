@@ -62,6 +62,7 @@ const SlateEditor: FC<{
   )
 
   useEffect(() => {
+    // 切换doc时重置
     if (defaultValue) {
       editor.children = defaultValue
       setValue(defaultValue)

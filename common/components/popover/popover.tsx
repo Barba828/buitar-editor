@@ -9,6 +9,7 @@ import {
 } from 'react'
 import { Portal } from './portal'
 import cx from 'classnames'
+import isHotkey from 'is-hotkey'
 
 import './popover.scss'
 
@@ -86,10 +87,13 @@ export const Popover = forwardRef<PopoverRefs, PopoverProps>(
 
     const handleKeyDown = useCallback(
       (event: KeyboardEvent) => {
-        if (event.key === 'Escape') {
+        if (isHotkey('esc', event)) {
           event.stopPropagation()
           event.preventDefault()
           hide()
+        }
+        if (isHotkey(['backspace', 'delete'], event)) {
+          event.stopPropagation()
         }
       },
       [hide]

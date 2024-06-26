@@ -67,7 +67,7 @@ export const FilesProvider: FC<{ children: ReactNode }> = ({ children }) => {
   )
 
   const updateFile = useCallback(
-    async (newDoc?: FileData) => {      
+    async (newDoc?: FileData) => {
       if (!window.editor?.children) {
         return
       }
@@ -87,9 +87,6 @@ export const FilesProvider: FC<{ children: ReactNode }> = ({ children }) => {
         } as FileData
       }
       fileDbManager.updateData(updateDoc)
-      if (updateDoc.id === doc?.id) {
-        setDoc(updateDoc)
-      }
       await readFiles()
     },
     [doc, readFiles]

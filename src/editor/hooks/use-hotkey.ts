@@ -10,6 +10,7 @@ const useHotkey = () => {
   const { selection } = editor
 
   const onKeyDown = (event: KeyboardEvent) => {
+    // 全选
     if (isHotkey('mod+a', event)) {
       if (!focused) return
       const { selection } = editor
@@ -47,12 +48,14 @@ const useHotkey = () => {
       }
     }
 
+    // 保存
     if (isHotkey('mod+s', event)) {
       event.preventDefault()
       updateFile()
       return
     }
 
+    // 复制
     if (isHotkey('mod+d', event)) {
       if (!focused || !selection) return
 
@@ -91,10 +94,10 @@ const useHotkey = () => {
     }
 
     if (isHotkey(['backspace', 'delete'], event)) {
+      
       if (selection && !Range.isCollapsed(selection) && !focused) {
         Transforms.removeNodes(editor, { at: selection, mode: 'highest' })
         ReactEditor.focus(editor)
-
         event.preventDefault()
         return
       }

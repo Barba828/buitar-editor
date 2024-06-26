@@ -43,10 +43,9 @@ const getClosetRect = (editor: Editor, targetNode: CustomElement, mouseY: number
 
   // toogle-list 获取其第一个/最后一个子元素的rect
   if (targetNode.type === 'toogle-list') {
-    if(isFromTop){
-      return getClosetRect(editor, targetNode.children?.[0] as CustomElement, mouseY)
-    }
-    const leastChild = targetNode.children?.[targetNode.children.length - 1] as CustomElement
+    const leastChild = targetNode.children?.[
+      isFromTop ? 0 : targetNode.children.length - 1
+    ] as CustomElement
     return getClosetRect(editor, leastChild, mouseY)
   }
 
@@ -60,15 +59,6 @@ const getClosetRect = (editor: Editor, targetNode: CustomElement, mouseY: number
     }
   }
 
-  if (targetNode.type === 'heading-1') {
-    return {
-      ...rect,
-      top: rect.top,
-      height: 48,
-      left: rect.left,
-    }
-  }
-
   if (editor.isVoid(targetNode)) {
     return {
       ...rect,
@@ -77,6 +67,15 @@ const getClosetRect = (editor: Editor, targetNode: CustomElement, mouseY: number
       left: rect.left,
     }
   }
+
+  // if (targetNode.type.includes('heading')) {
+  //   return {
+  //     ...rect,
+  //     top: rect.top,
+  //     height: 48,
+  //     left: rect.left,
+  //   }
+  // }
 
   return {
     ...rect,

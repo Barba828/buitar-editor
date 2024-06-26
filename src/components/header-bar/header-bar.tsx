@@ -22,20 +22,21 @@ export const HeaderBar: FC<
   const createTime = useMemo(() => {
     const date = new Date(doc?.updateTime || doc?.createTime || new Date())
     return date.toLocaleString()
-  }, [doc])
+  }, [doc?.createTime, doc?.updateTime])
 
   return (
     <div className="header-bar flex-center print-hide" {...props}>
-      <div className="flex-center" onClick={onTriggerExtend}>
-        <Icon
-          style={{ opacity: 0.8 }}
-          name={extend ? 'icon-left-double' : 'icon-menu'}
-          className="header-bar__icon"
-        ></Icon>
-        <div className="header-bar__title">
-          <h1> {doc?.title || 'Buitar Editor'} </h1>
-          <div className="header-bar__title__time">{createTime}</div>
-        </div>
+      <Icon
+        style={{ opacity: 0.8 }}
+        name={extend ? 'icon-left-double' : 'icon-menu'}
+        className="header-bar__icon"
+        onClick={onTriggerExtend}
+      ></Icon>
+      <div className="header-bar__title flex-1 w-0 text-ellipsis">
+        <h1 className="text-ellipsis overflow-x-hidden whitespace-nowrap">
+          {doc?.title || 'Buitar Editor'}
+        </h1>
+        <div className="header-bar__title__time">{createTime}</div>
       </div>
       <div>
         <button onClick={printFile}>Print</button>
