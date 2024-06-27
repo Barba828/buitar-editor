@@ -57,6 +57,15 @@ export const TablatureElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>
       setPoints(points)
     }, [stringNums, text])
 
+    const handleChangeData = useCallback((text: string) => {
+      setText(text)
+      Transforms.setNodes(
+        editor,
+        { data: text },
+        { at: ReactEditor.findPath(editor, element) }
+      )
+    }, [editor, element])
+
     const handleRotate = useCallback(() => {
       Transforms.setNodes(
         editor,
@@ -132,7 +141,7 @@ export const TablatureElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>
                 'tablature-element__content relative rounded-lg p-2 m-2 box-border text-sm border-none outline-none resize-none w-full h-32'
               )}
               value={text}
-              onChange={(e) => setText(e.target.value)}
+              onChange={(e) => handleChangeData(e.target.value)}
               spellCheck={false}
               autoFocus
             ></textarea>

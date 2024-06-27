@@ -133,6 +133,10 @@ export type CustomText = {
   strike?: boolean
   link?: string
   highlight?: boolean
+  color?: {
+    color?: string
+    background?: string
+  }
   text: string
 } & CustomChordText
 

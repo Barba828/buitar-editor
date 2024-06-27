@@ -1,5 +1,5 @@
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
-import { Descendant, Transforms, Range, createEditor} from 'slate'
+import { Descendant, Transforms, Range, createEditor } from 'slate'
 import {
   Slate,
   Editable,
@@ -312,6 +312,21 @@ const Leaf = (props: RenderLeafProps) => {
   if (leaf.chord) {
     children = <FixedChordLeaf {...props}>{children}</FixedChordLeaf>
   }
+
+  if (leaf.color) {
+    children = (
+      <span
+        className={cx(
+          leaf.color?.color,
+          leaf.color?.background,
+          leaf.color?.background && 'bg-opacity-40'
+        )}
+      >
+        {children}
+      </span>
+    )
+  }
+
   return <DefaultLeaf {...props}>{children}</DefaultLeaf>
 }
 

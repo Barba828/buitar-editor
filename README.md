@@ -7,9 +7,9 @@ Based on slate.js
 
 ## todolist
 
-### function
+### feature
+- [ ] dir
 - [ ] readonly
-- [ ] font color
 - [ ] code block
 
 ### utils

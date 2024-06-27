@@ -5,6 +5,7 @@ import { InputChordPopover } from '~chord'
 import { getSelectedRect, Icon, isBlockActive, isMarkActive, Popover } from '~common'
 import { TextTypePopover } from '~/editor/components/text-type-popover'
 import { LinkTextPopover } from '~/editor/components/link-text-popover'
+import { TextColorPopover } from '~/editor/components/text-color-popover'
 import { useBlockType } from '~/editor/hooks/use-block-type'
 import { ONLY_ONE_WRAP_TYPES } from '~/editor/plugins/config'
 import cx from 'classnames'
@@ -15,6 +16,7 @@ const defaultPopoverVisible = {
   textType: false,
   link: false,
   chord: false,
+  color: false,
 }
 
 export const SelectToolbar = () => {
@@ -24,6 +26,7 @@ export const SelectToolbar = () => {
   const editor = useSlate()
   const focused = useFocused()
   const { selection } = editor
+  const colorStyle = Editor.marks(editor)?.color
 
   const { selectType } = useBlockType()
 
@@ -31,15 +34,15 @@ export const SelectToolbar = () => {
   useEffect(() => {
     setVisible(
       Boolean(
-        focused && selection && !Range.isCollapsed(selection) && Editor.string(editor, selection).length > 0
+        selection && !Range.isCollapsed(selection) && Editor.string(editor, selection).length > 0
       )
     )
-    setPopoverVisibleMap(defaultPopoverVisible)
+    // setPopoverVisibleMap(defaultPopoverVisible)
   }, [editor, selection])
 
   /**显示toolbar位置 */
   useEffect(() => {
-    if (!visible) {
+    if (!visible || !focused) {
       return
     }
 
@@ -106,28 +109,67 @@ export const SelectToolbar = () => {
             <s>S</s>
           </FormatButton>
           {!isBasicToolbar && (
-            <FormatButton format="code">
-              <strong style={{ fontSize: '0.8rem' }}>{`</>`}</strong>
-            </FormatButton>
+            <>
+              <FormatButton format="code">
+                <strong style={{ fontSize: '0.8rem' }}>{`</>`}</strong>
+              </FormatButton>
+              <div
+                onMouseDown={() => handlePopoverVisibleChange('color')}
+                className="toolbar-menu-item"
+              >
+                <div
+                  className={cx(
+                    'w-5 h-5 flex-center text-sm rounded-sm',
+                    colorStyle?.color,
+                    colorStyle?.background,
+                    colorStyle?.background && 'bg-opacity-40'
+                  )}
+                >
+                  A
+                </div>
+                <Icon
+                  name="icon-right"
+                  className={cx(
+                    'ml-1 opacity-60 rotate-90 text-xs transition-all duration-300',
+                    popoverVisibleMap['color'] && '-rotate-90'
+                  )}
+                />
+              </div>
+            </>
           )}
         </div>
-        {!isBasicToolbar && (
-          <div className="toolbar-menu-group">
-            <FormatButton format="link" onMouseDown={() => handlePopoverVisibleChange('link')}>
-              <Icon name="icon-link-break" />
-              <Icon name="icon-right" className="ml-1 opacity-60 rotate-90 text-xs" />
-            </FormatButton>
-            <FormatButton format="chord" onMouseDown={() => handlePopoverVisibleChange('chord')}>
-              <Icon name="icon-chord" />
-              <Icon name="icon-right" className="ml-1 opacity-60 rotate-90 text-xs" />
-            </FormatButton>
-          </div>
-        )}
+        <div className="toolbar-menu-group">
+          {!isBasicToolbar && (
+            <>
+              <FormatButton format="link" onMouseDown={() => handlePopoverVisibleChange('link')}>
+                <Icon name="icon-link-break" />
+                <Icon
+                  name="icon-right"
+                  className={cx(
+                    'ml-1 opacity-60 rotate-90 text-xs transition-all duration-300',
+                    popoverVisibleMap['link'] && '-rotate-90'
+                  )}
+                />
+              </FormatButton>
+              <FormatButton format="chord" onMouseDown={() => handlePopoverVisibleChange('chord')}>
+                <Icon name="icon-chord" />
+                <Icon
+                  name="icon-right"
+                  className={cx(
+                    'ml-1 opacity-60 rotate-90 text-xs transition-all duration-300',
+                    popoverVisibleMap['chord'] && '-rotate-90'
+                  )}
+                />
+              </FormatButton>
+            </>
+          )}
+        </div>
       </Popover>
 
       <TextTypePopover visible={popoverVisibleMap['textType']} />
-      <LinkTextPopover visible={popoverVisibleMap['link']}></LinkTextPopover>
+      <LinkTextPopover visible={popoverVisibleMap['link']} />
       <InputChordPopover visible={popoverVisibleMap['chord']} />
+      <TextColorPopover visible={popoverVisibleMap['color']} />
     </>
   )
 }
@@ -145,9 +187,9 @@ const FormatButton: FC<{ format: TextFormat } & HTMLProps<HTMLDivElement>> = ({
   }, [])
   return (
     <div
-      className={cx('toolbar-menu-item', active && 'toolbar-menu-item--active')}
-      onMouseDown={props.onMouseDown ? props.onMouseDown : onMouseDown}
       {...props}
+      className={cx('toolbar-menu-item', active && 'toolbar-menu-item--active', props.className)}
+      onMouseDown={props.onMouseDown ? props.onMouseDown : onMouseDown}
     >
       {children}
     </div>

@@ -43,7 +43,7 @@ export const EditableProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [mouseY, setMouseY] = useState(-1)
 
   const selectedDepth = useMemo(() => {
-    if (!selection || Range.isCollapsed(selection)) {
+    if (!selection) {
       return 0
     }
 

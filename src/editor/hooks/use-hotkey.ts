@@ -2,6 +2,7 @@ import { Editor, Path, Range, Element as SlateElement, Transforms } from 'slate'
 import isHotkey from 'is-hotkey'
 import { ReactEditor, useFocused, useSlate } from 'slate-react'
 import { useFilesContext } from '~/utils/use-files-context'
+import { deepClone } from '~common/utils/deep-clone'
 
 const useHotkey = () => {
   const editor = useSlate()
@@ -64,7 +65,7 @@ const useHotkey = () => {
       })
       if (match) {
         const [node, path] = match
-        Transforms.insertNodes(editor, { ...node }, { at: Path.next(path) })
+        Transforms.insertNodes(editor, deepClone(node), { at: Path.next(path) })
         Transforms.select(editor, Path.next(path))
         event.preventDefault()
         return
@@ -94,7 +95,6 @@ const useHotkey = () => {
     }
 
     if (isHotkey(['backspace', 'delete'], event)) {
-      
       if (selection && !Range.isCollapsed(selection) && !focused) {
         Transforms.removeNodes(editor, { at: selection, mode: 'highest' })
         ReactEditor.focus(editor)

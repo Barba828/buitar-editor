@@ -237,7 +237,7 @@ export const ABCElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>> = me
         return
       }
       const tablature = instrument ? [{ instrument }] : []
-
+      
       visualObj.current = renderAbc(musicSheetRef.current, text, {
         add_classes: true,
         // oneSvgPerLine: true,
@@ -584,7 +584,7 @@ export const ABCElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>> = me
           {editable && (
             <textarea
               className={cx(
-                'abc-editor__content rounded-lg p-2 pt-6 box-border border-none outline-none resize-y overflow-y-scroll w-full min-h-32'
+                'abc-editor__content rounded-lg p-2 pt-6 box-border border-none outline-none resize-y overflow-y-scroll w-full min-h-40'
               )}
               value={text}
               onChange={(e) => setText(e.target.value)}

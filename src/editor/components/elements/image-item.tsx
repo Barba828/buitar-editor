@@ -1,10 +1,6 @@
 import { FC, HTMLProps, useCallback, useMemo, useState } from 'react'
 import { Transforms } from 'slate'
-import {
-  RenderElementProps,
-  useSlateStatic,
-  ReactEditor,
-} from 'slate-react'
+import { RenderElementProps, useSlateStatic, ReactEditor } from 'slate-react'
 import type { ImageElement } from '~/custom-types'
 import cx from 'classnames'
 import { ButtonGroup, Icon, Modal } from '~common'
@@ -47,6 +43,13 @@ export const ImageBlockElement: FC<RenderElementProps & HTMLProps<HTMLDivElement
     },
     [changeElementLink]
   )
+
+  const selectImage = useCallback(() => {
+    Transforms.select(editor, ReactEditor.findPath(editor, element))
+    console.log(ReactEditor.findPath(editor, element));
+    
+    ReactEditor.blur(editor)
+  }, [editor, element])
 
   const btns = useMemo(
     () =>
@@ -100,7 +103,11 @@ export const ImageBlockElement: FC<RenderElementProps & HTMLProps<HTMLDivElement
         )}
       >
         {originUrl ? (
-          <img src={originUrl} className={cx('block max-w-full max-h-100 min-h-10 min-w-96 ')} />
+          <img
+            onClick={selectImage}
+            src={originUrl}
+            className={cx('block max-w-full max-h-100 min-h-10 min-w-96 ')}
+          />
         ) : (
           <div
             onClick={() => setShowModal(true)}
