@@ -102,7 +102,7 @@ export const TablatureElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>
             onClick: handleDecreaseSize,
           },
           size < BLOCK_TABLATURE_MAX_SIZE && { icon: 'icon-add-plus', onClick: handleIncreaseSize },
-          { icon: 'icon-close', onClick: handleRemove },
+          { icon: 'icon-remove', onClick: handleRemove },
         ].filter((it) => !!it),
       [editable, handleDecreaseSize, handleIncreaseSize, handleRemove, handleRotate, size, title]
     )

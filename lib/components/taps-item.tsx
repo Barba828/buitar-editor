@@ -87,7 +87,7 @@ export const InlineTapsItem = ({ attributes, element, children }: RenderElementP
         { icon: 'icon-title', onClick: handleChangeConcise, checked: !concise },
         size > INLINE_TAPS_MIN_SIZE && { icon: 'icon-remove-minus', onClick: handleDecreaseSize },
         size < INLINE_TAPS_MAX_SIZE && { icon: 'icon-add-plus', onClick: handleIncreaseSize },
-        { icon: 'icon-close', onClick: handleRemove },
+        { icon: 'icon-remove', onClick: handleRemove },
       ].filter((it) => !!it),
     [concise, handleChangeConcise, handleDecreaseSize, handleEdit, handleIncreaseSize, handleRemove, size, title]
   )

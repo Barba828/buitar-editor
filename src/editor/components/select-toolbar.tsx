@@ -32,12 +32,13 @@ export const SelectToolbar = () => {
 
   /**判断是否显示toolbar */
   useEffect(() => {
-    setVisible(
-      Boolean(
-        selection && !Range.isCollapsed(selection) && Editor.string(editor, selection).length > 0
-      )
+    const nextVisible = Boolean(
+      selection && !Range.isCollapsed(selection) && Editor.string(editor, selection).length > 0
     )
-    // setPopoverVisibleMap(defaultPopoverVisible)
+    setVisible(nextVisible)
+    if (!nextVisible) {
+      setPopoverVisibleMap(defaultPopoverVisible)
+    }
   }, [editor, selection])
 
   /**显示toolbar位置 */

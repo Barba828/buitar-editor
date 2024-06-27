@@ -27,7 +27,7 @@ export const SideBar: FC<
         >
           <div className='side-bar__item__title'> {item.title}</div>
           <div className="side-bar__item__icons flex-center">
-            <Icon name="icon-close-circle" onClick={() => deleteFile(item.id)}></Icon>
+            <Icon name="icon-remove" onClick={() => deleteFile(item.id)}></Icon>
           </div>
         </div>
       )
