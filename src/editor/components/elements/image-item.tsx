@@ -10,6 +10,7 @@ export const ImageBlockElement: FC<RenderElementProps & HTMLProps<HTMLDivElement
   attributes,
   children,
   element,
+  className,
   ...divProps
 }) => {
   const editor = useSlateStatic()
@@ -46,8 +47,6 @@ export const ImageBlockElement: FC<RenderElementProps & HTMLProps<HTMLDivElement
 
   const selectImage = useCallback(() => {
     Transforms.select(editor, ReactEditor.findPath(editor, element))
-    console.log(ReactEditor.findPath(editor, element));
-    
     ReactEditor.blur(editor)
   }, [editor, element])
 
@@ -87,7 +86,7 @@ export const ImageBlockElement: FC<RenderElementProps & HTMLProps<HTMLDivElement
       ></input>
       <label htmlFor="fileInput" className="primary-file-input">
         <Icon name="icon-paperclip-attechment"></Icon>
-        <div className="text-sm ml-2"> Upload local GTP file</div>
+        <div className="text-sm ml-2"> Upload image</div>
         <input type="file" id="fileInput" accept="image/*" onChange={handleloadFile} />
       </label>
     </Modal>
@@ -99,7 +98,8 @@ export const ImageBlockElement: FC<RenderElementProps & HTMLProps<HTMLDivElement
         contentEditable={false}
         className={cx(
           'relative group block-element-empty select-none',
-          originUrl ? 'w-fit' : 'w-full'
+          originUrl ? 'w-fit' : 'w-full',
+          className
         )}
       >
         {originUrl ? (

@@ -82,13 +82,8 @@ const SlateEditor: FC<{
 const Editor = () => {
   const editor = useSlate()
   const { onCompositionStart, onCompositionEnd, onMouseOver, onSelect } = useEditableContext()!
-  const { onKeyDown } = useHotkey()
+  useHotkey()
   useFormatEmptyEditor()
-
-  useEffect(() => {
-    window.addEventListener('keydown', onKeyDown)
-    return () => window.removeEventListener('keydown', onKeyDown)
-  })
 
   /**
    * 如果末尾是非空行，插入一个空行

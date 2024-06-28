@@ -107,7 +107,7 @@
             }
         ],
         "type": "gtp-previewer",
-        "link": "/buitar/canon.gp"
+        "link": "/buitar-editor/canon.gp"
     },
     {
         "type": "paragraph",

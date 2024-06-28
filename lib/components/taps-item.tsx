@@ -89,7 +89,16 @@ export const InlineTapsItem = ({ attributes, element, children }: RenderElementP
         size < INLINE_TAPS_MAX_SIZE && { icon: 'icon-add-plus', onClick: handleIncreaseSize },
         { icon: 'icon-remove', onClick: handleRemove },
       ].filter((it) => !!it),
-    [concise, handleChangeConcise, handleDecreaseSize, handleEdit, handleIncreaseSize, handleRemove, size, title]
+    [
+      concise,
+      handleChangeConcise,
+      handleDecreaseSize,
+      handleEdit,
+      handleIncreaseSize,
+      handleRemove,
+      size,
+      title,
+    ]
   )
 
   if (!taps) {

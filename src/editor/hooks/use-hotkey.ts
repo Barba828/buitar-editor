@@ -1,16 +1,17 @@
 import { Editor, Path, Range, Element as SlateElement, Transforms } from 'slate'
 import isHotkey from 'is-hotkey'
-import { ReactEditor, useFocused, useSlate } from 'slate-react'
+import { ReactEditor, useSlate } from 'slate-react'
 import { useFilesContext } from '~/utils/use-files-context'
 import { deepClone } from '~common/utils/deep-clone'
+import { useCallback, useEffect } from 'react'
 
 const useHotkey = () => {
   const editor = useSlate()
-  const focused = useFocused()
   const { updateFile } = useFilesContext()!
   const { selection } = editor
 
-  const onKeyDown = (event: KeyboardEvent) => {
+  const onKeyDown = useCallback((event: KeyboardEvent) => {
+    const focused = ReactEditor.isFocused(editor)
     // 全选
     if (isHotkey('mod+a', event)) {
       if (!focused) return
@@ -102,10 +103,12 @@ const useHotkey = () => {
         return
       }
     }
-  }
+  }, [editor, selection, updateFile])
 
-  return { onKeyDown }
+  useEffect(() => {
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [onKeyDown])
 }
 
-export default useHotkey
 export { useHotkey }

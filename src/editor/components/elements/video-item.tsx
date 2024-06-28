@@ -1,11 +1,7 @@
 import isUrl from 'is-url'
 import { FC, HTMLProps, useCallback, useMemo, useState } from 'react'
 import { Transforms } from 'slate'
-import {
-  ReactEditor,
-  RenderElementProps,
-  useSlateStatic,
-} from 'slate-react'
+import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react'
 import { VideoElement } from '~/custom-types'
 import cx from 'classnames'
 import { ButtonGroup, Icon, Modal } from '~common'
@@ -57,7 +53,7 @@ export const VideoBlockElement: FC<RenderElementProps & HTMLProps<HTMLDivElement
       <input
         contentEditable={true}
         placeholder="Input embed page url"
-        className='primary-text-input'
+        className="primary-text-input"
         onChange={(e) => setUrl(e.target.value)}
         defaultValue={originUrl}
         autoFocus
@@ -67,12 +63,9 @@ export const VideoBlockElement: FC<RenderElementProps & HTMLProps<HTMLDivElement
   )
   return (
     <div {...attributes} {...divProps}>
-      <div className='hidden'>{children}</div>
+      <div className="hidden">{children}</div>
 
-      <div
-        contentEditable={false}
-        className={cx('relative group block-element-empty select-none')}
-      >
+      <div contentEditable={false} className={cx('relative group block-element-empty select-none')}>
         {originUrl ? (
           <div
             style={{

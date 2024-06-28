@@ -237,7 +237,7 @@ export const ABCElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>> = me
         return
       }
       const tablature = instrument ? [{ instrument }] : []
-      
+
       visualObj.current = renderAbc(musicSheetRef.current, text, {
         add_classes: true,
         // oneSvgPerLine: true,

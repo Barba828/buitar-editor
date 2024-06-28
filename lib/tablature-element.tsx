@@ -1,11 +1,6 @@
 import { type SvgChordPoint, SvgTablature } from '@buitar/svg-chord'
 import { FC, HTMLProps, memo, useCallback, useEffect, useMemo, useState } from 'react'
-import {
-  ReactEditor,
-  RenderElementProps,
-  useSelected,
-  useSlateStatic,
-} from 'slate-react'
+import { ReactEditor, RenderElementProps, useSelected, useSlateStatic } from 'slate-react'
 import { CustomBlockTablatureElement } from '~chord'
 import { ButtonGroup, useIsLightMode } from '~common'
 import { Transforms } from 'slate'
@@ -57,14 +52,13 @@ export const TablatureElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>
       setPoints(points)
     }, [stringNums, text])
 
-    const handleChangeData = useCallback((text: string) => {
-      setText(text)
-      Transforms.setNodes(
-        editor,
-        { data: text },
-        { at: ReactEditor.findPath(editor, element) }
-      )
-    }, [editor, element])
+    const handleChangeData = useCallback(
+      (text: string) => {
+        setText(text)
+        Transforms.setNodes(editor, { data: text }, { at: ReactEditor.findPath(editor, element) })
+      },
+      [editor, element]
+    )
 
     const handleRotate = useCallback(() => {
       Transforms.setNodes(
@@ -109,7 +103,7 @@ export const TablatureElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>
 
     return (
       <div {...attributes} {...divProps}>
-        <div className='hidden'>{children}</div>
+        <div className="hidden">{children}</div>
 
         <div
           className={cx(
