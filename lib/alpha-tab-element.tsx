@@ -453,11 +453,9 @@ export const AlphaTabElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>>
       <div
         {...attributes}
         {...divProps}
-        onClick={(e) => {
-          e.stopPropagation()
-        }}
+        contentEditable={false}
       >
-        <div className="hidden">{children}</div>
+        <div className='invisible'>{children}</div>
 
         <div
           className={cx(
@@ -472,7 +470,6 @@ export const AlphaTabElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>>
             },
             { 'select-element after:rounded-lg': selected && !fullscreen }
           )}
-          contentEditable={false}
         >
           <div ref={containerRef} className="alpha-tab-element__container">
             <div ref={elementRef}></div>

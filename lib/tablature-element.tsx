@@ -102,9 +102,12 @@ export const TablatureElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>
     )
 
     return (
-      <div {...attributes} {...divProps}>
-        <div className="hidden">{children}</div>
-
+      <div
+        {...attributes}
+        {...divProps}
+        contentEditable={false}
+      >
+        <div className='invisible'>{children}</div>
         <div
           className={cx(
             'tablature-element rounded-lg select-none',

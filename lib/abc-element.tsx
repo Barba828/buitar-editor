@@ -556,11 +556,9 @@ export const ABCElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>> = me
         {...attributes}
         {...divProps}
         data-slate-tablature={instrument}
-        onClick={(e) => {
-          e.stopPropagation()
-        }}
+        contentEditable={false}
       >
-        <div className="hidden">{children}</div>
+        <div className="invisible">{children}</div>
         <div
           className={cx(
             'abc-editor rounded-lg group box-border text-sm select-none',
@@ -577,7 +575,6 @@ export const ABCElement: FC<RenderElementProps & HTMLProps<HTMLDivElement>> = me
               'select-element-3': fullscreen,
             }
           )}
-          contentEditable={false}
         >
           {btnsView}
 
